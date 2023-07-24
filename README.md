@@ -31,6 +31,8 @@
 https://creativival.github.io/voxelamming-extension/dist/voxelamming.mjs
 ```
 
+* この拡張機能は「ボクセラミングタートル」拡張機能と同時には使えません。
+
 ## 開発
 
 [README.md](README.md)

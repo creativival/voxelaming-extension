@@ -29,6 +29,8 @@ This extension can be used with other extension in [Xcratch](https://xcratch.git
 https://creativival.github.io/voxelamming-extension/dist/voxelamming.mjs
 ```
 
+* This extension cannot be used at the same time as the "Voxelamming Turtle" extension.
+
 ## Development
 
 [README.md](README.md)
