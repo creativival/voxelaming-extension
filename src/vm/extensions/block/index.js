@@ -650,13 +650,15 @@ class ExtensionBlocks {
                 for (let x = x1; x <= x2; x++) {
                     const y = y1 + (x - x1) * diff_y / diff_x;
                     const z = z1 + (x - x1) * diff_z / diff_x;
-                    this.createBox(x, y, z, r, g, b, alpha);
+                    const args = {X: x, Y: y, Z: z, R: r, G: g, B: b, ALPHA: alpha};
+                    this.createBox(args);
                 }
             } else{
                 for (let x = x1; x >= x2; x--) {
                     const y = y1 + (x - x1) * diff_y / diff_x;
                     const z = z1 + (x - x1) * diff_z / diff_x;
-                    this.createBox(x, y, z, r, g, b, alpha);
+                    const args = {X: x, Y: y, Z: z, R: r, G: g, B: b, ALPHA: alpha};
+                    this.createBox(args);
                 }
             }
         } else if (Math.abs(diff_y) === maxLength) {
@@ -664,13 +666,15 @@ class ExtensionBlocks {
                 for (let y = y1; y <= y2; y++) {
                     const x = x1 + (y - y1) * diff_x / diff_y;
                     const z = z1 + (y - y1) * diff_z / diff_y;
-                    this.createBox(x, y, z, r, g, b, alpha);
+                    const args = {X: x, Y: y, Z: z, R: r, G: g, B: b, ALPHA: alpha};
+                    this.createBox(args);
                 }
             } else {
                 for (let y = y1; y >= y2; y--) {
                     const x = x1 + (y - y1) * diff_x / diff_y;
                     const z = z1 + (y - y1) * diff_z / diff_y;
-                    this.createBox(x, y, z, r, g, b, alpha);
+                    const args = {X: x, Y: y, Z: z, R: r, G: g, B: b, ALPHA: alpha};
+                    this.createBox(args);
                 }
             }
         } else if (Math.abs(diff_z) === maxLength) {
@@ -678,13 +682,15 @@ class ExtensionBlocks {
                 for (let z = z1; z <= z2; z++) {
                     const x = x1 + (z - z1) * diff_x / diff_z;
                     const y = y1 + (z - z1) * diff_y / diff_z;
-                    this.createBox(x, y, z, r, g, b, alpha);
+                    const args = {X: x, Y: y, Z: z, R: r, G: g, B: b, ALPHA: alpha};
+                    this.createBox(args);
                 }
             } else {
                 for (let z = z1; z >= z2; z--) {
                     const x = x1 + (z - z1) * diff_x / diff_z;
                     const y = y1 + (z - z1) * diff_y / diff_z;
-                    this.createBox(x, y, z, r, g, b, alpha);
+                    const args = {X: x, Y: y, Z: z, R: r, G: g, B: b, ALPHA: alpha};
+                    this.createBox(args);
                 }
             }
         }
