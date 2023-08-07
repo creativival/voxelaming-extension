@@ -199,6 +199,7 @@ var argumentType = ArgumentType;
 var en = {
 	"voxelamming.name": "Voxelamming",
 	"voxelamming.setRoomName": "Set room name to [ROOMNAME]",
+	"voxelamming.animateGlobal": "Animate all voxels at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] interval: [INTERVAL]",
 	"voxelamming.setNode": "Set node at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.animateNode": "Animate node at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] interval: [INTERVAL]",
 	"voxelamming.createBox": "Create voxel at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -219,6 +220,7 @@ var en = {
 var ja = {
 	"voxelamming.name": "ボクセラミング",
 	"voxelamming.setRoomName": "ルームネームを [ROOMNAME] にする",
+	"voxelamming.animateGlobal": "まとめてアニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。拡大: [SCALE] 移動時間: [INTERVAL]",
 	"voxelamming.setNode": "ノードを x: [X] y: [Y] z: [Z] に配置する。角度を pitch: [PITCH] yaw: [YAW] roll: [ROLL] にする",
 	"voxelamming.animateNode": "アニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。拡大: [SCALE] 移動時間: [INTERVAL]",
 	"voxelamming.createBox": "ボクセルを x: [X] y: [Y] z: [Z] に作成する。色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -242,6 +244,7 @@ var translations = {
 	"ja-Hira": {
 	"voxelamming.name": "ボクセラミング",
 	"voxelamming.setRoomName": "ルームネームを [ROOMNAME] にする",
+	"voxelamming.globalAnimateNode": "まとめてアニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。かくだい: [SCALE] じかん: [INTERVAL]",
 	"voxelamming.setNode": "ノードを x: [X] y: [Y] z: [Z] におく。かくどを pitch: [PITCH] yaw: [YAW] roll: [ROLL] にする",
 	"voxelamming.animateNode": "アニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。かくだい: [SCALE] じかん: [INTERVAL]",
 	"voxelamming.createBox": "ボクセルを x: [X] y: [Y] z: [Z] につくる。いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -307,6 +310,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
      */
     this.runtime = runtime;
     this.roomName = '1000';
+    this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.node = [0, 0, 0, 0, 0, 0];
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.boxes = [];
@@ -364,6 +368,21 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
+          opcode: 'changeShape',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.changeShape',
+            default: 'Change shape: [SHAPE]',
+            description: 'change shape'
+          }),
+          arguments: {
+            SHAPE: {
+              type: argumentType.STRING,
+              defaultValue: 'box',
+              menu: 'shapeTypeMenu'
+            }
+          }
+        }, {
           opcode: 'setBuildInterval',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -377,6 +396,82 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 0.01
             }
           }
+        }, {
+          opcode: 'createBox',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.createBox',
+            default: 'Create box at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]',
+            description: 'create box'
+          }),
+          arguments: {
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            R: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            G: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            B: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            ALPHA: {
+              type: argumentType.NUMBER,
+              defaultValue: 1
+            }
+          }
+        }, {
+          opcode: 'removeBox',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.removeBox',
+            default: 'Remove box at x: [X] y: [Y] z: [Z]',
+            description: 'remove box'
+          }),
+          arguments: {
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            }
+          }
+        }, {
+          opcode: 'sendData',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.sendData',
+            default: 'Send data',
+            description: 'send data to server'
+          })
+        }, {
+          opcode: 'clearData',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.clearData',
+            default: 'Clear data',
+            description: 'clear data'
+          })
         }, {
           opcode: 'setNode',
           blockType: blockType.COMMAND,
@@ -454,12 +549,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
-          opcode: 'createBox',
+          opcode: 'animateGlobal',
           blockType: blockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.createBox',
-            default: 'Create box at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]',
-            description: 'create box'
+            id: 'voxelamming.animateGlobal',
+            default: 'Animate global at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] interval: [INTERVAL]',
+            description: 'animate global'
           }),
           arguments: {
             X: {
@@ -474,53 +569,27 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               type: argumentType.NUMBER,
               defaultValue: 0
             },
-            R: {
+            PITCH: {
               type: argumentType.NUMBER,
               defaultValue: 0
             },
-            G: {
+            YAW: {
               type: argumentType.NUMBER,
               defaultValue: 0
             },
-            B: {
+            ROLL: {
               type: argumentType.NUMBER,
               defaultValue: 0
             },
-            ALPHA: {
+            SCALE: {
               type: argumentType.NUMBER,
               defaultValue: 1
+            },
+            INTERVAL: {
+              type: argumentType.NUMBER,
+              defaultValue: 10
             }
           }
-        }, {
-          opcode: 'removeBox',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.removeBox',
-            default: 'Remove box at x: [X] y: [Y] z: [Z]',
-            description: 'remove box'
-          }),
-          arguments: {
-            X: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            Y: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            Z: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            }
-          }
-        }, {
-          opcode: 'clearData',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.clearData',
-            default: 'Clear data',
-            description: 'clear data'
-          })
         }, {
           opcode: 'writeSentence',
           blockType: blockType.COMMAND,
@@ -673,29 +742,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 1
             }
           }
-        }, {
-          opcode: 'changeShape',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.changeShape',
-            default: 'Change shape: [SHAPE]',
-            description: 'change shape'
-          }),
-          arguments: {
-            SHAPE: {
-              type: argumentType.STRING,
-              defaultValue: 'box',
-              menu: 'shapeTypeMenu'
-            }
-          }
-        }, {
-          opcode: 'sendData',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.sendData',
-            default: 'Send data',
-            description: 'send data to server'
-          })
         }],
         menus: {
           shapeTypeMenu: {
@@ -730,6 +776,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "setRoomName",
     value: function setRoomName(args) {
       this.roomName = args.ROOMNAME;
+    }
+  }, {
+    key: "animateGlobal",
+    value: function animateGlobal(args) {
+      var x = Math.floor(Number(args.X));
+      var y = Math.floor(Number(args.Y));
+      var z = Math.floor(Number(args.Z));
+      var pitch = Number(args.PITCH);
+      var yaw = Number(args.YAW);
+      var roll = Number(args.ROLL);
+      var scale = Number(args.SCALE);
+      var interval = Number(args.INTERVAL);
+      this.globalAnimation = [x, y, z, pitch, yaw, roll, scale, interval];
     }
   }, {
     key: "setNode",
@@ -800,6 +859,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "clearData",
     value: function clearData() {
+      this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
       this.node = [0, 0, 0, 0, 0, 0];
       this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
       this.boxes = [];
@@ -973,6 +1033,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var date = new Date();
       var self = this;
       var dataToSend = {
+        globalAnimation: this.globalAnimation,
         node: this.node,
         animation: this.animation,
         boxes: this.boxes,
@@ -984,7 +1045,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         interval: this.buildInterval,
         date: date.toISOString()
       };
-      var socket = new WebSocket("wss://render-nodejs-server.onrender.com");
+      var socket = new WebSocket("wss://websocket.voxelamming.com");
       // console.log(socket);
 
       socket.onopen = function () {
