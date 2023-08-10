@@ -11,14 +11,20 @@
     "voxelamming.setBuildInterval": "Set build interval to [INTERVAL]",
     "voxelamming.clearData": "Clear data",
     "voxelamming.writeSentence": "Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-    "voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL]",
+    "voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]",
     "voxelamming.setCommand": "Set command [COMMAND]",
     "voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
     "voxelamming.changeShape": "Change shape: [SHAPE]",
+    "voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
     "voxelamming.sendData": "Send data",
     "voxelamming.box": "box",
     "voxelamming.sphere": "sphere",
-    "voxelamming.plane": "plane"
+    "voxelamming.plane": "plane",
+    "voxelamming.point": "point",
+    "voxelamming.spot": "spot",
+    "voxelamming.directional": "directional",
+    "voxelamming.on": "on",
+    "voxelamming.off": "off"
   },
   "ja": {
     "voxelamming.name": "ボクセラミング",
@@ -32,14 +38,20 @@
     "voxelamming.setBuildInterval": "ボクセルの作成間隔を [INTERVAL] 秒にする",
     "voxelamming.clearData": "データを初期化する",
     "voxelamming.writeSentence": "[SENTENCE] を x: [X] y: [Y] z: [Z] に書く。色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
-    "voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒",
+    "voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
     "voxelamming.setCommand": "コマンドをセットする [COMMAND]",
     "voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
     "voxelamming.changeShape": "形状を変更する [SHAPE]",
+    "voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
     "voxelamming.sendData": "データを送信する",
     "voxelamming.box": "立方体",
     "voxelamming.sphere": "球体",
-    "voxelamming.plane": "平面"
+    "voxelamming.plane": "平面",
+    "voxelamming.point": "ポイント",
+    "voxelamming.spot": "スポット",
+    "voxelamming.directional": "ディレクショナル",
+    "voxelamming.on": "オン",
+    "voxelamming.off": "オフ"
   },
   "ja-Hira": {
     "voxelamming.name": "ボクセラミング",
@@ -53,13 +65,19 @@
     "voxelamming.setBuildInterval": "ボクセルのつくるかんかくを [INTERVAL] びょうにする",
     "voxelamming.clearData": "データをけす",
     "voxelamming.writeSentence": "[SENTENCE] を x: [X] y: [Y] z: [Z] にかく。いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
-    "voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう",
+    "voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
     "voxelamming.setCommand": "コマンドをセットする [COMMAND]",
     "voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
     "voxelamming.changeShape": "かたちをかえる [SHAPE]",
+    "voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
     "voxelamming.sendData": "データをおくる",
     "voxelamming.box": "はこ",
     "voxelamming.sphere": "きゅう",
-    "voxelamming.plane": "いた"
+    "voxelamming.plane": "いた",
+    "voxelamming.point": "ポイント",
+    "voxelamming.spot": "スポット",
+    "voxelamming.directional": "ディレクショナル",
+    "voxelamming.on": "オン",
+    "voxelamming.off": "オフ"
   }
 }

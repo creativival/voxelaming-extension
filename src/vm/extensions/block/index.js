@@ -94,6 +94,8 @@ class ExtensionBlocks {
         this.commands = []
         this.size = 1.0;
         this.shape = 'box';
+        this.isMetallic = 0
+        this.roughness = 0.5
         this.buildInterval = 0.01;
 
         if (runtime.formatMessage) {
@@ -157,6 +159,26 @@ class ExtensionBlocks {
                             type: ArgumentType.STRING,
                             defaultValue: 'box',
                             menu: 'shapeTypeMenu'
+                        }
+                    }
+                },
+                {
+                    opcode: 'changeMaterial',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.changeMaterial',
+                        default: 'Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]',
+                        description: 'change material'
+                    }),
+                    arguments: {
+                        IS_METALLIC: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'off',
+                            menu: 'onOrOffMenu'
+                        },
+                        ROUGHNESS: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0.5
                         }
                     }
                 },
@@ -424,7 +446,7 @@ class ExtensionBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'voxelamming.setLight',
-                        default: 'Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL]',
+                        default: 'Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]',
                         description: 'set light'
                     }),
                     arguments: {
@@ -463,6 +485,11 @@ class ExtensionBlocks {
                         INTERVAL: {
                             type: ArgumentType.NUMBER,
                             defaultValue: 1
+                        },
+                        LIGHT_TYPE: {
+                            type: ArgumentType.STRING,
+                            defaultValue: "point",
+                            menu: 'lightTypeMenu'
                         }
                     }
                 },
@@ -562,6 +589,56 @@ class ExtensionBlocks {
                             value: 'plane'
                         }
                     ]
+                },
+                lightTypeMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.point',
+                                default: 'point',
+                                description: 'Menu item for point'
+                            }),
+                            value: 'point'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.spot',
+                                default: 'spot',
+                                description: 'Menu item for spot'
+                            }),
+                            value: 'spot'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.directional',
+                                default: 'directional',
+                                description: 'Menu item for directional'
+                            }),
+                            value: 'directional'
+                        }
+                    ]
+                },
+                onOrOffMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.off',
+                                default: 'off',
+                                description: 'Menu item for off'
+                            }),
+                            value: 'off'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.on',
+                                default: 'on',
+                                description: 'Menu item for on'
+                            }),
+                            value: 'on'
+                        }
+                    ]
                 }
             }
         };
@@ -649,6 +726,8 @@ class ExtensionBlocks {
         this.commands = []
         this.size = 1.0;
         this.shape = 'box';
+        this.isMetallic = 0
+        this.roughness = 0.5
         this.buildInterval = 0.01;
     }
 
@@ -665,6 +744,7 @@ class ExtensionBlocks {
     }
 
     setLight(args) {
+        console.log(args)
         const x = Math.floor(Number(args.X));
         const y = Math.floor(Number(args.Y));
         const z = Math.floor(Number(args.Z));
@@ -674,7 +754,14 @@ class ExtensionBlocks {
         const alpha = Number(args.ALPHA);
         const intensity = Number(args.INTENSITY);
         const interval = Number(args.INTERVAL);
-        this.lights.push([x, y, z, r, g, b, alpha, intensity, interval]);
+        let lightType = 1;  // point light
+
+        if (args.LIGHT_TYPE === "spot") {
+            lightType = 2;
+        } else if (args.LIGHT_TYPE === "directional") {
+            lightType = 3;
+        }
+        this.lights.push([x, y, z, r, g, b, alpha, intensity, interval, lightType]);
     }
 
     setCommand(args) {
@@ -757,6 +844,16 @@ class ExtensionBlocks {
         this.shape = args.SHAPE
     }
 
+    changeMaterial(args) {
+        let isMetallic = 0;
+
+        if (args.IS_METALLIC === "on") {
+            isMetallic = 1;
+        }
+        this.isMetallic = isMetallic;
+        this.roughness = Number(args.ROUGHNESS);
+    }
+
     sendData () {
         console.log('Sending data...');
         const date = new Date();
@@ -771,6 +868,8 @@ class ExtensionBlocks {
             commands: this.commands,
             size: this.size,
             shape: this.shape,
+            isMetallic: this.isMetallic,
+            roughness: this.roughness,
             interval: this.buildInterval,
             date: date.toISOString()
         };
