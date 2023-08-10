@@ -208,14 +208,20 @@ var en = {
 	"voxelamming.setBuildInterval": "Set build interval to [INTERVAL]",
 	"voxelamming.clearData": "Clear data",
 	"voxelamming.writeSentence": "Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL]",
+	"voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
+	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
 	"voxelamming.sendData": "Send data",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
-	"voxelamming.plane": "plane"
+	"voxelamming.plane": "plane",
+	"voxelamming.point": "point",
+	"voxelamming.spot": "spot",
+	"voxelamming.directional": "directional",
+	"voxelamming.on": "on",
+	"voxelamming.off": "off"
 };
 var ja = {
 	"voxelamming.name": "ボクセラミング",
@@ -229,14 +235,20 @@ var ja = {
 	"voxelamming.setBuildInterval": "ボクセルの作成間隔を [INTERVAL] 秒にする",
 	"voxelamming.clearData": "データを初期化する",
 	"voxelamming.writeSentence": "[SENTENCE] を x: [X] y: [Y] z: [Z] に書く。色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒",
+	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
+	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
 	"voxelamming.sendData": "データを送信する",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
-	"voxelamming.plane": "平面"
+	"voxelamming.plane": "平面",
+	"voxelamming.point": "ポイント",
+	"voxelamming.spot": "スポット",
+	"voxelamming.directional": "ディレクショナル",
+	"voxelamming.on": "オン",
+	"voxelamming.off": "オフ"
 };
 var translations = {
 	en: en,
@@ -253,14 +265,20 @@ var translations = {
 	"voxelamming.setBuildInterval": "ボクセルのつくるかんかくを [INTERVAL] びょうにする",
 	"voxelamming.clearData": "データをけす",
 	"voxelamming.writeSentence": "[SENTENCE] を x: [X] y: [Y] z: [Z] にかく。いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう",
+	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
+	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
 	"voxelamming.sendData": "データをおくる",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
-	"voxelamming.plane": "いた"
+	"voxelamming.plane": "いた",
+	"voxelamming.point": "ポイント",
+	"voxelamming.spot": "スポット",
+	"voxelamming.directional": "ディレクショナル",
+	"voxelamming.on": "オン",
+	"voxelamming.off": "オフ"
 }
 };
 
@@ -319,6 +337,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.commands = [];
     this.size = 1.0;
     this.shape = 'box';
+    this.isMetallic = 0;
+    this.roughness = 0.5;
     this.buildInterval = 0.01;
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -380,6 +400,25 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               type: argumentType.STRING,
               defaultValue: 'box',
               menu: 'shapeTypeMenu'
+            }
+          }
+        }, {
+          opcode: 'changeMaterial',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.changeMaterial',
+            default: 'Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]',
+            description: 'change material'
+          }),
+          arguments: {
+            IS_METALLIC: {
+              type: argumentType.STRING,
+              defaultValue: 'off',
+              menu: 'onOrOffMenu'
+            },
+            ROUGHNESS: {
+              type: argumentType.NUMBER,
+              defaultValue: 0.5
             }
           }
         }, {
@@ -637,7 +676,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           blockType: blockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.setLight',
-            default: 'Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL]',
+            default: 'Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]',
             description: 'set light'
           }),
           arguments: {
@@ -676,6 +715,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             INTERVAL: {
               type: argumentType.NUMBER,
               defaultValue: 1
+            },
+            LIGHT_TYPE: {
+              type: argumentType.STRING,
+              defaultValue: "point",
+              menu: 'lightTypeMenu'
             }
           }
         }, {
@@ -767,6 +811,49 @@ var ExtensionBlocks = /*#__PURE__*/function () {
                 description: 'Menu item for plane'
               }),
               value: 'plane'
+            }]
+          },
+          lightTypeMenu: {
+            acceptReporters: false,
+            items: [{
+              text: formatMessage({
+                id: 'voxelamming.point',
+                default: 'point',
+                description: 'Menu item for point'
+              }),
+              value: 'point'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.spot',
+                default: 'spot',
+                description: 'Menu item for spot'
+              }),
+              value: 'spot'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.directional',
+                default: 'directional',
+                description: 'Menu item for directional'
+              }),
+              value: 'directional'
+            }]
+          },
+          onOrOffMenu: {
+            acceptReporters: false,
+            items: [{
+              text: formatMessage({
+                id: 'voxelamming.off',
+                default: 'off',
+                description: 'Menu item for off'
+              }),
+              value: 'off'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.on',
+                default: 'on',
+                description: 'Menu item for on'
+              }),
+              value: 'on'
             }]
           }
         }
@@ -868,6 +955,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.commands = [];
       this.size = 1.0;
       this.shape = 'box';
+      this.isMetallic = 0;
+      this.roughness = 0.5;
       this.buildInterval = 0.01;
     }
   }, {
@@ -886,6 +975,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "setLight",
     value: function setLight(args) {
+      console.log(args);
       var x = Math.floor(Number(args.X));
       var y = Math.floor(Number(args.Y));
       var z = Math.floor(Number(args.Z));
@@ -895,7 +985,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var alpha = Number(args.ALPHA);
       var intensity = Number(args.INTENSITY);
       var interval = Number(args.INTERVAL);
-      this.lights.push([x, y, z, r, g, b, alpha, intensity, interval]);
+      var lightType = 1; // point light
+
+      if (args.LIGHT_TYPE === "spot") {
+        lightType = 2;
+      } else if (args.LIGHT_TYPE === "directional") {
+        lightType = 3;
+      }
+      this.lights.push([x, y, z, r, g, b, alpha, intensity, interval, lightType]);
     }
   }, {
     key: "setCommand",
@@ -1027,6 +1124,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.shape = args.SHAPE;
     }
   }, {
+    key: "changeMaterial",
+    value: function changeMaterial(args) {
+      var isMetallic = 0;
+      if (args.IS_METALLIC === "on") {
+        isMetallic = 1;
+      }
+      this.isMetallic = isMetallic;
+      this.roughness = Number(args.ROUGHNESS);
+    }
+  }, {
     key: "sendData",
     value: function sendData() {
       console.log('Sending data...');
@@ -1042,6 +1149,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         commands: this.commands,
         size: this.size,
         shape: this.shape,
+        isMetallic: this.isMetallic,
+        roughness: this.roughness,
         interval: this.buildInterval,
         date: date.toISOString()
       };
