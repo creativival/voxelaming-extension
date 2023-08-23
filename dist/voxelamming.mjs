@@ -63,6 +63,37 @@ var entry = {
   translationMap: translations$1
 };
 
+function _arrayLikeToArray$1(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray$1(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray$1(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray$1(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray$1(arr) || _nonIterableSpread();
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -211,6 +242,7 @@ var en = {
 	"voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.makeModel": "Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
 	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
 	"voxelamming.sendData": "Send data",
@@ -238,6 +270,7 @@ var ja = {
 	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.makeModel": "モデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
 	"voxelamming.sendData": "データを送信する",
@@ -268,6 +301,7 @@ var translations = {
 	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.makeModel": "モデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
 	"voxelamming.sendData": "データをおくる",
@@ -283,6 +317,10 @@ var translations = {
 };
 
 var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAFymlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgdGlmZjpJbWFnZUxlbmd0aD0iNDAiCiAgIHRpZmY6SW1hZ2VXaWR0aD0iNDAiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHhtcDpDcmVhdGVEYXRlPSIyMDIzLTA3LTA4VDIyOjQxOjU4KzA5MDAiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDIzLTA3LTA4VDIyOjQyOjA4KzA5OjAwIgogICB4bXA6TWV0YWRhdGFEYXRlPSIyMDIzLTA3LTA4VDIyOjQyOjA4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";
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
 /**
  * Formatter which is used for translation.
@@ -786,6 +824,44 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 1
             }
           }
+        }, {
+          opcode: 'makeModel',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.makeModel',
+            default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+            description: 'make model'
+          }),
+          arguments: {
+            LIST_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'list'
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            }
+          }
         }],
         menus: {
           shapeTypeMenu: {
@@ -1119,6 +1195,53 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "makeModel",
+    value: function makeModel(args) {
+      // create boxes to make a model
+      var vertex_num = args.LIST_NAME;
+      vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
+      vertex_num = Number(vertex_num);
+      var list = args.LIST_NAME;
+      list = list.replace(/.*end_header\s*/, "");
+      list = list.split(' ');
+      list = list.map(function (str) {
+        return Number(str);
+      });
+      var positions = [];
+      for (var i = 0; i < vertex_num * 6; i += 6) {
+        positions.push(list.slice(i, i + 6));
+      }
+      var boxes = this.getBoxes(positions, vertex_num);
+      var _iterator = _createForOfIteratorHelper(boxes),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var box = _step.value;
+          var _args7 = {
+            X: box[0],
+            Y: box[1],
+            Z: box[2],
+            R: box[3],
+            G: box[4],
+            B: box[5],
+            ALPHA: box[6]
+          };
+          this.createBox(_args7);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      var x = Math.floor(Number(args.X));
+      var y = Math.floor(Number(args.Y));
+      var z = Math.floor(Number(args.Z));
+      var pitch = Number(args.PITCH);
+      var yaw = Number(args.YAW);
+      var roll = Number(args.ROLL);
+      this.node = [x, y, z, pitch, yaw, roll];
+    }
+  }, {
     key: "changeShape",
     value: function changeShape(args) {
       this.shape = args.SHAPE;
@@ -1180,6 +1303,54 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       socket.onerror = function (error) {
         console.error("WebSocket Error: ", error);
       };
+    }
+  }, {
+    key: "getBoxes",
+    value: function getBoxes(positions) {
+      var boxPositions = new Set();
+      var numberOfFaces = Math.floor(positions.length / 4);
+      for (var i = 0; i < numberOfFaces; i++) {
+        var vertex1 = positions[i * 4];
+        var vertex2 = positions[i * 4 + 1];
+        var vertex3 = positions[i * 4 + 2];
+        positions[i * 4 + 3]; // no need
+        var x = Math.min(vertex1[0], vertex2[0], vertex3[0]);
+        var y = Math.min(vertex1[1], vertex2[1], vertex3[1]);
+        var z = Math.min(vertex1[2], vertex2[2], vertex3[2]);
+        var r = vertex1[3] / 255;
+        var g = vertex1[4] / 255;
+        var b = vertex1[5] / 255;
+        var alpha = 1;
+        var step = 0;
+
+        // ボックスを置く方向を解析
+        if (vertex1[0] === vertex2[0] && vertex2[0] === vertex3[0]) {
+          // y-z plane
+          step = Math.max(vertex1[1], vertex2[1], vertex3[1]) - y;
+          if (vertex1[1] !== vertex2[1]) {
+            x -= step;
+          }
+        } else if (vertex1[1] === vertex2[1] && vertex2[1] === vertex3[1]) {
+          // z-x plane
+          step = Math.max(vertex1[2], vertex2[2], vertex3[2]) - z;
+          if (vertex1[2] !== vertex2[2]) {
+            y -= step;
+          }
+        } else {
+          // x-y plane
+          step = Math.max(vertex1[0], vertex2[0], vertex3[0]) - x;
+          if (vertex1[0] !== vertex2[0]) {
+            z -= step;
+          }
+        }
+
+        // minimum unit: 0.1
+        var positionX = Math.floor(Math.round(x * 10 / step) / 10);
+        var positionY = Math.floor(Math.round(y * 10 / step) / 10);
+        var positionZ = Math.floor(Math.round(z * 10 / step) / 10);
+        boxPositions.add([positionX, positionZ, -positionY, r, g, b, alpha]);
+      }
+      return _toConsumableArray(boxPositions);
     }
   }], [{
     key: "EXTENSION_NAME",
