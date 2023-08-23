@@ -558,6 +558,45 @@ class ExtensionBlocks {
                             defaultValue: 1
                         }
                     }
+                },
+                {
+                    opcode: 'makeModel',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.makeModel',
+                        default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+                        description: 'make model'
+                    }),
+                    arguments: {
+                        LIST_NAME: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'list'
+                        },
+                        X: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        PITCH: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        YAW: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        ROLL: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        }
+                    }
                 }
             ],
             menus: {
@@ -840,6 +879,44 @@ class ExtensionBlocks {
         }
     }
 
+    makeModel(args) {
+        // create boxes to make a model
+        let vertex_num = args.LIST_NAME;
+        vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
+        vertex_num = Number(vertex_num);
+        let list = args.LIST_NAME;
+        list = list.replace(/.*end_header\s*/, "");
+        list = list.split(' ')
+        list = list.map((str) => Number(str));
+        const positions = [];
+        for (let i = 0; i < vertex_num * 6; i += 6) {
+            positions.push(list.slice(i, i + 6));
+        }
+
+        const boxes = this.getBoxes(positions, vertex_num);
+
+        for (const box of boxes) {
+            const args = {
+                X: box[0],
+                Y: box[1],
+                Z: box[2],
+                R: box[3],
+                G: box[4],
+                B: box[5],
+                ALPHA: box[6],
+            }
+            this.createBox(args);
+        }
+
+        const x = Math.floor(Number(args.X));
+        const y = Math.floor(Number(args.Y));
+        const z = Math.floor(Number(args.Z));
+        const pitch = Number(args.PITCH);
+        const yaw = Number(args.YAW);
+        const roll = Number(args.ROLL);
+        this.node = [x, y, z, pitch, yaw, roll];
+    }
+
     changeShape(args) {
         this.shape = args.SHAPE
     }
@@ -903,6 +980,54 @@ class ExtensionBlocks {
         socket.onerror = function(error) {
             console.error("WebSocket Error: ", error);
         };
+    }
+
+    getBoxes(positions) {
+        const boxPositions = new Set();
+        const numberOfFaces = Math.floor(positions.length / 4);
+        for (let i = 0; i < numberOfFaces; i++) {
+            const vertex1 = positions[i * 4];
+            const vertex2 = positions[i * 4 + 1];
+            const vertex3 = positions[i * 4 + 2];
+            const vertex4 = positions[i * 4 + 3]; // no need
+            let x = Math.min(vertex1[0], vertex2[0], vertex3[0]);
+            let y = Math.min(vertex1[1], vertex2[1], vertex3[1]);
+            let z = Math.min(vertex1[2], vertex2[2], vertex3[2]);
+            const r = vertex1[3] / 255;
+            const g = vertex1[4] / 255;
+            const b = vertex1[5] / 255;
+            const alpha = 1
+            let step = 0;
+
+            // ボックスを置く方向を解析
+            if (vertex1[0] === vertex2[0] && vertex2[0] === vertex3[0]) {
+                // y-z plane
+                step = Math.max(vertex1[1], vertex2[1], vertex3[1]) - y;
+                if (vertex1[1] !== vertex2[1]) {
+                    x -= step;
+                }
+            } else if (vertex1[1] === vertex2[1] && vertex2[1] === vertex3[1]) {
+                // z-x plane
+                step = Math.max(vertex1[2], vertex2[2], vertex3[2]) - z;
+                if (vertex1[2] !== vertex2[2]) {
+                    y -= step;
+                }
+            } else {
+                // x-y plane
+                step = Math.max(vertex1[0], vertex2[0], vertex3[0]) - x;
+                if (vertex1[0] !== vertex2[0]) {
+                    z -= step;
+                }
+            }
+
+            // minimum unit: 0.1
+            const positionX = Math.floor(Math.round((x * 10) / step) / 10);
+            const positionY = Math.floor(Math.round((y * 10) / step) / 10);
+            const positionZ = Math.floor(Math.round((z * 10) / step) / 10);
+            boxPositions.add([positionX, positionZ, -positionY, r, g, b, alpha]);
+        }
+
+        return [...boxPositions];
     }
 }
 
