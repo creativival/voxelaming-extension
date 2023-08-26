@@ -94,6 +94,46 @@ function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray$1(arr) || _nonIterableSpread();
 }
 
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
+    try {
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+    } catch (err) {
+      _d = !0, _e = err;
+    } finally {
+      try {
+        if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+    return _arr;
+  }
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray$1(arr, i) || _nonIterableRest();
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -246,6 +286,8 @@ var en = {
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
 	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
 	"voxelamming.sendData": "Send data",
+	"voxelamming.pushMatrix": "Push matrix",
+	"voxelamming.popMatrix": "Pop matrix",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
 	"voxelamming.plane": "plane",
@@ -274,6 +316,8 @@ var ja = {
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
 	"voxelamming.sendData": "データを送信する",
+	"voxelamming.pushMatrix": "座標系を保存する",
+	"voxelamming.popMatrix": "座標系を復元する",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
 	"voxelamming.plane": "平面",
@@ -305,6 +349,8 @@ var translations = {
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
 	"voxelamming.sendData": "データをおくる",
+	"voxelamming.pushMatrix": "ざひょうけいをほぞんする",
+	"voxelamming.popMatrix": "ざひょうけいをもどす",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
 	"voxelamming.plane": "いた",
@@ -317,6 +363,57 @@ var translations = {
 };
 
 var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAFymlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgdGlmZjpJbWFnZUxlbmd0aD0iNDAiCiAgIHRpZmY6SW1hZ2VXaWR0aD0iNDAiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHhtcDpDcmVhdGVEYXRlPSIyMDIzLTA3LTA4VDIyOjQxOjU4KzA5MDAiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDIzLTA3LTA4VDIyOjQyOjA4KzA5OjAwIgogICB4bXA6TWV0YWRhdGFEYXRlPSIyMDIzLTA3LTA4VDIyOjQyOjA4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";
+
+function getRotationMatrix(pitch, yaw, roll) {
+  pitch = degreesToRadians(pitch);
+  yaw = degreesToRadians(yaw);
+  roll = degreesToRadians(roll);
+
+  // Pitch (Rotation around X-axis)
+  var Rx = [[1, 0, 0], [0, Math.cos(pitch), -Math.sin(pitch)], [0, Math.sin(pitch), Math.cos(pitch)]];
+
+  // Yaw (Rotation around Y-axis)
+  var Ry = [[Math.cos(yaw), 0, Math.sin(yaw)], [0, 1, 0], [-Math.sin(yaw), 0, Math.cos(yaw)]];
+
+  // Roll (Rotation around Z-axis)
+  var Rz = [[Math.cos(roll), -Math.sin(roll), 0], [Math.sin(roll), Math.cos(roll), 0], [0, 0, 1]];
+
+  // Multiply matrices in the order Rx, Rz, Ry
+  var R = matrixMultiply(Rx, matrixMultiply(Rz, Ry));
+  return R;
+}
+function matrixMultiply(A, B) {
+  var result = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < 3; j++) {
+      for (var k = 0; k < 3; k++) {
+        result[i][j] += A[i][k] * B[k][j];
+      }
+    }
+  }
+  return result;
+}
+function transformPointByRotationMatrix(point, R) {
+  var _point = _slicedToArray(point, 3),
+    x = _point[0],
+    y = _point[1],
+    z = _point[2];
+  var xNew = R[0][0] * x + R[0][1] * y + R[0][2] * z;
+  var yNew = R[1][0] * x + R[1][1] * y + R[1][2] * z;
+  var zNew = R[2][0] * x + R[2][1] * y + R[2][2] * z;
+  return [xNew, yNew, zNew];
+}
+function addVectors(vector1, vector2) {
+  return vector1.map(function (val, index) {
+    return val + vector2[index];
+  });
+}
+function transpose3x3(matrix) {
+  return [[matrix[0][0], matrix[1][0], matrix[2][0]], [matrix[0][1], matrix[1][1], matrix[2][1]], [matrix[0][2], matrix[1][2], matrix[2][2]]];
+}
+function degreesToRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -365,9 +462,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
      * @type {Runtime}
      */
     this.runtime = runtime;
-    this.roomName = '1000';
+    this.isAllowedMatrix = 0;
+    this.savedMatrices = [];
+    this.translation = [0, 0, 0, 0, 0, 0];
     this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
-    this.node = [0, 0, 0, 0, 0, 0];
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.boxes = [];
     this.sentence = [];
@@ -377,7 +475,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.shape = 'box';
     this.isMetallic = 0;
     this.roughness = 0.5;
+    this.isAllowedFloat = 0;
     this.buildInterval = 0.01;
+    this.dataQueue = [];
+    setInterval(this.sendQueuedData.bind(this), 1000);
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
@@ -862,6 +963,22 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 0
             }
           }
+        }, {
+          opcode: 'pushMatrix',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.pushMatrix',
+            default: 'Push Matrix',
+            description: 'push matrix'
+          })
+        }, {
+          opcode: 'popMatrix',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.popMatrix',
+            default: 'Pop Matrix',
+            description: 'pop matrix'
+          })
         }],
         menus: {
           shapeTypeMenu: {
@@ -941,11 +1058,79 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.roomName = args.ROOMNAME;
     }
   }, {
+    key: "pushMatrix",
+    value: function pushMatrix() {
+      this.isAllowedMatrix++;
+      this.savedMatrices.push(this.translation);
+    }
+  }, {
+    key: "popMatrix",
+    value: function popMatrix() {
+      this.isAllowedMatrix--;
+      this.translation = this.savedMatrices.pop();
+    }
+  }, {
+    key: "setNode",
+    value: function setNode(args) {
+      // method name changed from translate to setNode.
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers2 = _slicedToArray(_this$roundNumbers, 3),
+        x = _this$roundNumbers2[0],
+        y = _this$roundNumbers2[1],
+        z = _this$roundNumbers2[2];
+      var pitch = Number(args.PITCH);
+      var yaw = Number(args.YAW);
+      var roll = Number(args.ROLL);
+      if (this.isAllowedMatrix) {
+        var matrix = this.savedMatrices[this.savedMatrices.length - 1];
+        var basePosition = matrix.slice(0, 3);
+        var baseRotationMatrix;
+        if (matrix.length === 6) {
+          baseRotationMatrix = getRotationMatrix.apply(void 0, _toConsumableArray(matrix.slice(3)));
+        } else {
+          baseRotationMatrix = [matrix.slice(3, 6), matrix.slice(6, 9), matrix.slice(9, 12)];
+        }
+        var _transformPointByRota = transformPointByRotationMatrix([x, y, z], transpose3x3(baseRotationMatrix)),
+          _transformPointByRota2 = _slicedToArray(_transformPointByRota, 3),
+          addX = _transformPointByRota2[0],
+          addY = _transformPointByRota2[1],
+          addZ = _transformPointByRota2[2];
+        var _addVectors = addVectors(basePosition, [addX, addY, addZ]);
+        var _addVectors2 = _slicedToArray(_addVectors, 3);
+        x = _addVectors2[0];
+        y = _addVectors2[1];
+        z = _addVectors2[2];
+        var _this$roundNumbers3 = this.roundNumbers([x, y, z]);
+        var _this$roundNumbers4 = _slicedToArray(_this$roundNumbers3, 3);
+        x = _this$roundNumbers4[0];
+        y = _this$roundNumbers4[1];
+        z = _this$roundNumbers4[2];
+        var translateRotationMatrix = getRotationMatrix(-pitch, -yaw, -roll);
+        var rotateMatrix = matrixMultiply(translateRotationMatrix, baseRotationMatrix);
+        this.translation = [x, y, z].concat(_toConsumableArray(rotateMatrix[0]), _toConsumableArray(rotateMatrix[1]), _toConsumableArray(rotateMatrix[2]));
+      } else {
+        var _this$roundNumbers5 = this.roundNumbers([x, y, z]);
+        var _this$roundNumbers6 = _slicedToArray(_this$roundNumbers5, 3);
+        x = _this$roundNumbers6[0];
+        y = _this$roundNumbers6[1];
+        z = _this$roundNumbers6[2];
+        this.translation = [x, y, z, pitch, yaw, roll];
+      }
+    }
+  }, {
     key: "animateGlobal",
     value: function animateGlobal(args) {
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers7 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers8 = _slicedToArray(_this$roundNumbers7, 3),
+        x = _this$roundNumbers8[0],
+        y = _this$roundNumbers8[1],
+        z = _this$roundNumbers8[2];
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
@@ -954,22 +1139,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.globalAnimation = [x, y, z, pitch, yaw, roll, scale, interval];
     }
   }, {
-    key: "setNode",
-    value: function setNode(args) {
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
-      var pitch = Number(args.PITCH);
-      var yaw = Number(args.YAW);
-      var roll = Number(args.ROLL);
-      this.node = [x, y, z, pitch, yaw, roll];
-    }
-  }, {
     key: "animateNode",
     value: function animateNode(args) {
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers9 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers10 = _slicedToArray(_this$roundNumbers9, 3),
+        x = _this$roundNumbers10[0],
+        y = _this$roundNumbers10[1],
+        z = _this$roundNumbers10[2];
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
@@ -980,9 +1159,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "createBox",
     value: function createBox(args) {
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers11 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers12 = _slicedToArray(_this$roundNumbers11, 3),
+        x = _this$roundNumbers12[0],
+        y = _this$roundNumbers12[1],
+        z = _this$roundNumbers12[2];
       var r = Number(args.R);
       var g = Number(args.G);
       var b = Number(args.B);
@@ -998,9 +1182,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "removeBox",
     value: function removeBox(args) {
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers13 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers14 = _slicedToArray(_this$roundNumbers13, 3),
+        x = _this$roundNumbers14[0],
+        y = _this$roundNumbers14[1],
+        z = _this$roundNumbers14[2];
       for (var i = 0; i < this.boxes.length; i++) {
         var box = this.boxes[i];
         if (box[0] === x && box[1] === y && box[2] === z) {
@@ -1022,8 +1211,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "clearData",
     value: function clearData() {
+      this.translation = [0, 0, 0, 0, 0, 0];
       this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
-      this.node = [0, 0, 0, 0, 0, 0];
       this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
       this.boxes = [];
       this.sentence = [];
@@ -1033,6 +1222,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.shape = 'box';
       this.isMetallic = 0;
       this.roughness = 0.5;
+      this.isAllowedFloat = 0;
       this.buildInterval = 0.01;
     }
   }, {
@@ -1052,9 +1242,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "setLight",
     value: function setLight(args) {
       console.log(args);
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers15 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers16 = _slicedToArray(_this$roundNumbers15, 3),
+        x = _this$roundNumbers16[0],
+        y = _this$roundNumbers16[1],
+        z = _this$roundNumbers16[2];
       var r = Number(args.R);
       var g = Number(args.G);
       var b = Number(args.B);
@@ -1074,17 +1269,30 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "setCommand",
     value: function setCommand(args) {
       var command = args.COMMAND;
+      if (command === 'float') {
+        this.isAllowedFloat = 1;
+      }
       this.commands.push(command);
     }
   }, {
     key: "drawLine",
     value: function drawLine(args) {
-      var x1 = Math.floor(Number(args.X1));
-      var y1 = Math.floor(Number(args.Y1));
-      var z1 = Math.floor(Number(args.Z1));
-      var x2 = Math.floor(Number(args.X2));
-      var y2 = Math.floor(Number(args.Y2));
-      var z2 = Math.floor(Number(args.Z2));
+      var _x1 = Number(args.X1);
+      var _y1 = Number(args.Y1);
+      var _z1 = Number(args.Z1);
+      var _this$roundNumbers17 = this.roundNumbers([_x1, _y1, _z1]),
+        _this$roundNumbers18 = _slicedToArray(_this$roundNumbers17, 3),
+        x1 = _this$roundNumbers18[0],
+        y1 = _this$roundNumbers18[1],
+        z1 = _this$roundNumbers18[2];
+      var _x2 = Number(args.X2);
+      var _y2 = Number(args.Y2);
+      var _z2 = Number(args.Z2);
+      var _this$roundNumbers19 = this.roundNumbers([_x2, _y2, _z2]),
+        _this$roundNumbers20 = _slicedToArray(_this$roundNumbers19, 3),
+        x2 = _this$roundNumbers20[0],
+        y2 = _this$roundNumbers20[1],
+        z2 = _this$roundNumbers20[2];
       var diff_x = x2 - x1;
       var diff_y = y2 - y1;
       var diff_z = z2 - z1;
@@ -1113,13 +1321,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             this.createBox(_args);
           }
         } else {
-          for (var _x = x1; _x >= x2; _x--) {
-            var _y = y1 + (_x - x1) * diff_y / diff_x;
-            var _z = z1 + (_x - x1) * diff_z / diff_x;
+          for (var _x3 = x1; _x3 >= x2; _x3--) {
+            var _y3 = y1 + (_x3 - x1) * diff_y / diff_x;
+            var _z3 = z1 + (_x3 - x1) * diff_z / diff_x;
             var _args2 = {
-              X: _x,
-              Y: _y,
-              Z: _z,
+              X: _x3,
+              Y: _y3,
+              Z: _z3,
               R: r,
               G: g,
               B: b,
@@ -1130,13 +1338,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         }
       } else if (Math.abs(diff_y) === maxLength) {
         if (y2 > y1) {
-          for (var _y2 = y1; _y2 <= y2; _y2++) {
-            var _x2 = x1 + (_y2 - y1) * diff_x / diff_y;
-            var _z2 = z1 + (_y2 - y1) * diff_z / diff_y;
+          for (var _y4 = y1; _y4 <= y2; _y4++) {
+            var _x4 = x1 + (_y4 - y1) * diff_x / diff_y;
+            var _z4 = z1 + (_y4 - y1) * diff_z / diff_y;
             var _args3 = {
-              X: _x2,
-              Y: _y2,
-              Z: _z2,
+              X: _x4,
+              Y: _y4,
+              Z: _z4,
               R: r,
               G: g,
               B: b,
@@ -1145,13 +1353,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             this.createBox(_args3);
           }
         } else {
-          for (var _y3 = y1; _y3 >= y2; _y3--) {
-            var _x3 = x1 + (_y3 - y1) * diff_x / diff_y;
-            var _z3 = z1 + (_y3 - y1) * diff_z / diff_y;
+          for (var _y5 = y1; _y5 >= y2; _y5--) {
+            var _x5 = x1 + (_y5 - y1) * diff_x / diff_y;
+            var _z5 = z1 + (_y5 - y1) * diff_z / diff_y;
             var _args4 = {
-              X: _x3,
-              Y: _y3,
-              Z: _z3,
+              X: _x5,
+              Y: _y5,
+              Z: _z5,
               R: r,
               G: g,
               B: b,
@@ -1162,13 +1370,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         }
       } else if (Math.abs(diff_z) === maxLength) {
         if (z2 > z1) {
-          for (var _z4 = z1; _z4 <= z2; _z4++) {
-            var _x4 = x1 + (_z4 - z1) * diff_x / diff_z;
-            var _y4 = y1 + (_z4 - z1) * diff_y / diff_z;
+          for (var _z6 = z1; _z6 <= z2; _z6++) {
+            var _x6 = x1 + (_z6 - z1) * diff_x / diff_z;
+            var _y6 = y1 + (_z6 - z1) * diff_y / diff_z;
             var _args5 = {
-              X: _x4,
-              Y: _y4,
-              Z: _z4,
+              X: _x6,
+              Y: _y6,
+              Z: _z6,
               R: r,
               G: g,
               B: b,
@@ -1177,13 +1385,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             this.createBox(_args5);
           }
         } else {
-          for (var _z5 = z1; _z5 >= z2; _z5--) {
-            var _x5 = x1 + (_z5 - z1) * diff_x / diff_z;
-            var _y5 = y1 + (_z5 - z1) * diff_y / diff_z;
+          for (var _z7 = z1; _z7 >= z2; _z7--) {
+            var _x7 = x1 + (_z7 - z1) * diff_x / diff_z;
+            var _y7 = y1 + (_z7 - z1) * diff_y / diff_z;
             var _args6 = {
-              X: _x5,
-              Y: _y5,
-              Z: _z5,
+              X: _x7,
+              Y: _y7,
+              Z: _z7,
               R: r,
               G: g,
               B: b,
@@ -1239,7 +1447,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
-      this.node = [x, y, z, pitch, yaw, roll];
+      this.translation = [x, y, z, pitch, yaw, roll];
     }
   }, {
     key: "changeShape",
@@ -1256,15 +1464,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isMetallic = isMetallic;
       this.roughness = Number(args.ROUGHNESS);
     }
+
+    // 連続してデータを送信するときに、データをキューに入れる
   }, {
     key: "sendData",
     value: function sendData() {
       console.log('Sending data...');
       var date = new Date();
-      var self = this;
       var dataToSend = {
+        translation: this.translation,
         globalAnimation: this.globalAnimation,
-        node: this.node,
         animation: this.animation,
         boxes: this.boxes,
         sentence: this.sentence,
@@ -1275,8 +1484,21 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         isMetallic: this.isMetallic,
         roughness: this.roughness,
         interval: this.buildInterval,
+        isAllowedFloat: this.isAllowedFloat,
         date: date.toISOString()
       };
+      this.dataQueue.push(dataToSend);
+    }
+
+    // 定期的にキューに入れたデータを送信する
+  }, {
+    key: "sendQueuedData",
+    value: function sendQueuedData() {
+      var self = this;
+      if (this.dataQueue.length === 0) return; // If there's no data in queue, skip
+
+      var dataToSend = this.dataQueue.shift(); // Dequeue the data
+      console.log('Sending data...', dataToSend);
       var socket = new WebSocket("wss://websocket.voxelamming.com");
       // console.log(socket);
 
@@ -1351,6 +1573,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         boxPositions.add([positionX, positionZ, -positionY, r, g, b, alpha]);
       }
       return _toConsumableArray(boxPositions);
+    }
+  }, {
+    key: "roundNumbers",
+    value: function roundNumbers(num_list) {
+      if (this.isAllowedFloat) {
+        return num_list.map(function (val) {
+          return parseFloat(val.toFixed(2));
+        });
+      } else {
+        return num_list.map(function (val) {
+          return Math.floor(parseFloat(val.toFixed(1)));
+        });
+      }
     }
   }], [{
     key: "EXTENSION_NAME",
