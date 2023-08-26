@@ -3,6 +3,13 @@ import ArgumentType from '../../extension-support/argument-type';
 import Cast from '../../util/cast';
 import translations from './translations.json';
 import blockIcon from './voxelamming_40x40_transparent.png';
+import {
+    getRotationMatrix,
+    matrixMultiply,
+    transformPointByRotationMatrix,
+    addVectors,
+    transpose3x3
+} from './matrixUtil.js'
 
 /**
  * Formatter which is used for translation.
@@ -599,6 +606,24 @@ class ExtensionBlocks {
                             defaultValue: 0
                         }
                     }
+                },
+                {
+                    opcode: 'pushMatrix',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.pushMatrix',
+                        default: 'Push Matrix',
+                        description: 'push matrix'
+                    }),
+                },
+                {
+                    opcode: 'popMatrix',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.popMatrix',
+                        default: 'Pop Matrix',
+                        description: 'pop matrix'
+                    }),
                 }
             ],
             menus: {
@@ -689,6 +714,54 @@ class ExtensionBlocks {
         this.roomName = args.ROOMNAME;
     }
 
+    pushMatrix() {
+        this.isAllowedMatrix++;
+        this.savedMatrices.push(this.translation);
+    }
+
+    popMatrix() {
+        this.isAllowedMatrix--;
+        this.translation = this.savedMatrices.pop();
+    }
+
+    setNode(args) {  // method name changed from translate to setNode.
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        let [x, y, z] = this.roundNumbers([_x, _y, _z]);
+        const pitch = Number(args.PITCH);
+        const yaw = Number(args.YAW);
+        const roll = Number(args.ROLL);
+        if (this.isAllowedMatrix) {
+            const matrix = this.savedMatrices[this.savedMatrices.length - 1];
+            const basePosition = matrix.slice(0, 3);
+
+            let baseRotationMatrix;
+            if (matrix.length === 6) {
+                baseRotationMatrix = getRotationMatrix(...matrix.slice(3));
+            } else {
+                baseRotationMatrix = [
+                    matrix.slice(3, 6),
+                    matrix.slice(6, 9),
+                    matrix.slice(9, 12)
+                ];
+            }
+
+            const [addX, addY, addZ] = transformPointByRotationMatrix([x, y, z], transpose3x3(baseRotationMatrix));
+
+            [x, y, z] = addVectors(basePosition, [addX, addY, addZ]);
+            [x, y, z] = this.roundNumbers([x, y, z]);
+
+            const translateRotationMatrix = getRotationMatrix(-pitch, -yaw, -roll);
+            const rotateMatrix = matrixMultiply(translateRotationMatrix, baseRotationMatrix);
+
+            this.translation = [x, y, z, ...rotateMatrix[0], ...rotateMatrix[1], ...rotateMatrix[2]];
+        } else {
+            [x, y, z] = this.roundNumbers([x, y, z]);
+            this.translation = [x, y, z, pitch, yaw, roll];
+        }
+    }
+
     animateGlobal(args) {
         const _x = Number(args.X);
         const _y = Number(args.Y);
@@ -700,17 +773,6 @@ class ExtensionBlocks {
         const scale = Number(args.SCALE);
         const interval = Number(args.INTERVAL);
         this.globalAnimation = [x, y, z, pitch, yaw, roll, scale, interval];
-    }
-
-    setNode(args) {
-        const _x = Number(args.X);
-        const _y = Number(args.Y);
-        const _z = Number(args.Z);
-        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-        const pitch = Number(args.PITCH);
-        const yaw = Number(args.YAW);
-        const roll = Number(args.ROLL);
-        this.translation = [x, y, z, pitch, yaw, roll];
     }
 
     animateNode(args) {
