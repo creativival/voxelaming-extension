@@ -106,6 +106,8 @@ class ExtensionBlocks {
         this.roughness = 0.5
         this.isAllowedFloat = 0
         this.buildInterval = 0.01;
+        this.dataQueue = [];
+        setInterval(this.sendQueuedData.bind(this), 1000);
 
         if (runtime.formatMessage) {
             // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -1008,6 +1010,7 @@ class ExtensionBlocks {
         this.roughness = Number(args.ROUGHNESS);
     }
 
+    // 連続してデータを送信するときに、データをキューに入れる
     sendData () {
         console.log('Sending data...');
         const date = new Date();
@@ -1028,6 +1031,18 @@ class ExtensionBlocks {
             isAllowedFloat: this.isAllowedFloat,
             date: date.toISOString()
         };
+
+        this.dataQueue.push(dataToSend);
+    }
+
+    // 定期的にキューに入れたデータを送信する
+    sendQueuedData() {
+        const self = this;
+        if (this.dataQueue.length === 0) return; // If there's no data in queue, skip
+
+        const dataToSend = this.dataQueue.shift(); // Dequeue the data
+        console.log('Sending data...', dataToSend);
+
 
         let socket = new WebSocket("wss://websocket.voxelamming.com");
         // console.log(socket);
