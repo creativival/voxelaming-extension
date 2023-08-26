@@ -84,18 +84,20 @@ class ExtensionBlocks {
          * @type {Runtime}
          */
         this.runtime = runtime;
-        this.roomName = '1000';
+        this.isAllowedMatrix = 0;
+        this.savedMatrices = [];
+        this.translation = [0, 0, 0, 0, 0, 0];
         this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
-        this.node = [0, 0, 0, 0, 0, 0]
         this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
         this.boxes = [];
-        this.sentence = [];
+        this.sentence = []
         this.lights = [];
         this.commands = []
         this.size = 1.0;
-        this.shape = 'box';
+        this.shape = 'box'
         this.isMetallic = 0
         this.roughness = 0.5
+        this.isAllowedFloat = 0
         this.buildInterval = 0.01;
 
         if (runtime.formatMessage) {
@@ -688,9 +690,10 @@ class ExtensionBlocks {
     }
 
     animateGlobal(args) {
-        const x = Math.floor(Number(args.X));
-        const y = Math.floor(Number(args.Y));
-        const z = Math.floor(Number(args.Z));
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
         const pitch = Number(args.PITCH);
         const yaw = Number(args.YAW);
         const roll = Number(args.ROLL);
@@ -700,19 +703,21 @@ class ExtensionBlocks {
     }
 
     setNode(args) {
-        const x = Math.floor(Number(args.X));
-        const y = Math.floor(Number(args.Y));
-        const z = Math.floor(Number(args.Z));
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
         const pitch = Number(args.PITCH);
         const yaw = Number(args.YAW);
         const roll = Number(args.ROLL);
-        this.node = [x, y, z, pitch, yaw, roll];
+        this.translation = [x, y, z, pitch, yaw, roll];
     }
 
     animateNode(args) {
-        const x = Math.floor(Number(args.X));
-        const y = Math.floor(Number(args.Y));
-        const z = Math.floor(Number(args.Z));
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
         const pitch = Number(args.PITCH);
         const yaw = Number(args.YAW);
         const roll = Number(args.ROLL);
@@ -722,9 +727,10 @@ class ExtensionBlocks {
     }
 
     createBox(args) {
-        const x = Math.floor(Number(args.X));
-        const y = Math.floor(Number(args.Y));
-        const z = Math.floor(Number(args.Z));
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
         const r = Number(args.R);
         const g = Number(args.G);
         const b = Number(args.B);
@@ -735,9 +741,10 @@ class ExtensionBlocks {
     }
 
     removeBox(args) {
-        const x = Math.floor(Number(args.X));
-        const y = Math.floor(Number(args.Y));
-        const z = Math.floor(Number(args.Z));
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
         for (let i = 0; i < this.boxes.length; i++) {
             const box = this.boxes[i];
             if (box[0] === x && box[1] === y && box[2] === z) {
@@ -756,17 +763,18 @@ class ExtensionBlocks {
     }
 
     clearData() {
+        this.translation = [0, 0, 0, 0, 0, 0];
         this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
-        this.node = [0, 0, 0, 0, 0, 0]
         this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
         this.boxes = [];
-        this.sentence = [];
+        this.sentence = []
         this.lights = [];
         this.commands = []
         this.size = 1.0;
-        this.shape = 'box';
+        this.shape = 'box'
         this.isMetallic = 0
         this.roughness = 0.5
+        this.isAllowedFloat = 0
         this.buildInterval = 0.01;
     }
 
@@ -784,9 +792,10 @@ class ExtensionBlocks {
 
     setLight(args) {
         console.log(args)
-        const x = Math.floor(Number(args.X));
-        const y = Math.floor(Number(args.Y));
-        const z = Math.floor(Number(args.Z));
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
         const r = Number(args.R);
         const g = Number(args.G);
         const b = Number(args.B);
@@ -805,16 +814,22 @@ class ExtensionBlocks {
 
     setCommand(args) {
         const command = args.COMMAND;
+
+        if (command === 'float') {
+            this.isAllowedFloat = 1;
+        }
         this.commands.push(command);
     }
 
     drawLine(args) {
-        const x1 = Math.floor(Number(args.X1));
-        const y1 = Math.floor(Number(args.Y1));
-        const z1 = Math.floor(Number(args.Z1));
-        const x2 = Math.floor(Number(args.X2));
-        const y2 = Math.floor(Number(args.Y2));
-        const z2 = Math.floor(Number(args.Z2));
+        const _x1 = Number(args.X1);
+        const _y1 = Number(args.Y1);
+        const _z1 = Number(args.Z1);
+        const [x1, y1, z1] = this.roundNumbers([_x1, _y1, _z1]);
+        const _x2 = Number(args.X2);
+        const _y2 = Number(args.Y2);
+        const _z2 = Number(args.Z2);
+        const [x2, y2, z2] = this.roundNumbers([_x2, _y2, _z2]);
         const diff_x = x2 - x1;
         const diff_y = y2 - y1;
         const diff_z = z2 - z1;
@@ -914,7 +929,7 @@ class ExtensionBlocks {
         const pitch = Number(args.PITCH);
         const yaw = Number(args.YAW);
         const roll = Number(args.ROLL);
-        this.node = [x, y, z, pitch, yaw, roll];
+        this.translation = [x, y, z, pitch, yaw, roll];
     }
 
     changeShape(args) {
@@ -936,8 +951,8 @@ class ExtensionBlocks {
         const date = new Date();
         const self = this;
         const dataToSend = {
+            translation: this.translation,
             globalAnimation: this.globalAnimation,
-            node: this.node,
             animation: this.animation,
             boxes: this.boxes,
             sentence: this.sentence,
@@ -948,6 +963,7 @@ class ExtensionBlocks {
             isMetallic: this.isMetallic,
             roughness: this.roughness,
             interval: this.buildInterval,
+            isAllowedFloat: this.isAllowedFloat,
             date: date.toISOString()
         };
 
@@ -1028,6 +1044,14 @@ class ExtensionBlocks {
         }
 
         return [...boxPositions];
+    }
+
+    roundNumbers(num_list) {
+        if (this.isAllowedFloat) {
+            return num_list.map(val => parseFloat(val.toFixed(2)));
+        } else {
+            return num_list.map(val => Math.floor(parseFloat(val.toFixed(1))));
+        }
     }
 }
 
