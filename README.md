@@ -1,5 +1,7 @@
 # ボクセラミング拡張機能
 
+<p align="center"><img src="https://creativival.github.io/voxelamming/image/turtle_cage.png" alt="turtle_cage" width="50%"/></p>
+
 [Xcratch](https://xcratch.github.io/)用のボクセラミング拡張機能
 
 *Read this in other languages: [English](README.en.md), [日本語](README.md)*
@@ -32,6 +34,14 @@ https://creativival.github.io/voxelamming-extension/dist/voxelamming.mjs
 ```
 
 * この拡張機能は「ボクセラミングタートル」拡張機能と同時には使えません。
+
+## ボクセラミングタートル拡張機能について
+
+ボクセラミングタートル拡張機能は、より直感的なプログラミングが可能であり、ボクセラミングの入門として、低学年の子供たち、プログラミング初心者のために開発されました。
+
+ボクセラミングタートル拡張機能は、タートルグラフィックスと呼ばれる図形描画ツールを提供します。 タートルグラフィックスは物理的な「亀」（ペンを持った小さなロボット）を想定します。亀は、前進、後退、左に回転、右に回転、ペンを上げる、ペンを下ろすなどの命令を受け取り、それに従って動きます。亀は、ペンを下ろしている間に移動した場所に線を描きます。タートルグラフィックスは、亀が描いた線を表示することで、亀の動きを可視化します。
+
+ボクセラミングタートル拡張機能については、以下のサイトを参照してください。https://creativival.github.io/voxelamming-turtle-extension/
 
 ## 開発
 

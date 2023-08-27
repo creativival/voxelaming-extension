@@ -1,5 +1,7 @@
 # Voxelamming extension
 
+<p align="center"><img src="https://creativival.github.io/voxelamming/image/turtle_cage.png" alt="turtle_cage" width="50%"/></p>
+
 Voxelamming extension for [Xcratch](https://xcratch.github.io/)
 
 *Read this in other languages: [English](README.en.md), [日本語](README.md)*
@@ -30,6 +32,14 @@ https://creativival.github.io/voxelamming-extension/dist/voxelamming.mjs
 ```
 
 * This extension cannot be used at the same time as the "Voxelamming Turtle" extension.
+
+## About Voxelamming Turtle Extension
+
+The Voxelamming Turtle Extension was developed for younger children and programming beginners as a more intuitive introduction to programming and as an introduction to Voxelamming.
+
+The Voxelamming Turtle Extension provides a graphic drawing tool called TurtleGraphics. Turtle Graphics assumes a physical "turtle" (a small robot with a pen).The turtle receives commands to move forward, backward, rotate left, rotate right, raise the pen, lower the pen, etc., and moves accordingly. The turtle draws lines where it moves while the pen is down. TurtleGraphics visualizes the turtle's movements by displaying the lines drawn by the turtle.
+
+For more information on the Voxelamming Turtle extension, please visit: https://creativival.github.io/voxelamming-turtle-extension/
 
 ## Development
 
