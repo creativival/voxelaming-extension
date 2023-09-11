@@ -91,6 +91,7 @@ class ExtensionBlocks {
          * @type {Runtime}
          */
         this.runtime = runtime;
+        this.textureNames = ["grass", "stone", "dirt", "planks", "bricks"];
         this.isAllowedMatrix = 0;
         this.savedMatrices = [];
         this.translation = [0, 0, 0, 0, 0, 0];
@@ -244,6 +245,34 @@ class ExtensionBlocks {
                         ALPHA: {
                             type: ArgumentType.NUMBER,
                             defaultValue: 1
+                        }
+                    }
+                },
+                {
+                    opcode: 'createTexturedBox',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.createTexturedBox',
+                        default: 'Create box at x: [X] y: [Y] z: [Z] texture: [TEXTURE]',
+                        description: 'create textured box'
+                    }),
+                    arguments: {
+                        X: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        TEXTURE: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'grass',
+                            menu: 'textureTypeMenu'
                         }
                     }
                 },
@@ -658,6 +687,51 @@ class ExtensionBlocks {
                         }
                     ]
                 },
+                textureTypeMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.grass',
+                                default: 'grass',
+                                description: 'Menu item for grass'
+                            }),
+                            value: 'grass'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.stone',
+                                default: 'stone',
+                                description: 'Menu item for stone'
+                            }),
+                            value: 'stone'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.dirt',
+                                default: 'dirt',
+                                description: 'Menu item for dirt'
+                            }),
+                            value: 'dirt'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.planks',
+                                default: 'planks',
+                                description: 'Menu item for planks'
+                            }),
+                            value: 'planks'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'voxelamming.bricks',
+                                default: 'bricks',
+                                description: 'Menu item for bricks'
+                            }),
+                            value: 'bricks'
+                        },
+                    ]
+                },
                 lightTypeMenu: {
                     acceptReporters: false,
                     items: [
@@ -801,7 +875,25 @@ class ExtensionBlocks {
         const alpha = Number(args.ALPHA);
         // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
         this.removeBox({X: x, Y: y, Z: z});
-        this.boxes.push([x, y, z, r, g, b, alpha]);
+        this.boxes.push([x, y, z, r, g, b, alpha, -1]);
+    }
+
+    createTexturedBox(args) {
+        const _x = Number(args.X);
+        const _y = Number(args.Y);
+        const _z = Number(args.Z);
+        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
+        const texture = args.TEXTURE;
+
+        let textureId;
+        if (!this.textureNames.includes(texture)) {
+            textureId = -1;
+        } else {
+            textureId = this.textureNames.indexOf(texture);
+        }
+        // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
+        this.removeBox({X: x, Y: y, Z: z});
+        this.boxes.push([x, y, z, 0, 0, 0, 1, textureId]);
     }
 
     removeBox(args) {

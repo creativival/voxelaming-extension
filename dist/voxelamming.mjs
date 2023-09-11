@@ -274,6 +274,7 @@ var en = {
 	"voxelamming.setNode": "Set node at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.animateNode": "Animate node at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] interval: [INTERVAL]",
 	"voxelamming.createBox": "Create voxel at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.createTexturedBox": "Create box at x: [X] y: [Y] z: [Z] texture: [TEXTURE]",
 	"voxelamming.removeBox": "Remove voxel at x: [X] y: [Y] z: [Z]",
 	"voxelamming.setBoxSize": "Set voxel size to [BOXSIZE]",
 	"voxelamming.setBuildInterval": "Set build interval to [INTERVAL]",
@@ -295,7 +296,12 @@ var en = {
 	"voxelamming.spot": "spot",
 	"voxelamming.directional": "directional",
 	"voxelamming.on": "on",
-	"voxelamming.off": "off"
+	"voxelamming.off": "off",
+	"voxelamming.grass": "grass",
+	"voxelamming.stone": "stone",
+	"voxelamming.dirt": "dirt",
+	"voxelamming.planks": "planks",
+	"voxelamming.bricks": "bricks"
 };
 var ja = {
 	"voxelamming.name": "ボクセラミング",
@@ -304,11 +310,12 @@ var ja = {
 	"voxelamming.setNode": "ノードを x: [X] y: [Y] z: [Z] に配置する。角度を pitch: [PITCH] yaw: [YAW] roll: [ROLL] にする",
 	"voxelamming.animateNode": "アニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。拡大: [SCALE] 移動時間: [INTERVAL]",
 	"voxelamming.createBox": "ボクセルを x: [X] y: [Y] z: [Z] に作成する。色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.createTexturedBox": "ボクセルを x: [X] y: [Y] z: [Z] に作成する。テクスチャー: [TEXTURE]",
 	"voxelamming.removeBox": "ボクセルを x: [X] y: [Y] z: [Z] から削除する",
 	"voxelamming.setBoxSize": "ボクセルサイズを [BOXSIZE] にする",
 	"voxelamming.setBuildInterval": "ボクセルの作成間隔を [INTERVAL] 秒にする",
 	"voxelamming.clearData": "データを初期化する",
-	"voxelamming.writeSentence": "[SENTENCE] を x: [X] y: [Y] z: [Z] に書く。色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.writeSentence": "文字を書く [SENTENCE] x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -325,7 +332,12 @@ var ja = {
 	"voxelamming.spot": "スポット",
 	"voxelamming.directional": "ディレクショナル",
 	"voxelamming.on": "オン",
-	"voxelamming.off": "オフ"
+	"voxelamming.off": "オフ",
+	"voxelamming.grass": "草",
+	"voxelamming.stone": "石",
+	"voxelamming.dirt": "土",
+	"voxelamming.planks": "木材",
+	"voxelamming.bricks": "レンガ"
 };
 var translations = {
 	en: en,
@@ -337,11 +349,12 @@ var translations = {
 	"voxelamming.setNode": "ノードを x: [X] y: [Y] z: [Z] におく。かくどを pitch: [PITCH] yaw: [YAW] roll: [ROLL] にする",
 	"voxelamming.animateNode": "アニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。かくだい: [SCALE] じかん: [INTERVAL]",
 	"voxelamming.createBox": "ボクセルを x: [X] y: [Y] z: [Z] につくる。いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.createTexturedBox": "ボクセルを x: [X] y: [Y] z: [Z] につくる。テクスチャー: [TEXTURE]",
 	"voxelamming.removeBox": "ボクセルを x: [X] y: [Y] z: [Z] からけす",
 	"voxelamming.setBoxSize": "ボクセルサイズを [BOXSIZE] にする",
 	"voxelamming.setBuildInterval": "ボクセルのつくるかんかくを [INTERVAL] びょうにする",
 	"voxelamming.clearData": "データをけす",
-	"voxelamming.writeSentence": "[SENTENCE] を x: [X] y: [Y] z: [Z] にかく。いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.writeSentence": "もじをかく [SENTENCE] x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -358,7 +371,12 @@ var translations = {
 	"voxelamming.spot": "スポット",
 	"voxelamming.directional": "ディレクショナル",
 	"voxelamming.on": "オン",
-	"voxelamming.off": "オフ"
+	"voxelamming.off": "オフ",
+	"voxelamming.grass": "くさ",
+	"voxelamming.stone": "いし",
+	"voxelamming.dirt": "つち",
+	"voxelamming.planks": "もくざい",
+	"voxelamming.bricks": "レンガ"
 }
 };
 
@@ -462,6 +480,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
      * @type {Runtime}
      */
     this.runtime = runtime;
+    this.textureNames = ["grass", "stone", "dirt", "planks", "bricks"];
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
     this.translation = [0, 0, 0, 0, 0, 0];
@@ -610,6 +629,33 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             ALPHA: {
               type: argumentType.NUMBER,
               defaultValue: 1
+            }
+          }
+        }, {
+          opcode: 'createTexturedBox',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.createTexturedBox',
+            default: 'Create box at x: [X] y: [Y] z: [Z] texture: [TEXTURE]',
+            description: 'create textured box'
+          }),
+          arguments: {
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            TEXTURE: {
+              type: argumentType.STRING,
+              defaultValue: 'grass',
+              menu: 'textureTypeMenu'
             }
           }
         }, {
@@ -1006,6 +1052,45 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               value: 'plane'
             }]
           },
+          textureTypeMenu: {
+            acceptReporters: false,
+            items: [{
+              text: formatMessage({
+                id: 'voxelamming.grass',
+                default: 'grass',
+                description: 'Menu item for grass'
+              }),
+              value: 'grass'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.stone',
+                default: 'stone',
+                description: 'Menu item for stone'
+              }),
+              value: 'stone'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.dirt',
+                default: 'dirt',
+                description: 'Menu item for dirt'
+              }),
+              value: 'dirt'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.planks',
+                default: 'planks',
+                description: 'Menu item for planks'
+              }),
+              value: 'planks'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.bricks',
+                default: 'bricks',
+                description: 'Menu item for bricks'
+              }),
+              value: 'bricks'
+            }]
+          },
           lightTypeMenu: {
             acceptReporters: false,
             items: [{
@@ -1177,11 +1262,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         Y: y,
         Z: z
       });
-      this.boxes.push([x, y, z, r, g, b, alpha]);
+      this.boxes.push([x, y, z, r, g, b, alpha, -1]);
     }
   }, {
-    key: "removeBox",
-    value: function removeBox(args) {
+    key: "createTexturedBox",
+    value: function createTexturedBox(args) {
       var _x = Number(args.X);
       var _y = Number(args.Y);
       var _z = Number(args.Z);
@@ -1190,6 +1275,32 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         x = _this$roundNumbers14[0],
         y = _this$roundNumbers14[1],
         z = _this$roundNumbers14[2];
+      var texture = args.TEXTURE;
+      var textureId;
+      if (!this.textureNames.includes(texture)) {
+        textureId = -1;
+      } else {
+        textureId = this.textureNames.indexOf(texture);
+      }
+      // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
+      this.removeBox({
+        X: x,
+        Y: y,
+        Z: z
+      });
+      this.boxes.push([x, y, z, 0, 0, 0, 1, textureId]);
+    }
+  }, {
+    key: "removeBox",
+    value: function removeBox(args) {
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers15 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers16 = _slicedToArray(_this$roundNumbers15, 3),
+        x = _this$roundNumbers16[0],
+        y = _this$roundNumbers16[1],
+        z = _this$roundNumbers16[2];
       for (var i = 0; i < this.boxes.length; i++) {
         var box = this.boxes[i];
         if (box[0] === x && box[1] === y && box[2] === z) {
@@ -1245,11 +1356,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var _x = Number(args.X);
       var _y = Number(args.Y);
       var _z = Number(args.Z);
-      var _this$roundNumbers15 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers16 = _slicedToArray(_this$roundNumbers15, 3),
-        x = _this$roundNumbers16[0],
-        y = _this$roundNumbers16[1],
-        z = _this$roundNumbers16[2];
+      var _this$roundNumbers17 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers18 = _slicedToArray(_this$roundNumbers17, 3),
+        x = _this$roundNumbers18[0],
+        y = _this$roundNumbers18[1],
+        z = _this$roundNumbers18[2];
       var r = Number(args.R);
       var g = Number(args.G);
       var b = Number(args.B);
@@ -1280,19 +1391,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var _x1 = Number(args.X1);
       var _y1 = Number(args.Y1);
       var _z1 = Number(args.Z1);
-      var _this$roundNumbers17 = this.roundNumbers([_x1, _y1, _z1]),
-        _this$roundNumbers18 = _slicedToArray(_this$roundNumbers17, 3),
-        x1 = _this$roundNumbers18[0],
-        y1 = _this$roundNumbers18[1],
-        z1 = _this$roundNumbers18[2];
+      var _this$roundNumbers19 = this.roundNumbers([_x1, _y1, _z1]),
+        _this$roundNumbers20 = _slicedToArray(_this$roundNumbers19, 3),
+        x1 = _this$roundNumbers20[0],
+        y1 = _this$roundNumbers20[1],
+        z1 = _this$roundNumbers20[2];
       var _x2 = Number(args.X2);
       var _y2 = Number(args.Y2);
       var _z2 = Number(args.Z2);
-      var _this$roundNumbers19 = this.roundNumbers([_x2, _y2, _z2]),
-        _this$roundNumbers20 = _slicedToArray(_this$roundNumbers19, 3),
-        x2 = _this$roundNumbers20[0],
-        y2 = _this$roundNumbers20[1],
-        z2 = _this$roundNumbers20[2];
+      var _this$roundNumbers21 = this.roundNumbers([_x2, _y2, _z2]),
+        _this$roundNumbers22 = _slicedToArray(_this$roundNumbers21, 3),
+        x2 = _this$roundNumbers22[0],
+        y2 = _this$roundNumbers22[1],
+        z2 = _this$roundNumbers22[2];
       var diff_x = x2 - x1;
       var diff_y = y2 - y1;
       var diff_z = z2 - z1;
