@@ -95,9 +95,12 @@ class ExtensionBlocks {
         this.isAllowedMatrix = 0;
         this.savedMatrices = [];
         this.translation = [0, 0, 0, 0, 0, 0];
+        this.matrixTranslation = [0, 0, 0, 0, 0, 0];
+        this.frameTranslations = [];
         this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
         this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
         this.boxes = [];
+        this.frames = [];
         this.sentence = []
         this.lights = [];
         this.commands = []
@@ -107,6 +110,8 @@ class ExtensionBlocks {
         this.roughness = 0.5
         this.isAllowedFloat = 0
         this.buildInterval = 0.01;
+        this.isFraming = false;
+        this.frameId = 0;
         this.dataQueue = [];
         setInterval(this.sendQueuedData.bind(this), 1000);
 
@@ -655,6 +660,54 @@ class ExtensionBlocks {
                         default: 'Pop Matrix',
                         description: 'pop matrix'
                     }),
+                },
+                {
+                    opcode: 'setFrameFPS',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.setFrameFPS',
+                        default: 'Set Frame FPS: [FPS]',
+                        description: 'set frame fps'
+                    }),
+                    arguments: {
+                        FPS: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 2
+                        }
+                    }
+                },
+                {
+                    opcode: 'setFrameRepeats',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.setFrameRepeats',
+                        default: 'Set Frame Repeats: [REPEATS]',
+                        description: 'set frame repeats'
+                    }),
+                    arguments: {
+                        REPEATS: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 10
+                        }
+                    }
+                },
+                {
+                    opcode: 'frameIn',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.frameIn',
+                        default: 'Frame In',
+                        description: 'frame in'
+                    }),
+                },
+                {
+                    opcode: 'frameOut',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'voxelamming.frameOut',
+                        default: 'Frame Out',
+                        description: 'frame out'
+                    }),
                 }
             ],
             menus: {
@@ -790,14 +843,56 @@ class ExtensionBlocks {
         this.roomName = args.ROOMNAME;
     }
 
+    clearData() {
+        this.isAllowedMatrix = 0;
+        this.savedMatrices = [];
+        this.translation = [0, 0, 0, 0, 0, 0];
+        this.matrixTranslation = [0, 0, 0, 0, 0, 0];
+        this.frameTranslations = [];
+        this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
+        this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
+        this.boxes = [];
+        this.frames = [];
+        this.sentence = []
+        this.lights = [];
+        this.commands = []
+        this.size = 1.0;
+        this.shape = 'box'
+        this.isMetallic = 0
+        this.roughness = 0.5
+        this.isAllowedFloat = 0
+        this.buildInterval = 0.01;
+        this.isFraming = false;
+        this.frameId = 0;
+    }
+
+    setFrameFPS(args) {
+        const fps = args.FPS
+        this.commands.push(`fps ${fps}`);
+    }
+
+    setFrameRepeats(args) {
+        const repeats = args.REPEATS
+        this.commands.push(`repeats ${repeats}`);
+    }
+
+    frameIn() {
+        this.isFraming = true;
+    }
+
+    frameOut() {
+        this.isFraming = false;
+        this.frameId++;
+    }
+
     pushMatrix() {
         this.isAllowedMatrix++;
-        this.savedMatrices.push(this.translation);
+        this.savedMatrices.push(this.matrixTranslation);
     }
 
     popMatrix() {
         this.isAllowedMatrix--;
-        this.translation = this.savedMatrices.pop();
+        this.matrixTranslation = this.savedMatrices.pop();
     }
 
     setNode(args) {  // method name changed from translate to setNode.
@@ -808,6 +903,7 @@ class ExtensionBlocks {
         const pitch = Number(args.PITCH);
         const yaw = Number(args.YAW);
         const roll = Number(args.ROLL);
+
         if (this.isAllowedMatrix) {
             const matrix = this.savedMatrices[this.savedMatrices.length - 1];
             const basePosition = matrix.slice(0, 3);
@@ -831,10 +927,126 @@ class ExtensionBlocks {
             const translateRotationMatrix = getRotationMatrix(-pitch, -yaw, -roll);
             const rotateMatrix = matrixMultiply(translateRotationMatrix, baseRotationMatrix);
 
-            this.translation = [x, y, z, ...rotateMatrix[0], ...rotateMatrix[1], ...rotateMatrix[2]];
+            this.matrixTranslation = [x, y, z, ...rotateMatrix[0], ...rotateMatrix[1], ...rotateMatrix[2]];
         } else {
             [x, y, z] = this.roundNumbers([x, y, z]);
-            this.translation = [x, y, z, pitch, yaw, roll];
+
+            if (this.isFraming) {
+                this.frameTranslations.push([x, y, z, pitch, yaw, roll, this.frameId]);
+            } else {
+                this.translation = [x, y, z, pitch, yaw, roll];
+            }
+        }
+    }
+
+    createBox(args) {
+        let x = Number(args.X);
+        let y = Number(args.Y);
+        let z = Number(args.Z);
+        let r = Number(args.R);
+        let g = Number(args.G);
+        let b = Number(args.B);
+        let alpha = Number(args.ALPHA);
+
+        if (this.isAllowedMatrix) {
+            // 移動用のマトリックスにより位置を計算する
+            const matrix = this.matrixTranslation;
+            const basePosition = matrix.slice(0, 3);
+
+            let baseRotationMatrix;
+            if (matrix.length === 6) {
+                baseRotationMatrix = getRotationMatrix(...matrix.slice(3));
+            } else {
+                baseRotationMatrix = [
+                    matrix.slice(3, 6),
+                    matrix.slice(6, 9),
+                    matrix.slice(9, 12)
+                ];
+            }
+
+            const [addX, addY, addZ] = transformPointByRotationMatrix([x, y, z], transpose3x3(baseRotationMatrix));
+            [x, y, z] = addVectors(basePosition, [addX, addY, addZ]);
+        }
+
+        [x, y, z] = this.roundNumbers([x, y, z]);
+        [r, g, b, alpha] = this.roundColors([r, g, b, alpha]);
+
+        // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
+        this.removeBox({X: x, Y: y, Z: z});
+
+        if (this.isFraming) {
+            this.frames.push([x, y, z, r, g, b, alpha, -1, this.frameId]);
+        } else {
+            this.boxes.push([x, y, z, r, g, b, alpha, -1]);
+        }
+    }
+
+    createTexturedBox(args) {
+        let x = Number(args.X);
+        let y = Number(args.Y);
+        let z = Number(args.Z);
+        const texture = args.TEXTURE;
+
+        if (this.isAllowedMatrix) {
+            // 移動用のマトリックスにより位置を計算する
+            const matrix = this.matrixTranslation;
+            const basePosition = matrix.slice(0, 3);
+
+            let baseRotationMatrix;
+            if (matrix.length === 6) {
+                baseRotationMatrix = getRotationMatrix(...matrix.slice(3));
+            } else {
+                baseRotationMatrix = [
+                    matrix.slice(3, 6),
+                    matrix.slice(6, 9),
+                    matrix.slice(9, 12)
+                ];
+            }
+
+            const [addX, addY, addZ] = transformPointByRotationMatrix([x, y, z], transpose3x3(baseRotationMatrix));
+            [x, y, z] = addVectors(basePosition, [addX, addY, addZ]);
+        }
+
+        [x, y, z] = this.roundNumbers([x, y, z]);
+
+        let textureId;
+        if (!this.textureNames.includes(texture)) {
+            textureId = -1;
+        } else {
+            textureId = this.textureNames.indexOf(texture);
+        }
+        // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
+        this.removeBox({X: x, Y: y, Z: z});
+
+        if (this.isFraming) {
+            this.frames.push([x, y, z, 0, 0, 0, 1, textureId, this.frameId]);
+        } else {
+            this.boxes.push([x, y, z, 0, 0, 0, 1, textureId]);
+        }
+    }
+
+    removeBox(args) {
+        let x = Number(args.X);
+        let y = Number(args.Y);
+        let z = Number(args.Z);
+        [x, y, z] = this.roundNumbers([x, y, z]);
+
+        if (this.isFraming) {
+            for (let i = 0; i < this.frames.length; i++) {
+                let box = this.frames[i];
+                if (box[0] === x && box[1] === y && box[2] === z && box[8] === this.frameId) {
+                    this.frames.splice(i, 1);
+                    break;
+                }
+            }
+        } else {
+            for (let i = 0; i < this.boxes.length; i++) {
+                let box = this.boxes[i];
+                if (box[0] === x && box[1] === y && box[2] === z) {
+                    this.boxes.splice(i, 1);
+                    break;
+                }
+            }
         }
     }
 
@@ -864,52 +1076,6 @@ class ExtensionBlocks {
         this.animation = [x, y, z, pitch, yaw, roll, scale, interval];
     }
 
-    createBox(args) {
-        const _x = Number(args.X);
-        const _y = Number(args.Y);
-        const _z = Number(args.Z);
-        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-        const r = Number(args.R);
-        const g = Number(args.G);
-        const b = Number(args.B);
-        const alpha = Number(args.ALPHA);
-        // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
-        this.removeBox({X: x, Y: y, Z: z});
-        this.boxes.push([x, y, z, r, g, b, alpha, -1]);
-    }
-
-    createTexturedBox(args) {
-        const _x = Number(args.X);
-        const _y = Number(args.Y);
-        const _z = Number(args.Z);
-        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-        const texture = args.TEXTURE;
-
-        let textureId;
-        if (!this.textureNames.includes(texture)) {
-            textureId = -1;
-        } else {
-            textureId = this.textureNames.indexOf(texture);
-        }
-        // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
-        this.removeBox({X: x, Y: y, Z: z});
-        this.boxes.push([x, y, z, 0, 0, 0, 1, textureId]);
-    }
-
-    removeBox(args) {
-        const _x = Number(args.X);
-        const _y = Number(args.Y);
-        const _z = Number(args.Z);
-        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-        for (let i = 0; i < this.boxes.length; i++) {
-            const box = this.boxes[i];
-            if (box[0] === x && box[1] === y && box[2] === z) {
-                this.boxes.splice(i, 1);
-                break;
-            }
-        }
-    }
-
     setBoxSize(args) {
         this.size = Number(args.BOXSIZE);
     }
@@ -918,47 +1084,37 @@ class ExtensionBlocks {
         this.buildInterval = Number(args.INTERVAL);
     }
 
-    clearData() {
-        this.translation = [0, 0, 0, 0, 0, 0];
-        this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
-        this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
-        this.boxes = [];
-        this.sentence = []
-        this.lights = [];
-        this.commands = []
-        this.size = 1.0;
-        this.shape = 'box'
-        this.isMetallic = 0
-        this.roughness = 0.5
-        this.isAllowedFloat = 0
-        this.buildInterval = 0.01;
-    }
-
     writeSentence(args) {
         const sentence = args.SENTENCE;
-        const x = args.X;
-        const y = args.Y;
-        const z = args.Z;
-        const r = args.R;
-        const g = args.G
-        const b = args.B
-        const alpha = args.ALPHA
+        let x = Number(args.X);
+        let y = Number(args.Y);
+        let z = Number(args.Z);
+        let r = Number(args.R);
+        let g = Number(args.G);
+        let b = Number(args.B);
+        let alpha = Number(args.ALPHA);
+
+        [x, y, z] = this.roundNumbers([x, y, z]);
+        [r, g, b, alpha] = this.roundColors([r, g, b, alpha]);
+        [x, y, z] = [x, y, z].map(val => String(val));
+        [r, g, b, alpha] = [r, g, b, alpha].map(val => String(val));
         this.sentence = [sentence, x, y, z, r, g, b, alpha];
     }
 
     setLight(args) {
-        console.log(args)
-        const _x = Number(args.X);
-        const _y = Number(args.Y);
-        const _z = Number(args.Z);
-        const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-        const r = Number(args.R);
-        const g = Number(args.G);
-        const b = Number(args.B);
-        const alpha = Number(args.ALPHA);
+        let x = Number(args.X);
+        let y = Number(args.Y);
+        let z = Number(args.Z);
+        let r = Number(args.R);
+        let g = Number(args.G);
+        let b = Number(args.B);
+        let alpha = Number(args.ALPHA);
         const intensity = Number(args.INTENSITY);
         const interval = Number(args.INTERVAL);
         let lightType = 1;  // point light
+
+        [x, y, z] = this.roundNumbers([x, y, z]);
+        [r, g, b, alpha] = this.roundColors([r, g, b, alpha]);
 
         if (args.LIGHT_TYPE === "spot") {
             lightType = 2;
@@ -1106,20 +1262,21 @@ class ExtensionBlocks {
     sendData () {
         console.log('Sending data...');
         const date = new Date();
-        const self = this;
         const dataToSend = {
             translation: this.translation,
+            frameTranslations: this.frameTranslations,
             globalAnimation: this.globalAnimation,
             animation: this.animation,
             boxes: this.boxes,
+            frames: this.frames,
             sentence: this.sentence,
             lights: this.lights,
             commands: this.commands,
             size: this.size,
             shape: this.shape,
+            interval: this.buildInterval,
             isMetallic: this.isMetallic,
             roughness: this.roughness,
-            interval: this.buildInterval,
             isAllowedFloat: this.isAllowedFloat,
             date: date.toISOString()
         };
@@ -1221,6 +1378,10 @@ class ExtensionBlocks {
         } else {
             return num_list.map(val => Math.floor(parseFloat(val.toFixed(1))));
         }
+    }
+
+    roundColors(num_list) {
+        return num_list.map(val => parseFloat(val.toFixed(2)));
     }
 }
 
