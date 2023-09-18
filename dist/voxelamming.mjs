@@ -289,6 +289,10 @@ var en = {
 	"voxelamming.sendData": "Send data",
 	"voxelamming.pushMatrix": "Push matrix",
 	"voxelamming.popMatrix": "Pop matrix",
+	"voxelamming.setFrameFPS": "Set Frame FPS: [FPS]",
+	"voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
+	"voxelamming.frameIn": "Frame in",
+	"voxelamming.frameOut": "Frame out",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
 	"voxelamming.plane": "plane",
@@ -325,6 +329,10 @@ var ja = {
 	"voxelamming.sendData": "データを送信する",
 	"voxelamming.pushMatrix": "座標系を保存する",
 	"voxelamming.popMatrix": "座標系を復元する",
+	"voxelamming.setFrameFPS": "フレーム FPS: [FPS]",
+	"voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
+	"voxelamming.frameIn": "フレームイン",
+	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
 	"voxelamming.plane": "平面",
@@ -364,6 +372,10 @@ var translations = {
 	"voxelamming.sendData": "データをおくる",
 	"voxelamming.pushMatrix": "ざひょうけいをほぞんする",
 	"voxelamming.popMatrix": "ざひょうけいをもどす",
+	"voxelamming.setFrameFPS": "フレーム FPS: [FPS]",
+	"voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
+	"voxelamming.frameIn": "フレームイン",
+	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
 	"voxelamming.plane": "いた",
@@ -484,9 +496,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
     this.translation = [0, 0, 0, 0, 0, 0];
+    this.matrixTranslation = [0, 0, 0, 0, 0, 0];
+    this.frameTranslations = [];
     this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.boxes = [];
+    this.frames = [];
     this.sentence = [];
     this.lights = [];
     this.commands = [];
@@ -496,6 +511,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.roughness = 0.5;
     this.isAllowedFloat = 0;
     this.buildInterval = 0.01;
+    this.isFraming = false;
+    this.frameId = 0;
     this.dataQueue = [];
     setInterval(this.sendQueuedData.bind(this), 1000);
     if (runtime.formatMessage) {
@@ -1025,6 +1042,50 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             default: 'Pop Matrix',
             description: 'pop matrix'
           })
+        }, {
+          opcode: 'setFrameFPS',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setFrameFPS',
+            default: 'Set Frame FPS: [FPS]',
+            description: 'set frame fps'
+          }),
+          arguments: {
+            FPS: {
+              type: argumentType.NUMBER,
+              defaultValue: 2
+            }
+          }
+        }, {
+          opcode: 'setFrameRepeats',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setFrameRepeats',
+            default: 'Set Frame Repeats: [REPEATS]',
+            description: 'set frame repeats'
+          }),
+          arguments: {
+            REPEATS: {
+              type: argumentType.NUMBER,
+              defaultValue: 10
+            }
+          }
+        }, {
+          opcode: 'frameIn',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.frameIn',
+            default: 'Frame In',
+            description: 'frame in'
+          })
+        }, {
+          opcode: 'frameOut',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.frameOut',
+            default: 'Frame Out',
+            description: 'frame out'
+          })
         }],
         menus: {
           shapeTypeMenu: {
@@ -1143,16 +1204,63 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.roomName = args.ROOMNAME;
     }
   }, {
+    key: "clearData",
+    value: function clearData() {
+      this.isAllowedMatrix = 0;
+      this.savedMatrices = [];
+      this.translation = [0, 0, 0, 0, 0, 0];
+      this.matrixTranslation = [0, 0, 0, 0, 0, 0];
+      this.frameTranslations = [];
+      this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
+      this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
+      this.boxes = [];
+      this.frames = [];
+      this.sentence = [];
+      this.lights = [];
+      this.commands = [];
+      this.size = 1.0;
+      this.shape = 'box';
+      this.isMetallic = 0;
+      this.roughness = 0.5;
+      this.isAllowedFloat = 0;
+      this.buildInterval = 0.01;
+      this.isFraming = false;
+      this.frameId = 0;
+    }
+  }, {
+    key: "setFrameFPS",
+    value: function setFrameFPS(args) {
+      var fps = args.FPS;
+      this.commands.push("fps ".concat(fps));
+    }
+  }, {
+    key: "setFrameRepeats",
+    value: function setFrameRepeats(args) {
+      var repeats = args.REPEATS;
+      this.commands.push("repeats ".concat(repeats));
+    }
+  }, {
+    key: "frameIn",
+    value: function frameIn() {
+      this.isFraming = true;
+    }
+  }, {
+    key: "frameOut",
+    value: function frameOut() {
+      this.isFraming = false;
+      this.frameId++;
+    }
+  }, {
     key: "pushMatrix",
     value: function pushMatrix() {
       this.isAllowedMatrix++;
-      this.savedMatrices.push(this.translation);
+      this.savedMatrices.push(this.matrixTranslation);
     }
   }, {
     key: "popMatrix",
     value: function popMatrix() {
       this.isAllowedMatrix--;
-      this.translation = this.savedMatrices.pop();
+      this.matrixTranslation = this.savedMatrices.pop();
     }
   }, {
     key: "setNode",
@@ -1195,14 +1303,152 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         z = _this$roundNumbers4[2];
         var translateRotationMatrix = getRotationMatrix(-pitch, -yaw, -roll);
         var rotateMatrix = matrixMultiply(translateRotationMatrix, baseRotationMatrix);
-        this.translation = [x, y, z].concat(_toConsumableArray(rotateMatrix[0]), _toConsumableArray(rotateMatrix[1]), _toConsumableArray(rotateMatrix[2]));
+        this.matrixTranslation = [x, y, z].concat(_toConsumableArray(rotateMatrix[0]), _toConsumableArray(rotateMatrix[1]), _toConsumableArray(rotateMatrix[2]));
       } else {
         var _this$roundNumbers5 = this.roundNumbers([x, y, z]);
         var _this$roundNumbers6 = _slicedToArray(_this$roundNumbers5, 3);
         x = _this$roundNumbers6[0];
         y = _this$roundNumbers6[1];
         z = _this$roundNumbers6[2];
-        this.translation = [x, y, z, pitch, yaw, roll];
+        if (this.isFraming) {
+          this.frameTranslations.push([x, y, z, pitch, yaw, roll, this.frameId]);
+        } else {
+          this.translation = [x, y, z, pitch, yaw, roll];
+        }
+      }
+    }
+  }, {
+    key: "createBox",
+    value: function createBox(args) {
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
+      var r = Number(args.R);
+      var g = Number(args.G);
+      var b = Number(args.B);
+      var alpha = Number(args.ALPHA);
+      if (this.isAllowedMatrix) {
+        // 移動用のマトリックスにより位置を計算する
+        var matrix = this.matrixTranslation;
+        var basePosition = matrix.slice(0, 3);
+        var baseRotationMatrix;
+        if (matrix.length === 6) {
+          baseRotationMatrix = getRotationMatrix.apply(void 0, _toConsumableArray(matrix.slice(3)));
+        } else {
+          baseRotationMatrix = [matrix.slice(3, 6), matrix.slice(6, 9), matrix.slice(9, 12)];
+        }
+        var _transformPointByRota3 = transformPointByRotationMatrix([x, y, z], transpose3x3(baseRotationMatrix)),
+          _transformPointByRota4 = _slicedToArray(_transformPointByRota3, 3),
+          addX = _transformPointByRota4[0],
+          addY = _transformPointByRota4[1],
+          addZ = _transformPointByRota4[2];
+        var _addVectors3 = addVectors(basePosition, [addX, addY, addZ]);
+        var _addVectors4 = _slicedToArray(_addVectors3, 3);
+        x = _addVectors4[0];
+        y = _addVectors4[1];
+        z = _addVectors4[2];
+      }
+      var _this$roundNumbers7 = this.roundNumbers([x, y, z]);
+      var _this$roundNumbers8 = _slicedToArray(_this$roundNumbers7, 3);
+      x = _this$roundNumbers8[0];
+      y = _this$roundNumbers8[1];
+      z = _this$roundNumbers8[2];
+      // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
+      var _this$roundColors = this.roundColors([r, g, b, alpha]);
+      var _this$roundColors2 = _slicedToArray(_this$roundColors, 4);
+      r = _this$roundColors2[0];
+      g = _this$roundColors2[1];
+      b = _this$roundColors2[2];
+      alpha = _this$roundColors2[3];
+      this.removeBox({
+        X: x,
+        Y: y,
+        Z: z
+      });
+      if (this.isFraming) {
+        this.frames.push([x, y, z, r, g, b, alpha, -1, this.frameId]);
+      } else {
+        this.boxes.push([x, y, z, r, g, b, alpha, -1]);
+      }
+    }
+  }, {
+    key: "createTexturedBox",
+    value: function createTexturedBox(args) {
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
+      var texture = args.TEXTURE;
+      if (this.isAllowedMatrix) {
+        // 移動用のマトリックスにより位置を計算する
+        var matrix = this.matrixTranslation;
+        var basePosition = matrix.slice(0, 3);
+        var baseRotationMatrix;
+        if (matrix.length === 6) {
+          baseRotationMatrix = getRotationMatrix.apply(void 0, _toConsumableArray(matrix.slice(3)));
+        } else {
+          baseRotationMatrix = [matrix.slice(3, 6), matrix.slice(6, 9), matrix.slice(9, 12)];
+        }
+        var _transformPointByRota5 = transformPointByRotationMatrix([x, y, z], transpose3x3(baseRotationMatrix)),
+          _transformPointByRota6 = _slicedToArray(_transformPointByRota5, 3),
+          addX = _transformPointByRota6[0],
+          addY = _transformPointByRota6[1],
+          addZ = _transformPointByRota6[2];
+        var _addVectors5 = addVectors(basePosition, [addX, addY, addZ]);
+        var _addVectors6 = _slicedToArray(_addVectors5, 3);
+        x = _addVectors6[0];
+        y = _addVectors6[1];
+        z = _addVectors6[2];
+      }
+      var _this$roundNumbers9 = this.roundNumbers([x, y, z]);
+      var _this$roundNumbers10 = _slicedToArray(_this$roundNumbers9, 3);
+      x = _this$roundNumbers10[0];
+      y = _this$roundNumbers10[1];
+      z = _this$roundNumbers10[2];
+      var textureId;
+      if (!this.textureNames.includes(texture)) {
+        textureId = -1;
+      } else {
+        textureId = this.textureNames.indexOf(texture);
+      }
+      // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
+      this.removeBox({
+        X: x,
+        Y: y,
+        Z: z
+      });
+      if (this.isFraming) {
+        this.frames.push([x, y, z, 0, 0, 0, 1, textureId, this.frameId]);
+      } else {
+        this.boxes.push([x, y, z, 0, 0, 0, 1, textureId]);
+      }
+    }
+  }, {
+    key: "removeBox",
+    value: function removeBox(args) {
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
+      var _this$roundNumbers11 = this.roundNumbers([x, y, z]);
+      var _this$roundNumbers12 = _slicedToArray(_this$roundNumbers11, 3);
+      x = _this$roundNumbers12[0];
+      y = _this$roundNumbers12[1];
+      z = _this$roundNumbers12[2];
+      if (this.isFraming) {
+        for (var i = 0; i < this.frames.length; i++) {
+          var box = this.frames[i];
+          if (box[0] === x && box[1] === y && box[2] === z && box[8] === this.frameId) {
+            this.frames.splice(i, 1);
+            break;
+          }
+        }
+      } else {
+        for (var _i = 0; _i < this.boxes.length; _i++) {
+          var _box = this.boxes[_i];
+          if (_box[0] === x && _box[1] === y && _box[2] === z) {
+            this.boxes.splice(_i, 1);
+            break;
+          }
+        }
       }
     }
   }, {
@@ -1211,11 +1457,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var _x = Number(args.X);
       var _y = Number(args.Y);
       var _z = Number(args.Z);
-      var _this$roundNumbers7 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers8 = _slicedToArray(_this$roundNumbers7, 3),
-        x = _this$roundNumbers8[0],
-        y = _this$roundNumbers8[1],
-        z = _this$roundNumbers8[2];
+      var _this$roundNumbers13 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers14 = _slicedToArray(_this$roundNumbers13, 3),
+        x = _this$roundNumbers14[0],
+        y = _this$roundNumbers14[1],
+        z = _this$roundNumbers14[2];
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
@@ -1229,85 +1475,17 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var _x = Number(args.X);
       var _y = Number(args.Y);
       var _z = Number(args.Z);
-      var _this$roundNumbers9 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers10 = _slicedToArray(_this$roundNumbers9, 3),
-        x = _this$roundNumbers10[0],
-        y = _this$roundNumbers10[1],
-        z = _this$roundNumbers10[2];
+      var _this$roundNumbers15 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers16 = _slicedToArray(_this$roundNumbers15, 3),
+        x = _this$roundNumbers16[0],
+        y = _this$roundNumbers16[1],
+        z = _this$roundNumbers16[2];
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
       var scale = Number(args.SCALE);
       var interval = Number(args.INTERVAL);
       this.animation = [x, y, z, pitch, yaw, roll, scale, interval];
-    }
-  }, {
-    key: "createBox",
-    value: function createBox(args) {
-      var _x = Number(args.X);
-      var _y = Number(args.Y);
-      var _z = Number(args.Z);
-      var _this$roundNumbers11 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers12 = _slicedToArray(_this$roundNumbers11, 3),
-        x = _this$roundNumbers12[0],
-        y = _this$roundNumbers12[1],
-        z = _this$roundNumbers12[2];
-      var r = Number(args.R);
-      var g = Number(args.G);
-      var b = Number(args.B);
-      var alpha = Number(args.ALPHA);
-      // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
-      this.removeBox({
-        X: x,
-        Y: y,
-        Z: z
-      });
-      this.boxes.push([x, y, z, r, g, b, alpha, -1]);
-    }
-  }, {
-    key: "createTexturedBox",
-    value: function createTexturedBox(args) {
-      var _x = Number(args.X);
-      var _y = Number(args.Y);
-      var _z = Number(args.Z);
-      var _this$roundNumbers13 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers14 = _slicedToArray(_this$roundNumbers13, 3),
-        x = _this$roundNumbers14[0],
-        y = _this$roundNumbers14[1],
-        z = _this$roundNumbers14[2];
-      var texture = args.TEXTURE;
-      var textureId;
-      if (!this.textureNames.includes(texture)) {
-        textureId = -1;
-      } else {
-        textureId = this.textureNames.indexOf(texture);
-      }
-      // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
-      this.removeBox({
-        X: x,
-        Y: y,
-        Z: z
-      });
-      this.boxes.push([x, y, z, 0, 0, 0, 1, textureId]);
-    }
-  }, {
-    key: "removeBox",
-    value: function removeBox(args) {
-      var _x = Number(args.X);
-      var _y = Number(args.Y);
-      var _z = Number(args.Z);
-      var _this$roundNumbers15 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers16 = _slicedToArray(_this$roundNumbers15, 3),
-        x = _this$roundNumbers16[0],
-        y = _this$roundNumbers16[1],
-        z = _this$roundNumbers16[2];
-      for (var i = 0; i < this.boxes.length; i++) {
-        var box = this.boxes[i];
-        if (box[0] === x && box[1] === y && box[2] === z) {
-          this.boxes.splice(i, 1);
-          break;
-        }
-      }
     }
   }, {
     key: "setBoxSize",
@@ -1320,47 +1498,50 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.buildInterval = Number(args.INTERVAL);
     }
   }, {
-    key: "clearData",
-    value: function clearData() {
-      this.translation = [0, 0, 0, 0, 0, 0];
-      this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
-      this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
-      this.boxes = [];
-      this.sentence = [];
-      this.lights = [];
-      this.commands = [];
-      this.size = 1.0;
-      this.shape = 'box';
-      this.isMetallic = 0;
-      this.roughness = 0.5;
-      this.isAllowedFloat = 0;
-      this.buildInterval = 0.01;
-    }
-  }, {
     key: "writeSentence",
     value: function writeSentence(args) {
       var sentence = args.SENTENCE;
-      var x = args.X;
-      var y = args.Y;
-      var z = args.Z;
-      var r = args.R;
-      var g = args.G;
-      var b = args.B;
-      var alpha = args.ALPHA;
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
+      var r = Number(args.R);
+      var g = Number(args.G);
+      var b = Number(args.B);
+      var alpha = Number(args.ALPHA);
+      var _this$roundNumbers17 = this.roundNumbers([x, y, z]);
+      var _this$roundNumbers18 = _slicedToArray(_this$roundNumbers17, 3);
+      x = _this$roundNumbers18[0];
+      y = _this$roundNumbers18[1];
+      z = _this$roundNumbers18[2];
+      var _this$roundColors3 = this.roundColors([r, g, b, alpha]);
+      var _this$roundColors4 = _slicedToArray(_this$roundColors3, 4);
+      r = _this$roundColors4[0];
+      g = _this$roundColors4[1];
+      b = _this$roundColors4[2];
+      alpha = _this$roundColors4[3];
+      var _map = [x, y, z].map(function (val) {
+        return String(val);
+      });
+      var _map2 = _slicedToArray(_map, 3);
+      x = _map2[0];
+      y = _map2[1];
+      z = _map2[2];
+      var _map3 = [r, g, b, alpha].map(function (val) {
+        return String(val);
+      });
+      var _map4 = _slicedToArray(_map3, 4);
+      r = _map4[0];
+      g = _map4[1];
+      b = _map4[2];
+      alpha = _map4[3];
       this.sentence = [sentence, x, y, z, r, g, b, alpha];
     }
   }, {
     key: "setLight",
     value: function setLight(args) {
-      console.log(args);
-      var _x = Number(args.X);
-      var _y = Number(args.Y);
-      var _z = Number(args.Z);
-      var _this$roundNumbers17 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers18 = _slicedToArray(_this$roundNumbers17, 3),
-        x = _this$roundNumbers18[0],
-        y = _this$roundNumbers18[1],
-        z = _this$roundNumbers18[2];
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
       var r = Number(args.R);
       var g = Number(args.G);
       var b = Number(args.B);
@@ -1368,7 +1549,17 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var intensity = Number(args.INTENSITY);
       var interval = Number(args.INTERVAL);
       var lightType = 1; // point light
-
+      var _this$roundNumbers19 = this.roundNumbers([x, y, z]);
+      var _this$roundNumbers20 = _slicedToArray(_this$roundNumbers19, 3);
+      x = _this$roundNumbers20[0];
+      y = _this$roundNumbers20[1];
+      z = _this$roundNumbers20[2];
+      var _this$roundColors5 = this.roundColors([r, g, b, alpha]);
+      var _this$roundColors6 = _slicedToArray(_this$roundColors5, 4);
+      r = _this$roundColors6[0];
+      g = _this$roundColors6[1];
+      b = _this$roundColors6[2];
+      alpha = _this$roundColors6[3];
       if (args.LIGHT_TYPE === "spot") {
         lightType = 2;
       } else if (args.LIGHT_TYPE === "directional") {
@@ -1391,19 +1582,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var _x1 = Number(args.X1);
       var _y1 = Number(args.Y1);
       var _z1 = Number(args.Z1);
-      var _this$roundNumbers19 = this.roundNumbers([_x1, _y1, _z1]),
-        _this$roundNumbers20 = _slicedToArray(_this$roundNumbers19, 3),
-        x1 = _this$roundNumbers20[0],
-        y1 = _this$roundNumbers20[1],
-        z1 = _this$roundNumbers20[2];
+      var _this$roundNumbers21 = this.roundNumbers([_x1, _y1, _z1]),
+        _this$roundNumbers22 = _slicedToArray(_this$roundNumbers21, 3),
+        x1 = _this$roundNumbers22[0],
+        y1 = _this$roundNumbers22[1],
+        z1 = _this$roundNumbers22[2];
       var _x2 = Number(args.X2);
       var _y2 = Number(args.Y2);
       var _z2 = Number(args.Z2);
-      var _this$roundNumbers21 = this.roundNumbers([_x2, _y2, _z2]),
-        _this$roundNumbers22 = _slicedToArray(_this$roundNumbers21, 3),
-        x2 = _this$roundNumbers22[0],
-        y2 = _this$roundNumbers22[1],
-        z2 = _this$roundNumbers22[2];
+      var _this$roundNumbers23 = this.roundNumbers([_x2, _y2, _z2]),
+        _this$roundNumbers24 = _slicedToArray(_this$roundNumbers23, 3),
+        x2 = _this$roundNumbers24[0],
+        y2 = _this$roundNumbers24[1],
+        z2 = _this$roundNumbers24[2];
       var diff_x = x2 - x1;
       var diff_y = y2 - y1;
       var diff_z = z2 - z1;
@@ -1584,17 +1775,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var date = new Date();
       var dataToSend = {
         translation: this.translation,
+        frameTranslations: this.frameTranslations,
         globalAnimation: this.globalAnimation,
         animation: this.animation,
         boxes: this.boxes,
+        frames: this.frames,
         sentence: this.sentence,
         lights: this.lights,
         commands: this.commands,
         size: this.size,
         shape: this.shape,
+        interval: this.buildInterval,
         isMetallic: this.isMetallic,
         roughness: this.roughness,
-        interval: this.buildInterval,
         isAllowedFloat: this.isAllowedFloat,
         date: date.toISOString()
       };
@@ -1697,6 +1890,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           return Math.floor(parseFloat(val.toFixed(1)));
         });
       }
+    }
+  }, {
+    key: "roundColors",
+    value: function roundColors(num_list) {
+      return num_list.map(function (val) {
+        return parseFloat(val.toFixed(2));
+      });
     }
   }], [{
     key: "EXTENSION_NAME",
