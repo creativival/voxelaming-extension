@@ -309,9 +309,15 @@ class ExtensionBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'voxelamming.sendData',
-                        default: 'Send data',
+                        default: 'Send data and record as [NAME]',
                         description: 'send data to server'
                     }),
+                    arguments: {
+                        NAME: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '1000'
+                        }
+                    }
                 },
                 {
                     opcode: 'clearData',
@@ -1259,9 +1265,10 @@ class ExtensionBlocks {
     }
 
     // 連続してデータを送信するときに、データをキューに入れる
-    sendData () {
+    sendData(args) {
         console.log('Sending data...');
         const date = new Date();
+        const name = args.NAME;
         const dataToSend = {
             translation: this.translation,
             frameTranslations: this.frameTranslations,
@@ -1278,6 +1285,7 @@ class ExtensionBlocks {
             isMetallic: this.isMetallic,
             roughness: this.roughness,
             isAllowedFloat: this.isAllowedFloat,
+            name: name,
             date: date.toISOString()
         };
 
