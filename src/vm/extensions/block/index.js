@@ -315,7 +315,7 @@ class ExtensionBlocks {
                     arguments: {
                         NAME: {
                             type: ArgumentType.STRING,
-                            defaultValue: '1000'
+                            defaultValue: 'Title'
                         }
                     }
                 },
