@@ -277,7 +277,7 @@ var en = {
 	"voxelamming.makeModel": "Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
 	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
-	"voxelamming.sendData": "Send data and record as [NAME]",
+	"voxelamming.sendAndRecordData": "Send data and record as [NAME]",
 	"voxelamming.pushMatrix": "Push matrix",
 	"voxelamming.popMatrix": "Pop matrix",
 	"voxelamming.setFrameFPS": "Set Frame FPS: [FPS]",
@@ -317,7 +317,7 @@ var ja = {
 	"voxelamming.makeModel": "モデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
-	"voxelamming.sendData": "データを送信して、[NAME] として記録する",
+	"voxelamming.sendAndRecordData": "データを送信して、[NAME] として記録する",
 	"voxelamming.pushMatrix": "座標系を保存する",
 	"voxelamming.popMatrix": "座標系を復元する",
 	"voxelamming.setFrameFPS": "フレーム FPS: [FPS]",
@@ -360,7 +360,7 @@ var translations = {
 	"voxelamming.makeModel": "モデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
-	"voxelamming.sendData": "データをおくって、[NAME] としてきろくする",
+	"voxelamming.sendAndRecordData": "データをおくって、[NAME] としてきろくする",
 	"voxelamming.pushMatrix": "ざひょうけいをほぞんする",
 	"voxelamming.popMatrix": "ざひょうけいをもどす",
 	"voxelamming.setFrameFPS": "フレーム FPS: [FPS]",
@@ -693,6 +693,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           blockType: blockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.sendData',
+            default: 'Send data',
+            description: 'send data to server'
+          })
+        }, {
+          opcode: 'sendAndRecordData',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.sendAndRecordData',
             default: 'Send data and record as [NAME]',
             description: 'send data to server'
           }),
@@ -1763,11 +1771,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isMetallic = isMetallic;
       this.roughness = Number(args.ROUGHNESS);
     }
+  }, {
+    key: "sendData",
+    value: function sendData() {
+      this.sendAndRecordData('');
+    }
 
     // 連続してデータを送信するときに、データをキューに入れる
   }, {
-    key: "sendData",
-    value: function sendData(args) {
+    key: "sendAndRecordData",
+    value: function sendAndRecordData(args) {
       console.log('Sending data...');
       var date = new Date();
       var name = args.NAME;
