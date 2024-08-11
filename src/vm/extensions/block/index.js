@@ -625,133 +625,133 @@ class ExtensionBlocks {
           }
         },
         {
-            opcode: 'buildPlyModel',
-            blockType: BlockType.COMMAND,
-            text: formatMessage({
-                id: 'voxelamming.buildPlyModel',
-                default: ' Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
-                description: 'build a ply model'
-            }),
-            arguments: {
-                LIST_NAME: {
-                    type: ArgumentType.STRING,
-                    defaultValue: 'list'
-                },
-                X: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                Y: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                Z: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                PITCH: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                YAW: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                ROLL: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                }
+          opcode: 'buildPlyModel',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.buildPlyModel',
+            default: ' Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+            description: 'build a ply model'
+          }),
+          arguments: {
+            LIST_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'list'
+            },
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
             }
+          }
         },
         {
-            opcode: 'createModel',
-            blockType: BlockType.COMMAND,
-            text: formatMessage({
-                id: 'voxelamming.createModel',
-                default: 'Create a default model [MODEL_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] entityName: [ENTITY_NAME]',
-                description: 'create model'
-            }),
-            arguments: {
-                MODEL_NAME: {
-                    type: ArgumentType.STRING,
-                    defaultValue: 'Skull'
-                },
-                X: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                Y: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                Z: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                PITCH: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                YAW: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                ROLL: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                SCALE: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 1
-                },
-                ENTITY_NAME: {
-                    type: ArgumentType.STRING,
-                    defaultValue: 'SkullEntity'
-                }
+          opcode: 'createModel',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.createModel',
+            default: 'Create a default model [MODEL_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] entityName: [ENTITY_NAME]',
+            description: 'create model'
+          }),
+          arguments: {
+            MODEL_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Skull'
+            },
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            SCALE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+            ENTITY_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'SkullEntity'
             }
+          }
         },
         {
-            opcode: 'moveModel',
-            blockType: BlockType.COMMAND,
-            text: formatMessage({
-                id: 'voxelamming.moveModel',
-                default: 'Move a entity model [ENTITY_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE]',
-                description: 'create model'
-            }),
-            arguments: {
-                ENTITY_NAME: {
-                    type: ArgumentType.STRING,
-                    defaultValue: 'SkullEntity'
-                },
-                X: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                Y: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                Z: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                PITCH: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                YAW: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                ROLL: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 0
-                },
-                SCALE: {
-                    type: ArgumentType.NUMBER,
-                    defaultValue: 1
-                }
+          opcode: 'moveModel',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.moveModel',
+            default: 'Move a entity model [ENTITY_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE]',
+            description: 'create model'
+          }),
+          arguments: {
+            ENTITY_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'SkullEntity'
+            },
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            SCALE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
             }
+          }
         },
         {
           opcode: 'pushMatrix',
@@ -1081,7 +1081,7 @@ class ExtensionBlocks {
     }
 
     [x, y, z] = this.roundNumbers([x, y, z]);
-    [r, g, b, alpha] = this.roundColors([r, g, b, alpha]);
+    [r, g, b, alpha] = this.roundTwoDecimals([r, g, b, alpha]);
 
     // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
     this.removeBox({X: x, Y: y, Z: z});
@@ -1207,7 +1207,7 @@ class ExtensionBlocks {
     let alpha = Number(args.ALPHA);
 
     [x, y, z] = this.roundNumbers([x, y, z]);
-    [r, g, b, alpha] = this.roundColors([r, g, b, alpha]);
+    [r, g, b, alpha] = this.roundTwoDecimals([r, g, b, alpha]);
     [x, y, z] = [x, y, z].map(val => String(val));
     [r, g, b, alpha] = [r, g, b, alpha].map(val => String(val));
     this.sentence = [sentence, x, y, z, r, g, b, alpha];
@@ -1226,7 +1226,7 @@ class ExtensionBlocks {
     let lightType = 1;  // point light
 
     [x, y, z] = this.roundNumbers([x, y, z]);
-    [r, g, b, alpha] = this.roundColors([r, g, b, alpha]);
+    [r, g, b, alpha] = this.roundTwoDecimals([r, g, b, alpha]);
 
     if (args.LIGHT_TYPE === "spot") {
       lightType = 2;
@@ -1319,78 +1319,76 @@ class ExtensionBlocks {
   }
 
   buildPlyModel(args) {
-      // create boxes to make a model
-      let vertex_num = args.LIST_NAME;
-      vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
-      vertex_num = Number(vertex_num);
-      let list = args.LIST_NAME;
-      list = list.replace(/.*end_header\s*/, "");
-      list = list.split(' ')
-      list = list.map((str) => Number(str));
-      const positions = [];
-      for (let i = 0; i < vertex_num * 6; i += 6) {
-          positions.push(list.slice(i, i + 6));
+    // create boxes to make a model
+    let vertex_num = args.LIST_NAME;
+    vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
+    vertex_num = Number(vertex_num);
+    let list = args.LIST_NAME;
+    list = list.replace(/.*end_header\s*/, "");
+    list = list.split(' ')
+    list = list.map((str) => Number(str));
+    const positions = [];
+    for (let i = 0; i < vertex_num * 6; i += 6) {
+      positions.push(list.slice(i, i + 6));
+    }
+
+    const boxes = this.getBoxes(positions, vertex_num);
+
+    for (const box of boxes) {
+      const args = {
+        X: box[0],
+        Y: box[1],
+        Z: box[2],
+        R: box[3],
+        G: box[4],
+        B: box[5],
+        ALPHA: box[6],
       }
+      this.createBox(args);
+    }
 
-      const boxes = this.getBoxes(positions, vertex_num);
-
-      for (const box of boxes) {
-          const args = {
-              X: box[0],
-              Y: box[1],
-              Z: box[2],
-              R: box[3],
-              G: box[4],
-              B: box[5],
-              ALPHA: box[6],
-          }
-          this.createBox(args);
-      }
-
-      const x = Math.floor(Number(args.X));
-      const y = Math.floor(Number(args.Y));
-      const z = Math.floor(Number(args.Z));
-      const pitch = Number(args.PITCH);
-      const yaw = Number(args.YAW);
-      const roll = Number(args.ROLL);
-      this.nodeTransform = [x, y, z, pitch, yaw, roll];
+    const x = Math.floor(Number(args.X));
+    const y = Math.floor(Number(args.Y));
+    const z = Math.floor(Number(args.Z));
+    const pitch = Number(args.PITCH);
+    const yaw = Number(args.YAW);
+    const roll = Number(args.ROLL);
+    this.nodeTransform = [x, y, z, pitch, yaw, roll];
   }
 
   createModel(args) {
-      const modelName = args.MODEL_NAME;
-      const _x = Number(args.X);
-      const _y = Number(args.Y);
-      const _z = Number(args.Z);
-      const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-      const pitch = Number(args.PITCH);
-      const yaw = Number(args.YAW);
-      const roll = Number(args.ROLL);
-      const scale = Number(args.SCALE);
-      const entityName = args.ENTITY_NAME;
-      if (this.modelNames.includes(modelName)) {
-          [x, y, z, pitch, yaw, roll, scale] = this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]);
-          [x, y, z, pitch, yaw, roll, scale] = [x, y, z, pitch, yaw, roll, scale].map(String);
-
-          this.models.push([modelName, x, y, z, pitch, yaw, roll, scale, entityName]);
-      } else {
-          console.log(`No model name: ${modelName}`);
-      }
-  }
-
-  moveModel(args) {
-      const entityName = args.ENTITY_NAME;
-      const _x = Number(args.X);
-      const _y = Number(args.Y);
-      const _z = Number(args.Z);
-      const [x, y, z] = this.roundNumbers([_x, _y, _z]);
-      const pitch = Number(args.PITCH);
-      const yaw = Number(args.YAW);
-      const roll = Number(args.ROLL);
-      const scale = Number(args.SCALE);
+    const modelName = args.MODEL_NAME;
+    let x = Number(args.X);
+    let y = Number(args.Y);
+    let z = Number(args.Z);
+    let pitch = Number(args.PITCH);
+    let yaw = Number(args.YAW);
+    let roll = Number(args.ROLL);
+    let scale = Number(args.SCALE);
+    const entityName = args.ENTITY_NAME;
+    if (this.modelNames.includes(modelName)) {
       [x, y, z, pitch, yaw, roll, scale] = this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]);
       [x, y, z, pitch, yaw, roll, scale] = [x, y, z, pitch, yaw, roll, scale].map(String);
 
-      this.modelMoves.push([entityName, x, y, z, pitch, yaw, roll, scale]);
+      this.models.push([modelName, x, y, z, pitch, yaw, roll, scale, entityName]);
+    } else {
+      console.log(`No model name: ${modelName}`);
+    }
+  }
+
+  moveModel(args) {
+    const entityName = args.ENTITY_NAME;
+    let x = Number(args.X);
+    let y = Number(args.Y);
+    let z = Number(args.Z);
+    let pitch = Number(args.PITCH);
+    let yaw = Number(args.YAW);
+    let roll = Number(args.ROLL);
+    let scale = Number(args.SCALE);
+    [x, y, z, pitch, yaw, roll, scale] = this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]);
+    [x, y, z, pitch, yaw, roll, scale] = [x, y, z, pitch, yaw, roll, scale].map(String);
+
+    this.modelMoves.push([entityName, x, y, z, pitch, yaw, roll, scale]);
   }
 
   changeShape(args) {
@@ -1537,7 +1535,7 @@ class ExtensionBlocks {
     }
   }
 
-  roundColors(num_list) {
+  roundTwoDecimals(num_list) {
     return num_list.map(val => parseFloat(val.toFixed(2)));
   }
 }
