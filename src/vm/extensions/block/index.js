@@ -91,7 +91,10 @@ class ExtensionBlocks {
      * @type {Runtime}
      */
     this.runtime = runtime;
+    this.roomName = '1000'
     this.textureNames = ["grass", "stone", "dirt", "planks", "bricks"];
+    this.modelNames = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "Sun",
+      "Moon", "ToyBiplane", "ToyCar", "Drummer", "Robot", "ToyRocket", "RocketToy1", "RocketToy2", "Skull"];
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
     this.nodeTransform = [0, 0, 0, 0, 0, 0];
@@ -103,7 +106,9 @@ class ExtensionBlocks {
     this.frames = [];
     this.sentence = []
     this.lights = [];
-    this.commands = []
+    this.commands = [];
+    this.models = [];
+    this.modelMoves = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -669,7 +674,7 @@ class ExtensionBlocks {
             arguments: {
                 MODEL_NAME: {
                     type: ArgumentType.STRING,
-                    defaultValue: ''
+                    defaultValue: 'Skull'
                 },
                 X: {
                     type: ArgumentType.NUMBER,
@@ -701,7 +706,7 @@ class ExtensionBlocks {
                 },
                 ENTITY_NAME: {
                     type: ArgumentType.STRING,
-                    defaultValue: ''
+                    defaultValue: 'SkullEntity'
                 }
             }
         },
@@ -716,7 +721,7 @@ class ExtensionBlocks {
             arguments: {
                 ENTITY_NAME: {
                     type: ArgumentType.STRING,
-                    defaultValue: ''
+                    defaultValue: 'SkullEntity'
                 },
                 X: {
                     type: ArgumentType.NUMBER,
@@ -951,7 +956,7 @@ class ExtensionBlocks {
   clearData() {
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
-    this.transform = [0, 0, 0, 0, 0, 0];
+    this.nodeTransform = [0, 0, 0, 0, 0, 0];
     this.matrixTransform = [0, 0, 0, 0, 0, 0];
     this.frameTransforms = [];
     this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
@@ -960,7 +965,9 @@ class ExtensionBlocks {
     this.frames = [];
     this.sentence = []
     this.lights = [];
-    this.commands = []
+    this.commands = [];
+    this.models = [];
+    this.modelMoves = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1419,6 +1426,8 @@ class ExtensionBlocks {
       sentence: this.sentence,
       lights: this.lights,
       commands: this.commands,
+      models: this.models,
+      modelMoves: this.modelMoves,
       size: this.size,
       shape: this.shape,
       interval: this.buildInterval,
