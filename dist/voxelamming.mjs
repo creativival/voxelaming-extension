@@ -275,6 +275,7 @@ var en = {
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.makeModel": "Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.buildPlyModel": "Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
 	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
 	"voxelamming.sendData": "Send data",
@@ -315,7 +316,8 @@ var ja = {
 	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.makeModel": "モデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.makeModel": "@PLYモデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.buildPlyModel": "PLYモデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
 	"voxelamming.sendData": "データを送信する",
@@ -360,6 +362,7 @@ var translations = {
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.makeModel": "モデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.buildPlyModel": "PLYモデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
 	"voxelamming.sendData": "データをおくる",
@@ -1003,6 +1006,44 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             id: 'voxelamming.makeModel',
             default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
             description: 'make model'
+          }),
+          arguments: {
+            LIST_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'list'
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            }
+          }
+        }, {
+          opcode: 'buildPlyModel',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.buildPlyModel',
+            default: ' Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+            description: 'build a ply model'
           }),
           arguments: {
             LIST_NAME: {
@@ -1758,6 +1799,53 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
       this.translation = [x, y, z, pitch, yaw, roll];
+    }
+  }, {
+    key: "buildPlyModel",
+    value: function buildPlyModel(args) {
+      // create boxes to make a model
+      var vertex_num = args.LIST_NAME;
+      vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
+      vertex_num = Number(vertex_num);
+      var list = args.LIST_NAME;
+      list = list.replace(/.*end_header\s*/, "");
+      list = list.split(' ');
+      list = list.map(function (str) {
+        return Number(str);
+      });
+      var positions = [];
+      for (var i = 0; i < vertex_num * 6; i += 6) {
+        positions.push(list.slice(i, i + 6));
+      }
+      var boxes = this.getBoxes(positions, vertex_num);
+      var _iterator2 = _createForOfIteratorHelper(boxes),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var box = _step2.value;
+          var _args8 = {
+            X: box[0],
+            Y: box[1],
+            Z: box[2],
+            R: box[3],
+            G: box[4],
+            B: box[5],
+            ALPHA: box[6]
+          };
+          this.createBox(_args8);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+      var x = Math.floor(Number(args.X));
+      var y = Math.floor(Number(args.Y));
+      var z = Math.floor(Number(args.Z));
+      var pitch = Number(args.PITCH);
+      var yaw = Number(args.YAW);
+      var roll = Number(args.ROLL);
+      this.nodeTransform = [x, y, z, pitch, yaw, roll];
     }
   }, {
     key: "changeShape",
