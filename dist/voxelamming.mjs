@@ -274,7 +274,6 @@ var en = {
 	"voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.makeModel": "Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.buildPlyModel": "Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
 	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
@@ -316,7 +315,6 @@ var ja = {
 	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.makeModel": "@PLYモデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.buildPlyModel": "PLYモデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
@@ -361,7 +359,6 @@ var translations = {
 	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.makeModel": "モデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.buildPlyModel": "PLYモデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
@@ -492,9 +489,9 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.textureNames = ["grass", "stone", "dirt", "planks", "bricks"];
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
-    this.translation = [0, 0, 0, 0, 0, 0];
-    this.matrixTranslation = [0, 0, 0, 0, 0, 0];
-    this.frameTranslations = [];
+    this.nodeTransform = [0, 0, 0, 0, 0, 0];
+    this.matrixTransform = [0, 0, 0, 0, 0, 0];
+    this.frameTransforms = [];
     this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.boxes = [];
@@ -999,45 +996,47 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 1
             }
           }
-        }, {
-          opcode: 'makeModel',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.makeModel',
-            default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
-            description: 'make model'
-          }),
-          arguments: {
-            LIST_NAME: {
-              type: argumentType.STRING,
-              defaultValue: 'list'
-            },
-            X: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            Y: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            Z: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            PITCH: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            YAW: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            },
-            ROLL: {
-              type: argumentType.NUMBER,
-              defaultValue: 0
-            }
-          }
-        }, {
+        },
+        // {
+        //   opcode: 'makeModel',
+        //   blockType: BlockType.COMMAND,
+        //   text: formatMessage({
+        //     id: 'voxelamming.makeModel',
+        //     default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+        //     description: 'make model'
+        //   }),
+        //   arguments: {
+        //     LIST_NAME: {
+        //       type: ArgumentType.STRING,
+        //       defaultValue: 'list'
+        //     },
+        //     X: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     Y: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     Z: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     PITCH: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     YAW: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     ROLL: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     }
+        //   }
+        // },
+        {
           opcode: 'buildPlyModel',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1257,9 +1256,9 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     value: function clearData() {
       this.isAllowedMatrix = 0;
       this.savedMatrices = [];
-      this.translation = [0, 0, 0, 0, 0, 0];
-      this.matrixTranslation = [0, 0, 0, 0, 0, 0];
-      this.frameTranslations = [];
+      this.transform = [0, 0, 0, 0, 0, 0];
+      this.matrixTransform = [0, 0, 0, 0, 0, 0];
+      this.frameTransforms = [];
       this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0];
       this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
       this.boxes = [];
@@ -1303,13 +1302,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "pushMatrix",
     value: function pushMatrix() {
       this.isAllowedMatrix++;
-      this.savedMatrices.push(this.matrixTranslation);
+      this.savedMatrices.push(this.matrixTransform);
     }
   }, {
     key: "popMatrix",
     value: function popMatrix() {
       this.isAllowedMatrix--;
-      this.matrixTranslation = this.savedMatrices.pop();
+      this.matrixTransform = this.savedMatrices.pop();
     }
   }, {
     key: "setNode",
@@ -1352,7 +1351,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         z = _this$roundNumbers4[2];
         var translateRotationMatrix = getRotationMatrix(-pitch, -yaw, -roll);
         var rotateMatrix = matrixMultiply(translateRotationMatrix, baseRotationMatrix);
-        this.matrixTranslation = [x, y, z].concat(_toConsumableArray(rotateMatrix[0]), _toConsumableArray(rotateMatrix[1]), _toConsumableArray(rotateMatrix[2]));
+        this.matrixTransform = [x, y, z].concat(_toConsumableArray(rotateMatrix[0]), _toConsumableArray(rotateMatrix[1]), _toConsumableArray(rotateMatrix[2]));
       } else {
         var _this$roundNumbers5 = this.roundNumbers([x, y, z]);
         var _this$roundNumbers6 = _slicedToArray(_this$roundNumbers5, 3);
@@ -1360,9 +1359,9 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         y = _this$roundNumbers6[1];
         z = _this$roundNumbers6[2];
         if (this.isFraming) {
-          this.frameTranslations.push([x, y, z, pitch, yaw, roll, this.frameId]);
+          this.frameTransforms.push([x, y, z, pitch, yaw, roll, this.frameId]);
         } else {
-          this.translation = [x, y, z, pitch, yaw, roll];
+          this.nodeTransform = [x, y, z, pitch, yaw, roll];
         }
       }
     }
@@ -1378,7 +1377,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var alpha = Number(args.ALPHA);
       if (this.isAllowedMatrix) {
         // 移動用のマトリックスにより位置を計算する
-        var matrix = this.matrixTranslation;
+        var matrix = this.matrixTransform;
         var basePosition = matrix.slice(0, 3);
         var baseRotationMatrix;
         if (matrix.length === 6) {
@@ -1429,7 +1428,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var texture = args.TEXTURE;
       if (this.isAllowedMatrix) {
         // 移動用のマトリックスにより位置を計算する
-        var matrix = this.matrixTranslation;
+        var matrix = this.matrixTransform;
         var basePosition = matrix.slice(0, 3);
         var baseRotationMatrix;
         if (matrix.length === 6) {
@@ -1753,9 +1752,47 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         }
       }
     }
+
+    // makeModel(args) {
+    //   // create boxes to make a model
+    //   let vertex_num = args.LIST_NAME;
+    //   vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
+    //   vertex_num = Number(vertex_num);
+    //   let list = args.LIST_NAME;
+    //   list = list.replace(/.*end_header\s*/, "");
+    //   list = list.split(' ')
+    //   list = list.map((str) => Number(str));
+    //   const positions = [];
+    //   for (let i = 0; i < vertex_num * 6; i += 6) {
+    //     positions.push(list.slice(i, i + 6));
+    //   }
+    //
+    //   const boxes = this.getBoxes(positions, vertex_num);
+    //
+    //   for (const box of boxes) {
+    //     const args = {
+    //       X: box[0],
+    //       Y: box[1],
+    //       Z: box[2],
+    //       R: box[3],
+    //       G: box[4],
+    //       B: box[5],
+    //       ALPHA: box[6],
+    //     }
+    //     this.createBox(args);
+    //   }
+    //
+    //   const x = Math.floor(Number(args.X));
+    //   const y = Math.floor(Number(args.Y));
+    //   const z = Math.floor(Number(args.Z));
+    //   const pitch = Number(args.PITCH);
+    //   const yaw = Number(args.YAW);
+    //   const roll = Number(args.ROLL);
+    //   this.transform = [x, y, z, pitch, yaw, roll];
+    // }
   }, {
-    key: "makeModel",
-    value: function makeModel(args) {
+    key: "buildPlyModel",
+    value: function buildPlyModel(args) {
       // create boxes to make a model
       var vertex_num = args.LIST_NAME;
       vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
@@ -1798,53 +1835,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
-      this.translation = [x, y, z, pitch, yaw, roll];
-    }
-  }, {
-    key: "buildPlyModel",
-    value: function buildPlyModel(args) {
-      // create boxes to make a model
-      var vertex_num = args.LIST_NAME;
-      vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
-      vertex_num = Number(vertex_num);
-      var list = args.LIST_NAME;
-      list = list.replace(/.*end_header\s*/, "");
-      list = list.split(' ');
-      list = list.map(function (str) {
-        return Number(str);
-      });
-      var positions = [];
-      for (var i = 0; i < vertex_num * 6; i += 6) {
-        positions.push(list.slice(i, i + 6));
-      }
-      var boxes = this.getBoxes(positions, vertex_num);
-      var _iterator2 = _createForOfIteratorHelper(boxes),
-        _step2;
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var box = _step2.value;
-          var _args8 = {
-            X: box[0],
-            Y: box[1],
-            Z: box[2],
-            R: box[3],
-            G: box[4],
-            B: box[5],
-            ALPHA: box[6]
-          };
-          this.createBox(_args8);
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
-      }
-      var x = Math.floor(Number(args.X));
-      var y = Math.floor(Number(args.Y));
-      var z = Math.floor(Number(args.Z));
-      var pitch = Number(args.PITCH);
-      var yaw = Number(args.YAW);
-      var roll = Number(args.ROLL);
       this.nodeTransform = [x, y, z, pitch, yaw, roll];
     }
   }, {
@@ -1876,8 +1866,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var date = new Date();
       var name = args.NAME;
       var dataToSend = {
-        translation: this.translation,
-        frameTranslations: this.frameTranslations,
+        nodeTransform: this.nodeTransform,
+        frameTransforms: this.frameTransforms,
         globalAnimation: this.globalAnimation,
         animation: this.animation,
         boxes: this.boxes,
