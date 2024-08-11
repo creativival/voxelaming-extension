@@ -63,6 +63,10 @@ var entry = {
   translationMap: translations$1
 };
 
+function _readOnlyError(r) {
+  throw new TypeError('"' + r + '" is read-only');
+}
+
 function _arrayLikeToArray$1(r, a) {
   (null == a || a > r.length) && (a = r.length);
   for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
@@ -275,6 +279,8 @@ var en = {
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.buildPlyModel": "Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.createModel": "Create a default model [MODEL_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] entityName: [ENTITY_NAME]",
+	"voxelamming.moveModel": "Move a entity model [ENTITY_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
 	"voxelamming.changeMaterial": "Change material: metallic: [IS_METALLIC] roughness: [ROUGHNESS]",
 	"voxelamming.sendData": "Send data",
@@ -316,6 +322,8 @@ var ja = {
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.buildPlyModel": "PLYモデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.createModel": "デフォルトモデルを作成する [MODEL_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 拡大: [SCALE] エンティティネーム: [ENTITY_NAME]",
+	"voxelamming.moveModel": "エンティティモデルを移動する [ENTITY_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 拡大: [SCALE]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
 	"voxelamming.sendData": "データを送信する",
@@ -360,6 +368,8 @@ var translations = {
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.buildPlyModel": "PLYモデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.createModel": "デフォルトモデルをつくる [MODEL_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] かくだい: [SCALE] エンティティネーム: [ENTITY_NAME]",
+	"voxelamming.moveModel": "エンティティモデルをうごかす [ENTITY_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] かくだい: [SCALE]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
 	"voxelamming.sendData": "データをおくる",
@@ -996,47 +1006,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 1
             }
           }
-        },
-        // {
-        //   opcode: 'makeModel',
-        //   blockType: BlockType.COMMAND,
-        //   text: formatMessage({
-        //     id: 'voxelamming.makeModel',
-        //     default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
-        //     description: 'make model'
-        //   }),
-        //   arguments: {
-        //     LIST_NAME: {
-        //       type: ArgumentType.STRING,
-        //       defaultValue: 'list'
-        //     },
-        //     X: {
-        //       type: ArgumentType.NUMBER,
-        //       defaultValue: 0
-        //     },
-        //     Y: {
-        //       type: ArgumentType.NUMBER,
-        //       defaultValue: 0
-        //     },
-        //     Z: {
-        //       type: ArgumentType.NUMBER,
-        //       defaultValue: 0
-        //     },
-        //     PITCH: {
-        //       type: ArgumentType.NUMBER,
-        //       defaultValue: 0
-        //     },
-        //     YAW: {
-        //       type: ArgumentType.NUMBER,
-        //       defaultValue: 0
-        //     },
-        //     ROLL: {
-        //       type: ArgumentType.NUMBER,
-        //       defaultValue: 0
-        //     }
-        //   }
-        // },
-        {
+        }, {
           opcode: 'buildPlyModel',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1072,6 +1042,94 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             ROLL: {
               type: argumentType.NUMBER,
               defaultValue: 0
+            }
+          }
+        }, {
+          opcode: 'createModel',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.createModel',
+            default: 'Create a default model [MODEL_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] entityName: [ENTITY_NAME]',
+            description: 'create model'
+          }),
+          arguments: {
+            MODEL_NAME: {
+              type: argumentType.STRING,
+              defaultValue: ''
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            SCALE: {
+              type: argumentType.NUMBER,
+              defaultValue: 1
+            },
+            ENTITY_NAME: {
+              type: argumentType.STRING,
+              defaultValue: ''
+            }
+          }
+        }, {
+          opcode: 'moveModel',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.moveModel',
+            default: 'Move a entity model [ENTITY_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE]',
+            description: 'create model'
+          }),
+          arguments: {
+            ENTITY_NAME: {
+              type: argumentType.STRING,
+              defaultValue: ''
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Z: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            PITCH: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            YAW: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            ROLL: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            SCALE: {
+              type: argumentType.NUMBER,
+              defaultValue: 1
             }
           }
         }, {
@@ -1752,44 +1810,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         }
       }
     }
-
-    // makeModel(args) {
-    //   // create boxes to make a model
-    //   let vertex_num = args.LIST_NAME;
-    //   vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
-    //   vertex_num = Number(vertex_num);
-    //   let list = args.LIST_NAME;
-    //   list = list.replace(/.*end_header\s*/, "");
-    //   list = list.split(' ')
-    //   list = list.map((str) => Number(str));
-    //   const positions = [];
-    //   for (let i = 0; i < vertex_num * 6; i += 6) {
-    //     positions.push(list.slice(i, i + 6));
-    //   }
-    //
-    //   const boxes = this.getBoxes(positions, vertex_num);
-    //
-    //   for (const box of boxes) {
-    //     const args = {
-    //       X: box[0],
-    //       Y: box[1],
-    //       Z: box[2],
-    //       R: box[3],
-    //       G: box[4],
-    //       B: box[5],
-    //       ALPHA: box[6],
-    //     }
-    //     this.createBox(args);
-    //   }
-    //
-    //   const x = Math.floor(Number(args.X));
-    //   const y = Math.floor(Number(args.Y));
-    //   const z = Math.floor(Number(args.Z));
-    //   const pitch = Number(args.PITCH);
-    //   const yaw = Number(args.YAW);
-    //   const roll = Number(args.ROLL);
-    //   this.transform = [x, y, z, pitch, yaw, roll];
-    // }
   }, {
     key: "buildPlyModel",
     value: function buildPlyModel(args) {
@@ -1836,6 +1856,51 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
       this.nodeTransform = [x, y, z, pitch, yaw, roll];
+    }
+  }, {
+    key: "createModel",
+    value: function createModel(args) {
+      var modelName = args.MODEL_NAME;
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers25 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers26 = _slicedToArray(_this$roundNumbers25, 3),
+        x = _this$roundNumbers26[0],
+        y = _this$roundNumbers26[1],
+        z = _this$roundNumbers26[2];
+      var pitch = Number(args.PITCH);
+      var yaw = Number(args.YAW);
+      var roll = Number(args.ROLL);
+      var scale = Number(args.SCALE);
+      var entityName = args.ENTITY_NAME;
+      if (this.modelNames.includes(modelName)) {
+        this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]), _readOnlyError("x");
+        _readOnlyError("x");
+        this.models.push([modelName, x, y, z, pitch, yaw, roll, scale, entityName]);
+      } else {
+        console.log("No model name: ".concat(modelName));
+      }
+    }
+  }, {
+    key: "moveModel",
+    value: function moveModel(args) {
+      var entityName = args.ENTITY_NAME;
+      var _x = Number(args.X);
+      var _y = Number(args.Y);
+      var _z = Number(args.Z);
+      var _this$roundNumbers27 = this.roundNumbers([_x, _y, _z]),
+        _this$roundNumbers28 = _slicedToArray(_this$roundNumbers27, 3),
+        x = _this$roundNumbers28[0],
+        y = _this$roundNumbers28[1],
+        z = _this$roundNumbers28[2];
+      var pitch = Number(args.PITCH);
+      var yaw = Number(args.YAW);
+      var roll = Number(args.ROLL);
+      var scale = Number(args.SCALE);
+      this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]), _readOnlyError("x");
+      _readOnlyError("x");
+      this.modelMoves.push([entityName, x, y, z, pitch, yaw, roll, scale]);
     }
   }, {
     key: "changeShape",
