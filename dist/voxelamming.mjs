@@ -63,10 +63,6 @@ var entry = {
   translationMap: translations$1
 };
 
-function _readOnlyError(r) {
-  throw new TypeError('"' + r + '" is read-only');
-}
-
 function _arrayLikeToArray$1(r, a) {
   (null == a || a > r.length) && (a = r.length);
   for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
@@ -1466,12 +1462,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       y = _this$roundNumbers8[1];
       z = _this$roundNumbers8[2];
       // 重ねて置くことを防止するために、同じ座標の箱があれば削除する
-      var _this$roundColors = this.roundColors([r, g, b, alpha]);
-      var _this$roundColors2 = _slicedToArray(_this$roundColors, 4);
-      r = _this$roundColors2[0];
-      g = _this$roundColors2[1];
-      b = _this$roundColors2[2];
-      alpha = _this$roundColors2[3];
+      var _this$roundTwoDecimal = this.roundTwoDecimals([r, g, b, alpha]);
+      var _this$roundTwoDecimal2 = _slicedToArray(_this$roundTwoDecimal, 4);
+      r = _this$roundTwoDecimal2[0];
+      g = _this$roundTwoDecimal2[1];
+      b = _this$roundTwoDecimal2[2];
+      alpha = _this$roundTwoDecimal2[3];
       this.removeBox({
         X: x,
         Y: y,
@@ -1625,12 +1621,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       x = _this$roundNumbers18[0];
       y = _this$roundNumbers18[1];
       z = _this$roundNumbers18[2];
-      var _this$roundColors3 = this.roundColors([r, g, b, alpha]);
-      var _this$roundColors4 = _slicedToArray(_this$roundColors3, 4);
-      r = _this$roundColors4[0];
-      g = _this$roundColors4[1];
-      b = _this$roundColors4[2];
-      alpha = _this$roundColors4[3];
+      var _this$roundTwoDecimal3 = this.roundTwoDecimals([r, g, b, alpha]);
+      var _this$roundTwoDecimal4 = _slicedToArray(_this$roundTwoDecimal3, 4);
+      r = _this$roundTwoDecimal4[0];
+      g = _this$roundTwoDecimal4[1];
+      b = _this$roundTwoDecimal4[2];
+      alpha = _this$roundTwoDecimal4[3];
       var _map = [x, y, z].map(function (val) {
         return String(val);
       });
@@ -1666,12 +1662,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       x = _this$roundNumbers20[0];
       y = _this$roundNumbers20[1];
       z = _this$roundNumbers20[2];
-      var _this$roundColors5 = this.roundColors([r, g, b, alpha]);
-      var _this$roundColors6 = _slicedToArray(_this$roundColors5, 4);
-      r = _this$roundColors6[0];
-      g = _this$roundColors6[1];
-      b = _this$roundColors6[2];
-      alpha = _this$roundColors6[3];
+      var _this$roundTwoDecimal5 = this.roundTwoDecimals([r, g, b, alpha]);
+      var _this$roundTwoDecimal6 = _slicedToArray(_this$roundTwoDecimal5, 4);
+      r = _this$roundTwoDecimal6[0];
+      g = _this$roundTwoDecimal6[1];
+      b = _this$roundTwoDecimal6[2];
+      alpha = _this$roundTwoDecimal6[3];
       if (args.LIGHT_TYPE === "spot") {
         lightType = 2;
       } else if (args.LIGHT_TYPE === "directional") {
@@ -1867,22 +1863,33 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "createModel",
     value: function createModel(args) {
       var modelName = args.MODEL_NAME;
-      var _x = Number(args.X);
-      var _y = Number(args.Y);
-      var _z = Number(args.Z);
-      var _this$roundNumbers25 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers26 = _slicedToArray(_this$roundNumbers25, 3),
-        x = _this$roundNumbers26[0],
-        y = _this$roundNumbers26[1],
-        z = _this$roundNumbers26[2];
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
       var scale = Number(args.SCALE);
       var entityName = args.ENTITY_NAME;
       if (this.modelNames.includes(modelName)) {
-        this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]), _readOnlyError("x");
-        _readOnlyError("x");
+        var _this$roundTwoDecimal7 = this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]);
+        var _this$roundTwoDecimal8 = _slicedToArray(_this$roundTwoDecimal7, 7);
+        x = _this$roundTwoDecimal8[0];
+        y = _this$roundTwoDecimal8[1];
+        z = _this$roundTwoDecimal8[2];
+        pitch = _this$roundTwoDecimal8[3];
+        yaw = _this$roundTwoDecimal8[4];
+        roll = _this$roundTwoDecimal8[5];
+        scale = _this$roundTwoDecimal8[6];
+        var _map5 = [x, y, z, pitch, yaw, roll, scale].map(String);
+        var _map6 = _slicedToArray(_map5, 7);
+        x = _map6[0];
+        y = _map6[1];
+        z = _map6[2];
+        pitch = _map6[3];
+        yaw = _map6[4];
+        roll = _map6[5];
+        scale = _map6[6];
         this.models.push([modelName, x, y, z, pitch, yaw, roll, scale, entityName]);
       } else {
         console.log("No model name: ".concat(modelName));
@@ -1892,20 +1899,31 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "moveModel",
     value: function moveModel(args) {
       var entityName = args.ENTITY_NAME;
-      var _x = Number(args.X);
-      var _y = Number(args.Y);
-      var _z = Number(args.Z);
-      var _this$roundNumbers27 = this.roundNumbers([_x, _y, _z]),
-        _this$roundNumbers28 = _slicedToArray(_this$roundNumbers27, 3),
-        x = _this$roundNumbers28[0],
-        y = _this$roundNumbers28[1],
-        z = _this$roundNumbers28[2];
+      var x = Number(args.X);
+      var y = Number(args.Y);
+      var z = Number(args.Z);
       var pitch = Number(args.PITCH);
       var yaw = Number(args.YAW);
       var roll = Number(args.ROLL);
       var scale = Number(args.SCALE);
-      this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]), _readOnlyError("x");
-      _readOnlyError("x");
+      var _this$roundTwoDecimal9 = this.roundTwoDecimals([x, y, z, pitch, yaw, roll, scale]);
+      var _this$roundTwoDecimal10 = _slicedToArray(_this$roundTwoDecimal9, 7);
+      x = _this$roundTwoDecimal10[0];
+      y = _this$roundTwoDecimal10[1];
+      z = _this$roundTwoDecimal10[2];
+      pitch = _this$roundTwoDecimal10[3];
+      yaw = _this$roundTwoDecimal10[4];
+      roll = _this$roundTwoDecimal10[5];
+      scale = _this$roundTwoDecimal10[6];
+      var _map7 = [x, y, z, pitch, yaw, roll, scale].map(String);
+      var _map8 = _slicedToArray(_map7, 7);
+      x = _map8[0];
+      y = _map8[1];
+      z = _map8[2];
+      pitch = _map8[3];
+      yaw = _map8[4];
+      roll = _map8[5];
+      scale = _map8[6];
       this.modelMoves.push([entityName, x, y, z, pitch, yaw, roll, scale]);
     }
   }, {
@@ -2058,8 +2076,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "roundColors",
-    value: function roundColors(num_list) {
+    key: "roundTwoDecimals",
+    value: function roundTwoDecimals(num_list) {
       return num_list.map(function (val) {
         return parseFloat(val.toFixed(2));
       });
