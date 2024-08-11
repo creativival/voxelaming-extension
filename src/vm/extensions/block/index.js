@@ -94,9 +94,9 @@ class ExtensionBlocks {
     this.textureNames = ["grass", "stone", "dirt", "planks", "bricks"];
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
-    this.translation = [0, 0, 0, 0, 0, 0];
-    this.matrixTranslation = [0, 0, 0, 0, 0, 0];
-    this.frameTranslations = [];
+    this.nodeTransform = [0, 0, 0, 0, 0, 0];
+    this.matrixTransform = [0, 0, 0, 0, 0, 0];
+    this.frameTransforms = [];
     this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
     this.boxes = [];
@@ -619,45 +619,45 @@ class ExtensionBlocks {
             }
           }
         },
-        {
-          opcode: 'makeModel',
-          blockType: BlockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.makeModel',
-            default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
-            description: 'make model'
-          }),
-          arguments: {
-            LIST_NAME: {
-              type: ArgumentType.STRING,
-              defaultValue: 'list'
-            },
-            X: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 0
-            },
-            Y: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 0
-            },
-            Z: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 0
-            },
-            PITCH: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 0
-            },
-            YAW: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 0
-            },
-            ROLL: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 0
-            }
-          }
-        },
+        // {
+        //   opcode: 'makeModel',
+        //   blockType: BlockType.COMMAND,
+        //   text: formatMessage({
+        //     id: 'voxelamming.makeModel',
+        //     default: 'Make model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+        //     description: 'make model'
+        //   }),
+        //   arguments: {
+        //     LIST_NAME: {
+        //       type: ArgumentType.STRING,
+        //       defaultValue: 'list'
+        //     },
+        //     X: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     Y: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     Z: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     PITCH: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     YAW: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     },
+        //     ROLL: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 0
+        //     }
+        //   }
+        // },
         {
             opcode: 'buildPlyModel',
             blockType: BlockType.COMMAND,
@@ -900,9 +900,9 @@ class ExtensionBlocks {
   clearData() {
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
-    this.translation = [0, 0, 0, 0, 0, 0];
-    this.matrixTranslation = [0, 0, 0, 0, 0, 0];
-    this.frameTranslations = [];
+    this.transform = [0, 0, 0, 0, 0, 0];
+    this.matrixTransform = [0, 0, 0, 0, 0, 0];
+    this.frameTransforms = [];
     this.globalAnimation = [0, 0, 0, 0, 0, 0, 1, 0]
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
     this.boxes = [];
@@ -941,12 +941,12 @@ class ExtensionBlocks {
 
   pushMatrix() {
     this.isAllowedMatrix++;
-    this.savedMatrices.push(this.matrixTranslation);
+    this.savedMatrices.push(this.matrixTransform);
   }
 
   popMatrix() {
     this.isAllowedMatrix--;
-    this.matrixTranslation = this.savedMatrices.pop();
+    this.matrixTransform = this.savedMatrices.pop();
   }
 
   setNode(args) {  // method name changed from translate to setNode.
@@ -981,14 +981,14 @@ class ExtensionBlocks {
       const translateRotationMatrix = getRotationMatrix(-pitch, -yaw, -roll);
       const rotateMatrix = matrixMultiply(translateRotationMatrix, baseRotationMatrix);
 
-      this.matrixTranslation = [x, y, z, ...rotateMatrix[0], ...rotateMatrix[1], ...rotateMatrix[2]];
+      this.matrixTransform = [x, y, z, ...rotateMatrix[0], ...rotateMatrix[1], ...rotateMatrix[2]];
     } else {
       [x, y, z] = this.roundNumbers([x, y, z]);
 
       if (this.isFraming) {
-        this.frameTranslations.push([x, y, z, pitch, yaw, roll, this.frameId]);
+        this.frameTransforms.push([x, y, z, pitch, yaw, roll, this.frameId]);
       } else {
-        this.translation = [x, y, z, pitch, yaw, roll];
+        this.nodeTransform = [x, y, z, pitch, yaw, roll];
       }
     }
   }
@@ -1004,7 +1004,7 @@ class ExtensionBlocks {
 
     if (this.isAllowedMatrix) {
       // 移動用のマトリックスにより位置を計算する
-      const matrix = this.matrixTranslation;
+      const matrix = this.matrixTransform;
       const basePosition = matrix.slice(0, 3);
 
       let baseRotationMatrix;
@@ -1043,7 +1043,7 @@ class ExtensionBlocks {
 
     if (this.isAllowedMatrix) {
       // 移動用のマトリックスにより位置を計算する
-      const matrix = this.matrixTranslation;
+      const matrix = this.matrixTransform;
       const basePosition = matrix.slice(0, 3);
 
       let baseRotationMatrix;
@@ -1260,43 +1260,43 @@ class ExtensionBlocks {
     }
   }
 
-  makeModel(args) {
-    // create boxes to make a model
-    let vertex_num = args.LIST_NAME;
-    vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
-    vertex_num = Number(vertex_num);
-    let list = args.LIST_NAME;
-    list = list.replace(/.*end_header\s*/, "");
-    list = list.split(' ')
-    list = list.map((str) => Number(str));
-    const positions = [];
-    for (let i = 0; i < vertex_num * 6; i += 6) {
-      positions.push(list.slice(i, i + 6));
-    }
-
-    const boxes = this.getBoxes(positions, vertex_num);
-
-    for (const box of boxes) {
-      const args = {
-        X: box[0],
-        Y: box[1],
-        Z: box[2],
-        R: box[3],
-        G: box[4],
-        B: box[5],
-        ALPHA: box[6],
-      }
-      this.createBox(args);
-    }
-
-    const x = Math.floor(Number(args.X));
-    const y = Math.floor(Number(args.Y));
-    const z = Math.floor(Number(args.Z));
-    const pitch = Number(args.PITCH);
-    const yaw = Number(args.YAW);
-    const roll = Number(args.ROLL);
-    this.translation = [x, y, z, pitch, yaw, roll];
-  }
+  // makeModel(args) {
+  //   // create boxes to make a model
+  //   let vertex_num = args.LIST_NAME;
+  //   vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
+  //   vertex_num = Number(vertex_num);
+  //   let list = args.LIST_NAME;
+  //   list = list.replace(/.*end_header\s*/, "");
+  //   list = list.split(' ')
+  //   list = list.map((str) => Number(str));
+  //   const positions = [];
+  //   for (let i = 0; i < vertex_num * 6; i += 6) {
+  //     positions.push(list.slice(i, i + 6));
+  //   }
+  //
+  //   const boxes = this.getBoxes(positions, vertex_num);
+  //
+  //   for (const box of boxes) {
+  //     const args = {
+  //       X: box[0],
+  //       Y: box[1],
+  //       Z: box[2],
+  //       R: box[3],
+  //       G: box[4],
+  //       B: box[5],
+  //       ALPHA: box[6],
+  //     }
+  //     this.createBox(args);
+  //   }
+  //
+  //   const x = Math.floor(Number(args.X));
+  //   const y = Math.floor(Number(args.Y));
+  //   const z = Math.floor(Number(args.Z));
+  //   const pitch = Number(args.PITCH);
+  //   const yaw = Number(args.YAW);
+  //   const roll = Number(args.ROLL);
+  //   this.transform = [x, y, z, pitch, yaw, roll];
+  // }
 
   buildPlyModel(args) {
       // create boxes to make a model
@@ -1360,8 +1360,8 @@ class ExtensionBlocks {
     const date = new Date();
     const name = args.NAME;
     const dataToSend = {
-      translation: this.translation,
-      frameTranslations: this.frameTranslations,
+      nodeTransform: this.nodeTransform,
+      frameTransforms: this.frameTransforms,
       globalAnimation: this.globalAnimation,
       animation: this.animation,
       boxes: this.boxes,
