@@ -299,7 +299,26 @@ var en = {
 	"voxelamming.stone": "stone",
 	"voxelamming.dirt": "dirt",
 	"voxelamming.planks": "planks",
-	"voxelamming.bricks": "bricks"
+	"voxelamming.bricks": "bricks",
+	"voxelamming.Mercury": "Mercury",
+	"voxelamming.Venus": "Venus",
+	"voxelamming.Earth": "Earth",
+	"voxelamming.Mars": "Mars",
+	"voxelamming.Jupiter": "Jupiter",
+	"voxelamming.Saturn": "Saturn",
+	"voxelamming.Uranus": "Uranus",
+	"voxelamming.Neptune": "Neptune",
+	"voxelamming.Pluto": "Pluto",
+	"voxelamming.Sun": "Sun",
+	"voxelamming.Moon": "Moon",
+	"voxelamming.ToyBiplane": "ToyBiplane",
+	"voxelamming.ToyCar": "ToyCar",
+	"voxelamming.Drummer": "Drummer",
+	"voxelamming.Robot": "Robot",
+	"voxelamming.ToyRocket": "ToyRocket",
+	"voxelamming.RocketToy1": "RocketToy1",
+	"voxelamming.RocketToy2": "RocketToy2",
+	"voxelamming.Skull": "Skull"
 };
 var ja = {
 	"voxelamming.name": "ボクセラミング",
@@ -342,7 +361,26 @@ var ja = {
 	"voxelamming.stone": "石",
 	"voxelamming.dirt": "土",
 	"voxelamming.planks": "木材",
-	"voxelamming.bricks": "レンガ"
+	"voxelamming.bricks": "レンガ",
+	"voxelamming.Mercury": "水星",
+	"voxelamming.Venus": "金星",
+	"voxelamming.Earth": "地球",
+	"voxelamming.Mars": "火星",
+	"voxelamming.Jupiter": "木星",
+	"voxelamming.Saturn": "土星",
+	"voxelamming.Uranus": "天王星",
+	"voxelamming.Neptune": "海王星",
+	"voxelamming.Pluto": "冥王星",
+	"voxelamming.Sun": "太陽",
+	"voxelamming.Moon": "月",
+	"voxelamming.ToyBiplane": "飛行機",
+	"voxelamming.ToyCar": "自動車",
+	"voxelamming.Drummer": "ドラマー",
+	"voxelamming.Robot": "ロボット",
+	"voxelamming.ToyRocket": "ロケット",
+	"voxelamming.RocketToy1": "トイロケット1",
+	"voxelamming.RocketToy2": "トイロケット2",
+	"voxelamming.Skull": "ガイコツ"
 };
 var translations = {
 	en: en,
@@ -388,7 +426,26 @@ var translations = {
 	"voxelamming.stone": "いし",
 	"voxelamming.dirt": "つち",
 	"voxelamming.planks": "もくざい",
-	"voxelamming.bricks": "レンガ"
+	"voxelamming.bricks": "レンガ",
+	"voxelamming.Mercury": "すいせい",
+	"voxelamming.Venus": "きんせい",
+	"voxelamming.Earth": "ちきゅう",
+	"voxelamming.Mars": "かせい",
+	"voxelamming.Jupiter": "もくせい",
+	"voxelamming.Saturn": "どせい",
+	"voxelamming.Uranus": "てんおうせい",
+	"voxelamming.Neptune": "かいおうせい",
+	"voxelamming.Pluto": "めいおうせい",
+	"voxelamming.Sun": "たいよう",
+	"voxelamming.Moon": "つき",
+	"voxelamming.ToyBiplane": "ひこうき",
+	"voxelamming.ToyCar": "くるま",
+	"voxelamming.Drummer": "ドラマー",
+	"voxelamming.Robot": "ロボット",
+	"voxelamming.ToyRocket": "ロケット",
+	"voxelamming.RocketToy1": "トイロケット1",
+	"voxelamming.RocketToy2": "トイロケット2",
+	"voxelamming.Skull": "がいこつ"
 }
 };
 
@@ -1055,7 +1112,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           arguments: {
             MODEL_NAME: {
               type: argumentType.STRING,
-              defaultValue: 'Skull'
+              defaultValue: 'Skull',
+              menu: 'modelNameMenu'
             },
             X: {
               type: argumentType.NUMBER,
@@ -1299,6 +1357,143 @@ var ExtensionBlocks = /*#__PURE__*/function () {
                 description: 'Menu item for on'
               }),
               value: 'on'
+            }]
+          },
+          modelNameMenu: {
+            acceptReporters: false,
+            items: [{
+              text: formatMessage({
+                id: 'voxelamming.Mercury',
+                default: 'Mercury',
+                description: 'Menu item for Mercury'
+              }),
+              value: 'Mercury'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Venus',
+                default: 'Venus',
+                description: 'Menu item for Venus'
+              }),
+              value: 'Venus'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Earth',
+                default: 'Earth',
+                description: 'Menu item for Earth'
+              }),
+              value: 'Earth'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Mars',
+                default: 'Mars',
+                description: 'Menu item for Mars'
+              }),
+              value: 'Mars'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Jupiter',
+                default: 'Jupiter',
+                description: 'Menu item for Jupiter'
+              }),
+              value: 'Jupiter'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Saturn',
+                default: 'Saturn',
+                description: 'Menu item for Saturn'
+              }),
+              value: 'Saturn'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Uranus',
+                default: 'Uranus',
+                description: 'Menu item for Uranus'
+              }),
+              value: 'Uranus'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Neptune',
+                default: 'Neptune',
+                description: 'Menu item for Neptune'
+              }),
+              value: 'Neptune'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Pluto',
+                default: 'Pluto',
+                description: 'Menu item for Pluto'
+              }),
+              value: 'Pluto'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Sun',
+                default: 'Sun',
+                description: 'Menu item for Sun'
+              }),
+              value: 'Sun'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Moon',
+                default: 'Moon',
+                description: 'Menu item for Moon'
+              }),
+              value: 'Moon'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.ToyBiplane',
+                default: 'ToyBiplane',
+                description: 'Menu item for ToyBiplane'
+              }),
+              value: 'ToyBiplane'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.ToyCar',
+                default: 'ToyCar',
+                description: 'Menu item for ToyCar'
+              }),
+              value: 'ToyCar'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Drummer',
+                default: 'Drummer',
+                description: 'Menu item for Drummer'
+              }),
+              value: 'Drummer'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Robot',
+                default: 'Robot',
+                description: 'Menu item for Robot'
+              }),
+              value: 'Robot'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.ToyRocket',
+                default: 'ToyRocket',
+                description: 'Menu item for ToyRocket'
+              }),
+              value: 'ToyRocket'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.RocketToy1',
+                default: 'RocketToy1',
+                description: 'Menu item for RocketToy1'
+              }),
+              value: 'RocketToy1'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.RocketToy2',
+                default: 'RocketToy2',
+                description: 'Menu item for RocketToy2'
+              }),
+              value: 'RocketToy2'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.Skull',
+                default: 'Skull',
+                description: 'Menu item for Skull'
+              }),
+              value: 'Skull'
             }]
           }
         }
