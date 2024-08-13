@@ -287,6 +287,7 @@ var en = {
 	"voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
+	"voxelamming.getSpritePosition": "get position of [SPRITE]",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
 	"voxelamming.plane": "plane",
@@ -349,6 +350,7 @@ var ja = {
 	"voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
+	"voxelamming.getSpritePosition": "スプライト [SPRITE] の位置を取得する",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
 	"voxelamming.plane": "平面",
@@ -414,6 +416,7 @@ var translations = {
 	"voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
+	"voxelamming.getSpritePosition": "スプライト [SPRITE] のいちをしゅとくする",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
 	"voxelamming.plane": "いた",
@@ -566,6 +569,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.commands = [];
     this.models = [];
     this.modelMoves = [];
+    this.sprites = [];
     this.size = 1.0;
     this.shape = 'box';
     this.isMetallic = 0;
@@ -1250,6 +1254,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             default: 'Frame Out',
             description: 'frame out'
           })
+        }, {
+          opcode: 'getSpritePosition',
+          blockType: blockType.COMMAND,
+          text: 'get position of [SPRITE]',
+          arguments: {
+            SPRITE: {
+              type: argumentType.STRING,
+              defaultValue: 'Sprite1'
+            }
+          }
         }],
         menus: {
           shapeTypeMenu: {
@@ -1521,6 +1535,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.commands = [];
       this.models = [];
       this.modelMoves = [];
+      this.sprites = [];
       this.size = 1.0;
       this.shape = 'box';
       this.isMetallic = 0;
@@ -2136,6 +2151,28 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isMetallic = isMetallic;
       this.roughness = Number(args.ROUGHNESS);
     }
+
+    // Game API
+  }, {
+    key: "getSpritePosition",
+    value: function getSpritePosition(args) {
+      var spriteName = args.SPRITE;
+      var sprite = this.runtime.getSpriteTargetByName(spriteName);
+      if (sprite) {
+        console.log(sprite);
+        var x = String(sprite.x);
+        var y = String(sprite.y);
+        // const [x, y] = [0, 0]
+
+        // sprites配列から同じスプライト名の要素を削除
+        this.sprites = this.sprites.filter(function (spriteInfo) {
+          return spriteInfo[0] !== spriteName;
+        });
+
+        // 新しいスプライトデータを配列に追加
+        this.sprites.push([spriteName, x, y]);
+      }
+    }
   }, {
     key: "sendData",
     value: function sendData() {
@@ -2161,6 +2198,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         commands: this.commands,
         models: this.models,
         modelMoves: this.modelMoves,
+        sprites: this.sprites,
         size: this.size,
         shape: this.shape,
         interval: this.buildInterval,
