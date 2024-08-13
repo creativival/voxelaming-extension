@@ -109,6 +109,7 @@ class ExtensionBlocks {
     this.commands = [];
     this.models = [];
     this.modelMoves = [];
+    this.sprites = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -752,7 +753,7 @@ class ExtensionBlocks {
               type: ArgumentType.NUMBER,
               defaultValue: 1
             }
-          }
+          },
         },
         {
           opcode: 'pushMatrix',
@@ -819,6 +820,17 @@ class ExtensionBlocks {
             default: 'Frame Out',
             description: 'frame out'
           }),
+        },
+        {
+          opcode: 'getSpritePosition',
+          blockType: BlockType.COMMAND,
+          text: 'get position of [SPRITE]',
+          arguments: {
+            SPRITE: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Sprite1'
+            }
+          }
         }
       ],
       menus: {
@@ -1126,6 +1138,7 @@ class ExtensionBlocks {
     this.commands = [];
     this.models = [];
     this.modelMoves = [];
+    this.sprites = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1563,6 +1576,24 @@ class ExtensionBlocks {
     this.roughness = Number(args.ROUGHNESS);
   }
 
+  // Game API
+  getSpritePosition(args) {
+    const spriteName = args.SPRITE;
+    const sprite = this.runtime.getSpriteTargetByName(spriteName);
+    if (sprite) {
+      console.log(sprite)
+      const x = String(sprite.x);
+      const y = String(sprite.y);
+      // const [x, y] = [0, 0]
+
+      // sprites配列から同じスプライト名の要素を削除
+      this.sprites = this.sprites.filter(spriteInfo => spriteInfo[0] !== spriteName);
+
+      // 新しいスプライトデータを配列に追加
+      this.sprites.push([spriteName, x, y]);
+    }
+  }
+
   sendData() {
     this.sendAndRecordData('')
   }
@@ -1584,6 +1615,7 @@ class ExtensionBlocks {
       commands: this.commands,
       models: this.models,
       modelMoves: this.modelMoves,
+      sprites: this.sprites,
       size: this.size,
       shape: this.shape,
       interval: this.buildInterval,
