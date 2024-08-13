@@ -1257,7 +1257,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         }, {
           opcode: 'getSpritePosition',
           blockType: blockType.COMMAND,
-          text: 'get position of [SPRITE]',
+          text: formatMessage({
+            id: 'voxelamming.getSpritePosition',
+            default: 'get position of [SPRITE]',
+            description: 'get sprite position'
+          }),
           arguments: {
             SPRITE: {
               type: argumentType.STRING,
