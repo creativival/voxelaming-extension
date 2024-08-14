@@ -274,7 +274,7 @@ var en = {
 	"voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.buildPlyModel": "Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.makePlyModel": "Make a ply model list: [LIST_CONTENT] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.createModel": "Create a default model [MODEL_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE] entityName: [ENTITY_NAME]",
 	"voxelamming.moveModel": "Move a entity model [ENTITY_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL] scale: [SCALE]",
 	"voxelamming.changeShape": "Change shape: [SHAPE]",
@@ -287,7 +287,8 @@ var en = {
 	"voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
-	"voxelamming.getSpritePosition": "get position of [SPRITE]",
+	"voxelamming.createSprite": "Create [SPRITE_NAME] list: [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]",
+	"voxelamming.getSpritePosition": "Get position of [SPRITE_NAME]",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
 	"voxelamming.plane": "plane",
@@ -337,7 +338,7 @@ var ja = {
 	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.buildPlyModel": "PLYモデルを作成する [LIST_NAME] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.makePlyModel": "PLYモデルを作成する リスト: [LIST_CONTENT] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.createModel": "デフォルトモデルを作成する [MODEL_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 拡大: [SCALE] エンティティネーム: [ENTITY_NAME]",
 	"voxelamming.moveModel": "エンティティモデルを移動する [ENTITY_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 拡大: [SCALE]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
@@ -350,7 +351,8 @@ var ja = {
 	"voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
-	"voxelamming.getSpritePosition": "スプライト [SPRITE] の位置を取得する",
+	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] スケール: [SCALE] 表示: [VISIBLE]",
+	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] の位置を取得する",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
 	"voxelamming.plane": "平面",
@@ -403,7 +405,7 @@ var translations = {
 	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.buildPlyModel": "PLYモデルをつくる [LIST_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
+	"voxelamming.makePlyModel": "PLYモデルをつくる リスト: [LIST_CONTENT] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
 	"voxelamming.createModel": "デフォルトモデルをつくる [MODEL_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] かくだい: [SCALE] エンティティネーム: [ENTITY_NAME]",
 	"voxelamming.moveModel": "エンティティモデルをうごかす [ENTITY_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] かくだい: [SCALE]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
@@ -416,7 +418,8 @@ var translations = {
 	"voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
-	"voxelamming.getSpritePosition": "スプライト [SPRITE] のいちをしゅとくする",
+	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] スケール: [SCALE] みえる: [VISIBLE]",
+	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] のいちをしゅとくする",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
 	"voxelamming.plane": "いた",
@@ -570,6 +573,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.models = [];
     this.modelMoves = [];
     this.sprites = [];
+    this.spriteMoves = [];
     this.size = 1.0;
     this.shape = 'box';
     this.isMetallic = 0;
@@ -1068,17 +1072,17 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
-          opcode: 'buildPlyModel',
+          opcode: 'makePlyModel',
           blockType: blockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.buildPlyModel',
-            default: ' Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
-            description: 'build a ply model'
+            id: 'voxelamming.makePlyModel',
+            default: 'Make a ply model list: [LIST_CONTENT] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+            description: 'make a ply model'
           }),
           arguments: {
-            LIST_NAME: {
+            LIST_CONTENT: {
               type: argumentType.STRING,
-              defaultValue: 'list'
+              defaultValue: 'plyFile'
             },
             X: {
               type: argumentType.NUMBER,
@@ -1195,6 +1199,59 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
+          opcode: 'createSprite',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.createSprite',
+            default: 'Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'Sprite1'
+            },
+            COLOR_LIST: {
+              type: argumentType.STRING,
+              defaultValue: 'colorList'
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            SCALE: {
+              type: argumentType.NUMBER,
+              defaultValue: 1
+            },
+            VISIBLE: {
+              type: argumentType.STRING,
+              defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        }, {
+          opcode: 'getSpritePosition',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.getSpritePosition',
+            default: 'Get position of [SPRITE_NAME]',
+            description: 'get sprite position'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'Sprite1'
+            }
+          }
+        }, {
           opcode: 'pushMatrix',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1254,20 +1311,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             default: 'Frame Out',
             description: 'frame out'
           })
-        }, {
-          opcode: 'getSpritePosition',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.getSpritePosition',
-            default: 'get position of [SPRITE]',
-            description: 'get sprite position'
-          }),
-          arguments: {
-            SPRITE: {
-              type: argumentType.STRING,
-              defaultValue: 'Sprite1'
-            }
-          }
         }],
         menus: {
           shapeTypeMenu: {
@@ -1540,6 +1583,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.models = [];
       this.modelMoves = [];
       this.sprites = [];
+      this.spriteMoves = [];
       this.size = 1.0;
       this.shape = 'box';
       this.isMetallic = 0;
@@ -2027,13 +2071,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "buildPlyModel",
-    value: function buildPlyModel(args) {
+    key: "makePlyModel",
+    value: function makePlyModel(args) {
       // create boxes to make a model
-      var vertex_num = args.LIST_NAME;
+      var vertex_num = args.LIST_CONTENT;
       vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
       vertex_num = Number(vertex_num);
-      var list = args.LIST_NAME;
+      var list = args.LIST_CONTENT;
       list = list.replace(/.*end_header\s*/, "");
       list = list.split(' ');
       list = list.map(function (str) {
@@ -2158,23 +2202,38 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
     // Game API
   }, {
+    key: "createSprite",
+    value: function createSprite(args) {
+      var spriteName = args.SPRITE_NAME;
+      var colorList = args.COLOR_LIST;
+      var x = args.X;
+      var y = args.Y;
+      var direction = args.DIRECTION;
+      var scale = args.SCALE;
+      var visible = args.VISIBLE == "on" ? 'visible' : 'invisible';
+
+      // 新しいスプライトデータを配列に追加
+      this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
+    }
+  }, {
     key: "getSpritePosition",
     value: function getSpritePosition(args) {
-      var spriteName = args.SPRITE;
+      var spriteName = args.SPRITE_NAME;
       var sprite = this.runtime.getSpriteTargetByName(spriteName);
       if (sprite) {
         console.log(sprite);
         var x = String(sprite.x);
         var y = String(sprite.y);
-        // const [x, y] = [0, 0]
+        var direction = String(sprite.direction);
+        var visible = sprite.visible ? 'visible' : 'invisible';
 
         // sprites配列から同じスプライト名の要素を削除
-        this.sprites = this.sprites.filter(function (spriteInfo) {
+        this.spriteMoves = this.spriteMoves.filter(function (spriteInfo) {
           return spriteInfo[0] !== spriteName;
         });
 
         // 新しいスプライトデータを配列に追加
-        this.sprites.push([spriteName, x, y]);
+        this.spriteMoves.push([spriteName, x, y, direction, visible]);
       }
     }
   }, {
@@ -2203,6 +2262,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         models: this.models,
         modelMoves: this.modelMoves,
         sprites: this.sprites,
+        spriteMoves: this.spriteMoves,
         size: this.size,
         shape: this.shape,
         interval: this.buildInterval,
