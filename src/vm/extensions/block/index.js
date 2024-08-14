@@ -110,6 +110,7 @@ class ExtensionBlocks {
     this.models = [];
     this.modelMoves = [];
     this.sprites = [];
+    this.spriteMoves = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -626,17 +627,17 @@ class ExtensionBlocks {
           }
         },
         {
-          opcode: 'buildPlyModel',
+          opcode: 'makePlyModel',
           blockType: BlockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.buildPlyModel',
-            default: ' Build a ply model [LIST_NAME] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
-            description: 'build a ply model'
+            id: 'voxelamming.makePlyModel',
+            default: 'Make a ply model list: [LIST_CONTENT] at x: [X] y: [Y] z: [Z] pitch: [PITCH] yaw: [YAW] roll: [ROLL]',
+            description: 'make a ply model'
           }),
           arguments: {
-            LIST_NAME: {
+            LIST_CONTENT: {
               type: ArgumentType.STRING,
-              defaultValue: 'list'
+              defaultValue: 'plyFile'
             },
             X: {
               type: ArgumentType.NUMBER,
@@ -756,6 +757,61 @@ class ExtensionBlocks {
           },
         },
         {
+          opcode: 'createSprite',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.createSprite',
+            default: 'Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Sprite1'
+            },
+            COLOR_LIST: {
+              type: ArgumentType.STRING,
+              defaultValue: 'colorList'
+            },
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            SCALE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+            VISIBLE: {
+              type: ArgumentType.STRING,
+              defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        },
+        {
+          opcode: 'getSpritePosition',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.getSpritePosition',
+            default: 'Get position of [SPRITE_NAME]',
+            description: 'get sprite position'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Sprite1'
+            }
+          }
+        },
+        {
           opcode: 'pushMatrix',
           blockType: BlockType.COMMAND,
           text: formatMessage({
@@ -820,21 +876,6 @@ class ExtensionBlocks {
             default: 'Frame Out',
             description: 'frame out'
           }),
-        },
-        {
-          opcode: 'getSpritePosition',
-          blockType: BlockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.getSpritePosition',
-            default: 'get position of [SPRITE]',
-            description: 'get sprite position'
-          }),
-          arguments: {
-            SPRITE: {
-              type: ArgumentType.STRING,
-              defaultValue: 'Sprite1'
-            }
-          }
         }
       ],
       menus: {
@@ -1143,6 +1184,7 @@ class ExtensionBlocks {
     this.models = [];
     this.modelMoves = [];
     this.sprites = [];
+    this.spriteMoves = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1493,12 +1535,12 @@ class ExtensionBlocks {
     }
   }
 
-  buildPlyModel(args) {
+  makePlyModel(args) {
     // create boxes to make a model
-    let vertex_num = args.LIST_NAME;
+    let vertex_num = args.LIST_CONTENT;
     vertex_num = vertex_num.replace(/.*element vertex\s*/, "").replace(/\s*property float x.*/, "");
     vertex_num = Number(vertex_num);
-    let list = args.LIST_NAME;
+    let list = args.LIST_CONTENT;
     list = list.replace(/.*end_header\s*/, "");
     list = list.split(' ')
     list = list.map((str) => Number(str));
@@ -1581,20 +1623,34 @@ class ExtensionBlocks {
   }
 
   // Game API
+  createSprite(args) {
+    const spriteName = args.SPRITE_NAME;
+    let colorList = args.COLOR_LIST;
+    const x = args.X;
+    const y = args.Y;
+    const direction = args.DIRECTION;
+    const scale = args.SCALE;
+    const visible = (args.VISIBLE == "on") ? 'visible' : 'invisible';
+
+    // 新しいスプライトデータを配列に追加
+    this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
+  }
+
   getSpritePosition(args) {
-    const spriteName = args.SPRITE;
+    const spriteName = args.SPRITE_NAME;
     const sprite = this.runtime.getSpriteTargetByName(spriteName);
     if (sprite) {
       console.log(sprite)
       const x = String(sprite.x);
       const y = String(sprite.y);
-      // const [x, y] = [0, 0]
+      const direction = String(sprite.direction);
+      const visible = sprite.visible ? 'visible' : 'invisible';
 
       // sprites配列から同じスプライト名の要素を削除
-      this.sprites = this.sprites.filter(spriteInfo => spriteInfo[0] !== spriteName);
+      this.spriteMoves = this.spriteMoves.filter(spriteInfo => spriteInfo[0] !== spriteName);
 
       // 新しいスプライトデータを配列に追加
-      this.sprites.push([spriteName, x, y]);
+      this.spriteMoves.push([spriteName, x, y, direction, visible]);
     }
   }
 
@@ -1620,6 +1676,7 @@ class ExtensionBlocks {
       models: this.models,
       modelMoves: this.modelMoves,
       sprites: this.sprites,
+      spriteMoves: this.spriteMoves,
       size: this.size,
       shape: this.shape,
       interval: this.buildInterval,
