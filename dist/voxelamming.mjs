@@ -2223,7 +2223,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       if (sprite) {
         console.log(sprite);
         var x = String(sprite.x);
-        var y = String(sprite.x);
+        var y = String(sprite.y);
         var direction = String(sprite.direction);
         var visible = sprite.visible ? 'visible' : 'invisible';
 
