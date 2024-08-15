@@ -1642,7 +1642,7 @@ class ExtensionBlocks {
     if (sprite) {
       console.log(sprite)
       const x = String(sprite.x);
-      const y = String(sprite.x);
+      const y = String(sprite.y);
       const direction = String(sprite.direction);
       const visible = sprite.visible ? 'visible' : 'invisible';
 
