@@ -757,6 +757,45 @@ class ExtensionBlocks {
           },
         },
         {
+          opcode: 'setGameScreenSize',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setGameScreenSize',
+            default: 'Set Game Screen Size x: [X] y: [Y]',
+            description: 'set game screen size'
+          }),
+          arguments: {
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 480
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 360
+            }
+          }
+        },
+        {
+          opcode: 'setRotationStyle',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setRotationStyle',
+            default: 'Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]',
+            description: 'change material'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Sprite1'
+            },
+            ROTATION_STYLE: {
+              type: ArgumentType.STRING,
+              defaultValue: 'left-right',
+              menu: 'rotationStyleMenu'
+            }
+          }
+        },
+        {
           opcode: 'createSprite',
           blockType: BlockType.COMMAND,
           text: formatMessage({
@@ -1159,7 +1198,36 @@ class ExtensionBlocks {
               value: 'Skull'
             },
           ]
-        }
+        },
+        rotationStyleMenu: {
+          acceptReporters: false,
+          items: [
+            {
+              text: formatMessage({
+                id: 'voxelamming.left-right',
+                default: 'left-right',
+                description: 'Menu item for left-right'
+              }),
+              value: 'left-right'
+            },
+            {
+              text: formatMessage({
+                id: "voxelamming.don't-rotate",
+                default: "don't-rotate",
+                description: "Menu item for don't-rotate"
+              }),
+              value: "don't-rotate"
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.all-around',
+                default: 'all-around',
+                description: 'Menu item for all-around'
+              }),
+              value: 'all-around'
+            }
+          ]
+        },
       }
     };
   }
@@ -1623,6 +1691,18 @@ class ExtensionBlocks {
   }
 
   // Game API
+  setGameScreenSize(args) {
+    const x = args.X
+    const y = args.Y
+    this.commands.push(`gameScreenSize ${x} ${y}`);
+  }
+
+  setRotationStyle(args) {
+    const spriteName = args.SPRITE_NAME;
+    const style = args.ROTATION_STYLE
+    this.commands.push(`rotationStyle ${spriteName} ${style}`);
+  }
+
   createSprite(args) {
     const spriteName = args.SPRITE_NAME;
     let colorList = args.COLOR_LIST;
@@ -1694,6 +1774,7 @@ class ExtensionBlocks {
     let socket = new WebSocket("wss://websocket.voxelamming.com");
     // console.log(socket);
 
+    const self = this;
     socket.onopen = function () {
       console.log("Connection open...");
       // socket.send("Hello Server");

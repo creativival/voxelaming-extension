@@ -28,6 +28,8 @@
     "voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
     "voxelamming.frameIn": "Frame in",
     "voxelamming.frameOut": "Frame out",
+    "voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y]",
+    "voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
     "voxelamming.createSprite": "Create [SPRITE_NAME] list: [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]",
     "voxelamming.getSpritePosition": "Get position of [SPRITE_NAME]",
     "voxelamming.box": "box",
@@ -61,7 +63,10 @@
     "voxelamming.ToyRocket": "ToyRocket",
     "voxelamming.RocketToy1": "RocketToy1",
     "voxelamming.RocketToy2": "RocketToy2",
-    "voxelamming.Skull": "Skull"
+    "voxelamming.Skull": "Skull",
+    "voxelamming.left-right": "left-right",
+    "voxelamming.don't-rotate": "don't-rotate",
+    "voxelamming.all-around": "all-around"
   },
   "ja": {
     "voxelamming.name": "ボクセラミング",
@@ -92,6 +97,8 @@
     "voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
     "voxelamming.frameIn": "フレームイン",
     "voxelamming.frameOut": "フレームアウト",
+    "voxelamming.setGameScreenSize": "ゲーム画面サイズを設定する x: [X] y: [Y]",
+    "voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
     "voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] スケール: [SCALE] 表示: [VISIBLE]",
     "voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] の位置を取得する",
     "voxelamming.box": "立方体",
@@ -125,7 +132,10 @@
     "voxelamming.ToyRocket": "ロケット",
     "voxelamming.RocketToy1": "トイロケット1",
     "voxelamming.RocketToy2": "トイロケット2",
-    "voxelamming.Skull": "ガイコツ"
+    "voxelamming.Skull": "ガイコツ",
+    "voxelamming.left-right": "左右のみ",
+    "voxelamming.don't-rotate": "回転しない",
+    "voxelamming.all-around": "自由に回転"
   },
   "ja-Hira": {
     "voxelamming.name": "ボクセラミング",
@@ -156,6 +166,8 @@
     "voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
     "voxelamming.frameIn": "フレームイン",
     "voxelamming.frameOut": "フレームアウト",
+    "voxelamming.setGameScreenSize": "ゲームがめんサイズをきめる x: [X] y: [Y]",
+    "voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
     "voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] スケール: [SCALE] みえる: [VISIBLE]",
     "voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] のいちをしゅとくする",
     "voxelamming.box": "はこ",
@@ -189,6 +201,9 @@
     "voxelamming.ToyRocket": "ロケット",
     "voxelamming.RocketToy1": "トイロケット1",
     "voxelamming.RocketToy2": "トイロケット2",
-    "voxelamming.Skull": "がいこつ"
+    "voxelamming.Skull": "がいこつ",
+    "voxelamming.left-right": "さゆうのみ",
+    "voxelamming.don't-rotate": "かいてんしない",
+    "voxelamming.all-around": "じゆうにかいてん"
   }
 }

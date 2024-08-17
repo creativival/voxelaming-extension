@@ -287,6 +287,8 @@ var en = {
 	"voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
+	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y]",
+	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list: [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]",
 	"voxelamming.getSpritePosition": "Get position of [SPRITE_NAME]",
 	"voxelamming.box": "box",
@@ -320,7 +322,10 @@ var en = {
 	"voxelamming.ToyRocket": "ToyRocket",
 	"voxelamming.RocketToy1": "RocketToy1",
 	"voxelamming.RocketToy2": "RocketToy2",
-	"voxelamming.Skull": "Skull"
+	"voxelamming.Skull": "Skull",
+	"voxelamming.left-right": "left-right",
+	"voxelamming.don't-rotate": "don't-rotate",
+	"voxelamming.all-around": "all-around"
 };
 var ja = {
 	"voxelamming.name": "ボクセラミング",
@@ -351,6 +356,8 @@ var ja = {
 	"voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
+	"voxelamming.setGameScreenSize": "ゲーム画面サイズを設定する x: [X] y: [Y]",
+	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] スケール: [SCALE] 表示: [VISIBLE]",
 	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] の位置を取得する",
 	"voxelamming.box": "立方体",
@@ -384,7 +391,10 @@ var ja = {
 	"voxelamming.ToyRocket": "ロケット",
 	"voxelamming.RocketToy1": "トイロケット1",
 	"voxelamming.RocketToy2": "トイロケット2",
-	"voxelamming.Skull": "ガイコツ"
+	"voxelamming.Skull": "ガイコツ",
+	"voxelamming.left-right": "左右のみ",
+	"voxelamming.don't-rotate": "回転しない",
+	"voxelamming.all-around": "自由に回転"
 };
 var translations = {
 	en: en,
@@ -418,6 +428,8 @@ var translations = {
 	"voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
+	"voxelamming.setGameScreenSize": "ゲームがめんサイズをきめる x: [X] y: [Y]",
+	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] スケール: [SCALE] みえる: [VISIBLE]",
 	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] のいちをしゅとくする",
 	"voxelamming.box": "はこ",
@@ -451,7 +463,10 @@ var translations = {
 	"voxelamming.ToyRocket": "ロケット",
 	"voxelamming.RocketToy1": "トイロケット1",
 	"voxelamming.RocketToy2": "トイロケット2",
-	"voxelamming.Skull": "がいこつ"
+	"voxelamming.Skull": "がいこつ",
+	"voxelamming.left-right": "さゆうのみ",
+	"voxelamming.don't-rotate": "かいてんしない",
+	"voxelamming.all-around": "じゆうにかいてん"
 }
 };
 
@@ -1200,6 +1215,43 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
+          opcode: 'setGameScreenSize',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setGameScreenSize',
+            default: 'Set Game Screen Size x: [X] y: [Y]',
+            description: 'set game screen size'
+          }),
+          arguments: {
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 480
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 360
+            }
+          }
+        }, {
+          opcode: 'setRotationStyle',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setRotationStyle',
+            default: 'Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]',
+            description: 'change material'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'Sprite1'
+            },
+            ROTATION_STYLE: {
+              type: argumentType.STRING,
+              defaultValue: 'left-right',
+              menu: 'rotationStyleMenu'
+            }
+          }
+        }, {
           opcode: 'createSprite',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1556,6 +1608,31 @@ var ExtensionBlocks = /*#__PURE__*/function () {
                 description: 'Menu item for Skull'
               }),
               value: 'Skull'
+            }]
+          },
+          rotationStyleMenu: {
+            acceptReporters: false,
+            items: [{
+              text: formatMessage({
+                id: 'voxelamming.left-right',
+                default: 'left-right',
+                description: 'Menu item for left-right'
+              }),
+              value: 'left-right'
+            }, {
+              text: formatMessage({
+                id: "voxelamming.don't-rotate",
+                default: "don't-rotate",
+                description: "Menu item for don't-rotate"
+              }),
+              value: "don't-rotate"
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.all-around',
+                default: 'all-around',
+                description: 'Menu item for all-around'
+              }),
+              value: 'all-around'
             }]
           }
         }
@@ -2203,6 +2280,20 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
     // Game API
   }, {
+    key: "setGameScreenSize",
+    value: function setGameScreenSize(args) {
+      var x = args.X;
+      var y = args.Y;
+      this.commands.push("gameScreenSize ".concat(x, " ").concat(y));
+    }
+  }, {
+    key: "setRotationStyle",
+    value: function setRotationStyle(args) {
+      var spriteName = args.SPRITE_NAME;
+      var style = args.ROTATION_STYLE;
+      this.commands.push("rotationStyle ".concat(spriteName, " ").concat(style));
+    }
+  }, {
     key: "createSprite",
     value: function createSprite(args) {
       var spriteName = args.SPRITE_NAME;
@@ -2281,6 +2372,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var socket = new WebSocket("wss://websocket.voxelamming.com");
       // console.log(socket);
 
+      var self = this;
       socket.onopen = function () {
         console.log("Connection open...");
         // socket.send("Hello Server");
