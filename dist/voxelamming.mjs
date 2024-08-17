@@ -324,8 +324,8 @@ var en = {
 	"voxelamming.RocketToy2": "RocketToy2",
 	"voxelamming.Skull": "Skull",
 	"voxelamming.left-right": "left-right",
-	"voxelamming.don't-rotate": "don't-rotate",
-	"voxelamming.all-around": "all-around"
+	"voxelamming.don't-rotate": "don't rotate",
+	"voxelamming.all-around": "all around"
 };
 var ja = {
 	"voxelamming.name": "ボクセラミング",
@@ -597,6 +597,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.buildInterval = 0.01;
     this.isFraming = false;
     this.frameId = 0;
+    this.retationStyles = {}; // 回転の制御（送信しない）
     // this.dataQueue = [];
     // setInterval(this.sendQueuedData.bind(this), 1000);
 
@@ -1622,17 +1623,17 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }, {
               text: formatMessage({
                 id: "voxelamming.don't-rotate",
-                default: "don't-rotate",
-                description: "Menu item for don't-rotate"
+                default: "don't rotate",
+                description: "Menu item for don't rotate"
               }),
-              value: "don't-rotate"
+              value: "don't rotate"
             }, {
               text: formatMessage({
                 id: 'voxelamming.all-around',
-                default: 'all-around',
-                description: 'Menu item for all-around'
+                default: 'all around',
+                description: 'Menu item for all around'
               }),
-              value: 'all-around'
+              value: 'all around'
             }]
           }
         }
@@ -1670,6 +1671,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.buildInterval = 0.01;
       this.isFraming = false;
       this.frameId = 0;
+      this.retationStyles = {}; // 回転の制御（送信しない）
     }
   }, {
     key: "setFrameFPS",
@@ -2291,7 +2293,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     value: function setRotationStyle(args) {
       var spriteName = args.SPRITE_NAME;
       var style = args.ROTATION_STYLE;
-      this.commands.push("rotationStyle ".concat(spriteName, " ").concat(style));
+      this.retationStyles[spriteName] = style;
     }
   }, {
     key: "createSprite",
@@ -2316,8 +2318,29 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         console.log(sprite);
         var x = String(sprite.x);
         var y = String(sprite.y);
-        var direction = String(sprite.direction);
+        var direction = sprite.direction;
         var visible = sprite.visible ? 'visible' : 'invisible';
+
+        // rotationStyleを取得
+        if (spriteName in this.retationStyles) {
+          var rotationStyle = this.retationStyles[spriteName];
+
+          // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+          if (rotationStyle === 'left-right') {
+            if (direction < 0) {
+              direction = "270"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
+            } else {
+              direction = "90";
+            }
+          } else if (rotationStyle === "don't rotate") {
+            direction = "90";
+          } else {
+            direction = String(direction);
+          }
+        } else {
+          // rotationStyleが設定されていない場合、そのままの値を使う
+          direction = String(direction);
+        }
 
         // sprites配列から同じスプライト名の要素を削除
         this.spriteMoves = this.spriteMoves.filter(function (spriteInfo) {
@@ -2372,7 +2395,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var socket = new WebSocket("wss://websocket.voxelamming.com");
       // console.log(socket);
 
-      var self = this;
+      var self = this; // thisを使うためにselfに代入
       socket.onopen = function () {
         console.log("Connection open...");
         // socket.send("Hello Server");
