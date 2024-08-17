@@ -119,8 +119,8 @@ class ExtensionBlocks {
     this.buildInterval = 0.01;
     this.isFraming = false;
     this.frameId = 0;
-    this.dataQueue = [];
-    setInterval(this.sendQueuedData.bind(this), 1000);
+    // this.dataQueue = [];
+    // setInterval(this.sendQueuedData.bind(this), 1000);
 
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -1687,18 +1687,10 @@ class ExtensionBlocks {
       date: date.toISOString()
     };
 
-    this.dataQueue.push(dataToSend);
-  }
+    // キューに一旦データを入れてから送信
+    // this.dataQueue.push(dataToSend);
 
-  // 定期的にキューに入れたデータを送信する
-  sendQueuedData() {
-    const self = this;
-    if (this.dataQueue.length === 0) return; // If there's no data in queue, skip
-
-    const dataToSend = this.dataQueue.shift(); // Dequeue the data
-    console.log('Sending data...', dataToSend);
-
-
+    // データを送信
     let socket = new WebSocket("wss://websocket.voxelamming.com");
     // console.log(socket);
 
@@ -1729,6 +1721,46 @@ class ExtensionBlocks {
       console.error("WebSocket Error: ", error);
     };
   }
+
+  // // 定期的にキューに入れたデータを送信する
+  // sendQueuedData() {
+  //   const self = this;
+  //   if (this.dataQueue.length === 0) return; // If there's no data in queue, skip
+  //
+  //   const dataToSend = this.dataQueue.shift(); // Dequeue the data
+  //   console.log('Sending data...', dataToSend);
+  //
+  //
+  //   let socket = new WebSocket("wss://websocket.voxelamming.com");
+  //   // console.log(socket);
+  //
+  //   socket.onopen = function () {
+  //     console.log("Connection open...");
+  //     // socket.send("Hello Server");
+  //     socket.send(self.roomName);
+  //     console.log(`Joined room: ${self.roomName}`);
+  //     socket.send(JSON.stringify(dataToSend));
+  //     console.log("Sent data: ", JSON.stringify(dataToSend));
+  //
+  //     // Not clear data after sending because we want to keep the data for the next sending
+  //     // self.clearData();  // clear data after sending
+  //
+  //     // Close the WebSocket connection after sending data
+  //     socket.close();
+  //   };
+  //
+  //   socket.onmessage = function (event) {
+  //     console.log("Received data: ", event.data);
+  //   };
+  //
+  //   socket.onclose = function () {
+  //     console.log("Connection closed.");
+  //   };
+  //
+  //   socket.onerror = function (error) {
+  //     console.error("WebSocket Error: ", error);
+  //   };
+  // }
 
   getBoxes(positions) {
     const boxPositions = new Set();
