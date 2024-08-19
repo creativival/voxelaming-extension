@@ -1,13 +1,12 @@
 import BlockType from '../../extension-support/block-type';
 import ArgumentType from '../../extension-support/argument-type';
-import Cast from '../../util/cast';
 import translations from './translations.json';
 import blockIcon from './voxelamming_40x40_transparent.png';
 import {
+  addVectors,
   getRotationMatrix,
   matrixMultiply,
   transformPointByRotationMatrix,
-  addVectors,
   transpose3x3
 } from './matrixUtil.js'
 
@@ -104,13 +103,14 @@ class ExtensionBlocks {
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
     this.boxes = [];
     this.frames = [];
-    this.sentence = []
+    this.sentences = []
     this.lights = [];
     this.commands = [];
     this.models = [];
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
+    this.gameScore = 0;
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -471,7 +471,7 @@ class ExtensionBlocks {
           blockType: BlockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.writeSentence',
-            default: 'Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]',
+            default: 'Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] fontsize: [FONTSIZE] fixed width: [IS_FIXED_WIDTH]',
             description: 'write sentence'
           }),
           arguments: {
@@ -506,6 +506,15 @@ class ExtensionBlocks {
             ALPHA: {
               type: ArgumentType.NUMBER,
               defaultValue: 1
+            },
+            FONTSIZE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 16
+            },
+            IS_FIXED_WIDTH: {
+              type: ArgumentType.STRING,
+              defaultValue: 'off',
+              menu: 'onOrOffMenu'
             }
           }
         },
@@ -773,6 +782,21 @@ class ExtensionBlocks {
             Y: {
               type: ArgumentType.NUMBER,
               defaultValue: 360
+            }
+          }
+        },
+        {
+          opcode: 'setGameScore',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setGameScore',
+            default: 'Set Game Score: [GAME_SCORE]',
+            description: 'set game score'
+          }),
+          arguments: {
+            GAME_SCORE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
             }
           }
         },
@@ -1247,13 +1271,14 @@ class ExtensionBlocks {
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0]
     this.boxes = [];
     this.frames = [];
-    this.sentence = []
+    this.sentences = []
     this.lights = [];
     this.commands = [];
     this.models = [];
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
+    this.gameScore = 0;
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1492,12 +1517,14 @@ class ExtensionBlocks {
     let g = Number(args.G);
     let b = Number(args.B);
     let alpha = Number(args.ALPHA);
+    let fontSize = args.FONTSIZE;
+    let isFixedWidth = args.IS_FIXED_WIDTH === 'true' ? "1" : "0";
 
     [x, y, z] = this.roundNumbers([x, y, z]);
     [r, g, b, alpha] = this.roundTwoDecimals([r, g, b, alpha]);
     [x, y, z] = [x, y, z].map(val => String(val));
     [r, g, b, alpha] = [r, g, b, alpha].map(val => String(val));
-    this.sentence = [sentence, x, y, z, r, g, b, alpha];
+    this.sentences.push([sentence, x, y, z, r, g, b, alpha, fontSize, isFixedWidth]);
   }
 
   setLight(args) {
@@ -1694,9 +1721,13 @@ class ExtensionBlocks {
 
   // Game API
   setGameScreenSize(args) {
-    const x = args.X
-    const y = args.Y
+    const x = args.X;
+    const y = args.Y;
     this.commands.push(`gameScreenSize ${x} ${y}`);
+  }
+
+  setGameScore(args) {
+    this.gameScore = Number(args.GAME_SCORE);
   }
 
   setRotationStyle(args) {
@@ -1712,7 +1743,7 @@ class ExtensionBlocks {
     const y = args.Y;
     const direction = args.DIRECTION;
     const scale = args.SCALE;
-    const visible = (args.VISIBLE == "on") ? 'visible' : 'invisible';
+    const visible = (args.VISIBLE === "on") ? 'visible' : 'invisible';
 
     // 新しいスプライトデータを配列に追加
     this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
@@ -1722,7 +1753,7 @@ class ExtensionBlocks {
     const spriteName = args.SPRITE_NAME;
     const sprite = this.runtime.getSpriteTargetByName(spriteName);
     if (sprite) {
-      console.log(sprite)
+      console.log(sprite);
       const x = String(sprite.x);
       const y = String(sprite.y);
       let direction = sprite.direction;
@@ -1773,13 +1804,14 @@ class ExtensionBlocks {
       animation: this.animation,
       boxes: this.boxes,
       frames: this.frames,
-      sentence: this.sentence,
+      sentences: this.sentences,
       lights: this.lights,
       commands: this.commands,
       models: this.models,
       modelMoves: this.modelMoves,
       sprites: this.sprites,
       spriteMoves: this.spriteMoves,
+      gameScore: this.gameScore,
       size: this.size,
       shape: this.shape,
       interval: this.buildInterval,
