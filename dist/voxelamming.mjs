@@ -270,7 +270,7 @@ var en = {
 	"voxelamming.setBoxSize": "Set voxel size to [BOXSIZE]",
 	"voxelamming.setBuildInterval": "Set build interval to [INTERVAL]",
 	"voxelamming.clearData": "Clear data",
-	"voxelamming.writeSentence": "Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.writeSentence": "Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] fontsize: [FONTSIZE] fixed width: [IS_FIXED_WIDTH]",
 	"voxelamming.setLight": "Set light at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] intensity: [INTENSITY] interval: [INTERVAL] type: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "Set command [COMMAND]",
 	"voxelamming.drawLine": "Draw line x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -288,6 +288,7 @@ var en = {
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
 	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y]",
+	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list: [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]",
 	"voxelamming.getSpritePosition": "Get position of [SPRITE_NAME]",
@@ -339,7 +340,7 @@ var ja = {
 	"voxelamming.setBoxSize": "ボクセルサイズを [BOXSIZE] にする",
 	"voxelamming.setBuildInterval": "ボクセルの作成間隔を [INTERVAL] 秒にする",
 	"voxelamming.clearData": "データを初期化する",
-	"voxelamming.writeSentence": "文字を書く [SENTENCE] x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.writeSentence": "文字を書く [SENTENCE] x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] フォントサイズ: [FONTSIZE] 固定長: [IS_FIXED_WIDTH]",
 	"voxelamming.setLight": "ライトを配置する x: [X] y: [Y] z: [Z] 色 r: [R] g: [G] b: [B] alpha: [ALPHA] 強さ: [INTENSITY] 点滅: [INTERVAL] 秒 タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -357,6 +358,7 @@ var ja = {
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreenSize": "ゲーム画面サイズを設定する x: [X] y: [Y]",
+	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] スケール: [SCALE] 表示: [VISIBLE]",
 	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] の位置を取得する",
@@ -411,7 +413,7 @@ var translations = {
 	"voxelamming.setBoxSize": "ボクセルサイズを [BOXSIZE] にする",
 	"voxelamming.setBuildInterval": "ボクセルのつくるかんかくを [INTERVAL] びょうにする",
 	"voxelamming.clearData": "データをけす",
-	"voxelamming.writeSentence": "もじをかく [SENTENCE] x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
+	"voxelamming.writeSentence": "もじをかく [SENTENCE] x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] フォントサイズ: [FONTSIZE] こていちょう: [IS_FIXED_WIDTH]",
 	"voxelamming.setLight": "ライトをおく x: [X] y: [Y] z: [Z] いろ r: [R] g: [G] b: [B] alpha: [ALPHA] つよさ: [INTENSITY] てんめつ: [INTERVAL] びょう タイプ: [LIGHT_TYPE]",
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
@@ -429,6 +431,7 @@ var translations = {
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreenSize": "ゲームがめんサイズをきめる x: [X] y: [Y]",
+	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] スケール: [SCALE] みえる: [VISIBLE]",
 	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] のいちをしゅとくする",
@@ -582,13 +585,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
     this.boxes = [];
     this.frames = [];
-    this.sentence = [];
+    this.sentences = [];
     this.lights = [];
     this.commands = [];
     this.models = [];
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
+    this.gameScore = 0;
     this.size = 1.0;
     this.shape = 'box';
     this.isMetallic = 0;
@@ -936,7 +940,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           blockType: blockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.writeSentence',
-            default: 'Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA]',
+            default: 'Write [SENTENCE] at x: [X] y: [Y] z: [Z] r: [R] g: [G] b: [B] alpha: [ALPHA] fontsize: [FONTSIZE] fixed width: [IS_FIXED_WIDTH]',
             description: 'write sentence'
           }),
           arguments: {
@@ -971,6 +975,15 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             ALPHA: {
               type: argumentType.NUMBER,
               defaultValue: 1
+            },
+            FONTSIZE: {
+              type: argumentType.NUMBER,
+              defaultValue: 16
+            },
+            IS_FIXED_WIDTH: {
+              type: argumentType.STRING,
+              defaultValue: 'off',
+              menu: 'onOrOffMenu'
             }
           }
         }, {
@@ -1231,6 +1244,20 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             Y: {
               type: argumentType.NUMBER,
               defaultValue: 360
+            }
+          }
+        }, {
+          opcode: 'setGameScore',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setGameScore',
+            default: 'Set Game Score: [GAME_SCORE]',
+            description: 'set game score'
+          }),
+          arguments: {
+            GAME_SCORE: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
             }
           }
         }, {
@@ -1656,13 +1683,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.animation = [0, 0, 0, 0, 0, 0, 1, 0];
       this.boxes = [];
       this.frames = [];
-      this.sentence = [];
+      this.sentences = [];
       this.lights = [];
       this.commands = [];
       this.models = [];
       this.modelMoves = [];
       this.sprites = [];
       this.spriteMoves = [];
+      this.gameScore = 0;
       this.size = 1.0;
       this.shape = 'box';
       this.isMetallic = 0;
@@ -1954,6 +1982,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var g = Number(args.G);
       var b = Number(args.B);
       var alpha = Number(args.ALPHA);
+      var fontSize = args.FONTSIZE;
+      var isFixedWidth = args.IS_FIXED_WIDTH === 'true' ? "1" : "0";
       var _this$roundNumbers17 = this.roundNumbers([x, y, z]);
       var _this$roundNumbers18 = _slicedToArray(_this$roundNumbers17, 3);
       x = _this$roundNumbers18[0];
@@ -1980,7 +2010,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       g = _map4[1];
       b = _map4[2];
       alpha = _map4[3];
-      this.sentence = [sentence, x, y, z, r, g, b, alpha];
+      this.sentences.push([sentence, x, y, z, r, g, b, alpha, fontSize, isFixedWidth]);
     }
   }, {
     key: "setLight",
@@ -2289,6 +2319,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.commands.push("gameScreenSize ".concat(x, " ").concat(y));
     }
   }, {
+    key: "setGameScore",
+    value: function setGameScore(args) {
+      this.gameScore = Number(args.GAME_SCORE);
+    }
+  }, {
     key: "setRotationStyle",
     value: function setRotationStyle(args) {
       var spriteName = args.SPRITE_NAME;
@@ -2304,7 +2339,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var y = args.Y;
       var direction = args.DIRECTION;
       var scale = args.SCALE;
-      var visible = args.VISIBLE == "on" ? 'visible' : 'invisible';
+      var visible = args.VISIBLE === "on" ? 'visible' : 'invisible';
 
       // 新しいスプライトデータを配列に追加
       this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
@@ -2371,13 +2406,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         animation: this.animation,
         boxes: this.boxes,
         frames: this.frames,
-        sentence: this.sentence,
+        sentences: this.sentences,
         lights: this.lights,
         commands: this.commands,
         models: this.models,
         modelMoves: this.modelMoves,
         sprites: this.sprites,
         spriteMoves: this.spriteMoves,
+        gameScore: this.gameScore,
         size: this.size,
         shape: this.shape,
         interval: this.buildInterval,
