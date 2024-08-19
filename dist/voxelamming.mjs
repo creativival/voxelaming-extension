@@ -602,9 +602,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.isFraming = false;
     this.frameId = 0;
     this.retationStyles = {}; // 回転の制御（送信しない）
-    // this.dataQueue = [];
-    // setInterval(this.sendQueuedData.bind(this), 1000);
-
+    this.socket = null;
+    this.dataQueue = [];
+    this.isSocketOpen = false;
+    setInterval(this.sendQueuedData.bind(this), 100);
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
@@ -2425,77 +2426,82 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       };
 
       // キューに一旦データを入れてから送信
-      // this.dataQueue.push(dataToSend);
+      this.dataQueue.push(dataToSend);
 
-      // データを送信
-      var socket = new WebSocket("wss://websocket.voxelamming.com");
-      // console.log(socket);
+      // // データを送信
+      // let socket = new WebSocket("wss://websocket.voxelamming.com");
+      // // console.log(socket);
+      //
+      // const self = this; // thisを使うためにselfに代入
+      // socket.onopen = function () {
+      //   console.log("Connection open...");
+      //   // socket.send("Hello Server");
+      //   socket.send(self.roomName);
+      //   console.log(`Joined room: ${self.roomName}`);
+      //   socket.send(JSON.stringify(dataToSend));
+      //   console.log("Sent data: ", JSON.stringify(dataToSend));
+      //
+      //   // Not clear data after sending because we want to keep the data for the next sending
+      //   // self.clearData();  // clear data after sending
+      //
+      //   // Close the WebSocket connection after sending data
+      //   socket.close();
+      // };
+      //
+      // socket.onmessage = function (event) {
+      //   console.log("Received data: ", event.data);
+      // };
+      //
+      // socket.onclose = function () {
+      //   console.log("Connection closed.");
+      // };
+      //
+      // socket.onerror = function (error) {
+      //   console.error("WebSocket Error: ", error);
+      // };
+    }
+  }, {
+    key: "connectWebSocket",
+    value: function connectWebSocket() {
+      var _this = this;
+      if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
 
-      var self = this; // thisを使うためにselfに代入
-      socket.onopen = function () {
+      this.socket = new WebSocket("wss://websocket.voxelamming.com");
+      this.socket.onopen = function () {
         console.log("Connection open...");
-        // socket.send("Hello Server");
-        socket.send(self.roomName);
-        console.log("Joined room: ".concat(self.roomName));
-        socket.send(JSON.stringify(dataToSend));
-        console.log("Sent data: ", JSON.stringify(dataToSend));
-
-        // Not clear data after sending because we want to keep the data for the next sending
-        // self.clearData();  // clear data after sending
-
-        // Close the WebSocket connection after sending data
-        socket.close();
+        _this.isSocketOpen = true;
+        _this.socket.send(_this.roomName);
+        console.log("Joined room: ".concat(_this.roomName));
       };
-      socket.onmessage = function (event) {
+      this.socket.onmessage = function (event) {
         console.log("Received data: ", event.data);
       };
-      socket.onclose = function () {
+      this.socket.onclose = function () {
         console.log("Connection closed.");
+        _this.isSocketOpen = false;
+        _this.socket = null;
       };
-      socket.onerror = function (error) {
+      this.socket.onerror = function (error) {
         console.error("WebSocket Error: ", error);
+        _this.isSocketOpen = false;
       };
     }
 
-    // // 定期的にキューに入れたデータを送信する
-    // sendQueuedData() {
-    //   const self = this;
-    //   if (this.dataQueue.length === 0) return; // If there's no data in queue, skip
-    //
-    //   const dataToSend = this.dataQueue.shift(); // Dequeue the data
-    //   console.log('Sending data...', dataToSend);
-    //
-    //
-    //   let socket = new WebSocket("wss://websocket.voxelamming.com");
-    //   // console.log(socket);
-    //
-    //   socket.onopen = function () {
-    //     console.log("Connection open...");
-    //     // socket.send("Hello Server");
-    //     socket.send(self.roomName);
-    //     console.log(`Joined room: ${self.roomName}`);
-    //     socket.send(JSON.stringify(dataToSend));
-    //     console.log("Sent data: ", JSON.stringify(dataToSend));
-    //
-    //     // Not clear data after sending because we want to keep the data for the next sending
-    //     // self.clearData();  // clear data after sending
-    //
-    //     // Close the WebSocket connection after sending data
-    //     socket.close();
-    //   };
-    //
-    //   socket.onmessage = function (event) {
-    //     console.log("Received data: ", event.data);
-    //   };
-    //
-    //   socket.onclose = function () {
-    //     console.log("Connection closed.");
-    //   };
-    //
-    //   socket.onerror = function (error) {
-    //     console.error("WebSocket Error: ", error);
-    //   };
-    // }
+    // 定期的にキューに入れたデータを送信する
+  }, {
+    key: "sendQueuedData",
+    value: function sendQueuedData() {
+      if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
+
+      this.connectWebSocket(); // WebSocket接続を確立または再利用
+
+      if (this.isSocketOpen) {
+        var dataToSend = this.dataQueue.shift(); // キューからデータを取得
+        console.log('Sending data...', dataToSend);
+        this.socket.send(JSON.stringify(dataToSend)); // データを送信
+        console.log("Sent data: ", JSON.stringify(dataToSend));
+      }
+    }
   }, {
     key: "getBoxes",
     value: function getBoxes(positions) {
