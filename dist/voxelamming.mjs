@@ -607,6 +607,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.retationStyles = {}; // 回転の制御（送信しない）
     this.socket = null;
     this.dataQueue = [];
+    this.isSocketConnecting = false;
     this.isSocketOpen = false;
     setInterval(this.sendQueuedData.bind(this), 100);
     if (runtime.formatMessage) {
@@ -2443,46 +2444,82 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       // キューに一旦データを入れてから送信
       this.dataQueue.push(dataToSend);
     }
-  }, {
-    key: "connectWebSocket",
-    value: function connectWebSocket() {
-      var _this = this;
-      if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
 
-      this.socket = new WebSocket("wss://websocket.voxelamming.com");
-      this.socket.onopen = function () {
-        console.log("Connection open...");
-        _this.isSocketOpen = true;
-        _this.socket.send(_this.roomName);
-        console.log("Joined room: ".concat(_this.roomName));
-      };
-      this.socket.onmessage = function (event) {
-        console.log("Received data: ", event.data);
-      };
-      this.socket.onclose = function () {
-        console.log("Connection closed.");
-        _this.isSocketOpen = false;
-        _this.socket = null;
-      };
-      this.socket.onerror = function (error) {
-        console.error("WebSocket Error: ", error);
-        _this.isSocketOpen = false;
-      };
-    }
+    // connectWebSocket() {
+    //   if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
+    //
+    //   // 接続開始
+    //   this.isSocketConnecting = true;
+    //   this.socket = new WebSocket("wss://websocket.voxelamming.com");
+    //
+    //   this.socket.onopen = () => {
+    //     console.log("Connection open...");
+    //     this.isSocketOpen = true;
+    //     this.isSocketConnecting = false;
+    //     this.socket.send(this.roomName);
+    //     console.log(`Joined room: ${this.roomName}`);
+    //   };
+    //
+    //   this.socket.onmessage = (event) => {
+    //     console.log("Received data: ", event.data);
+    //   };
+    //
+    //   this.socket.onclose = () => {
+    //     console.log("Connection closed.");
+    //     this.isSocketOpen = false;
+    //     this.socket = null;
+    //   };
+    //
+    //   this.socket.onerror = (error) => {
+    //     console.error("WebSocket Error: ", error);
+    //     this.isSocketOpen = false;
+    //   };
+    // }
 
     // 定期的にキューに入れたデータを送信する
   }, {
     key: "sendQueuedData",
     value: function sendQueuedData() {
+      var _this = this;
       if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
+      if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
 
-      this.connectWebSocket(); // WebSocket接続を確立または再利用
+      // this.connectWebSocket(); // WebSocket接続を確立または再利用
 
       if (this.isSocketOpen) {
         var dataToSend = this.dataQueue.shift(); // キューからデータを取得
         console.log('Sending data...', dataToSend);
         this.socket.send(JSON.stringify(dataToSend)); // データを送信
         console.log("Sent data: ", JSON.stringify(dataToSend));
+      } else {
+        if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
+
+        // 接続開始
+        this.isSocketConnecting = true;
+        this.socket = new WebSocket("wss://websocket.voxelamming.com");
+        this.socket.onopen = function () {
+          console.log("Connection open...");
+          _this.isSocketOpen = true;
+          _this.isSocketConnecting = false;
+          _this.socket.send(_this.roomName);
+          console.log("Joined room: ".concat(_this.roomName));
+          var dataToSend = _this.dataQueue.shift(); // キューからデータを取得
+          console.log('Sending data...', dataToSend);
+          _this.socket.send(JSON.stringify(dataToSend)); // データを送信
+          console.log("Sent data: ", JSON.stringify(dataToSend));
+        };
+        this.socket.onmessage = function (event) {
+          console.log("Received data: ", event.data);
+        };
+        this.socket.onclose = function () {
+          console.log("Connection closed.");
+          _this.isSocketOpen = false;
+          _this.socket = null;
+        };
+        this.socket.onerror = function (error) {
+          console.error("WebSocket Error: ", error);
+          _this.isSocketOpen = false;
+        };
       }
     }
   }, {
