@@ -122,6 +122,7 @@ class ExtensionBlocks {
     this.retationStyles = {}; // 回転の制御（送信しない）
     this.socket = null;
     this.dataQueue = [];
+    this.isSocketConnecting = false;
     this.isSocketOpen = false;
     setInterval(this.sendQueuedData.bind(this), 100);
 
@@ -1840,40 +1841,44 @@ class ExtensionBlocks {
     this.dataQueue.push(dataToSend);
   }
 
-  connectWebSocket() {
-    if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
-
-    this.socket = new WebSocket("wss://websocket.voxelamming.com");
-
-    this.socket.onopen = () => {
-      console.log("Connection open...");
-      this.isSocketOpen = true;
-      this.socket.send(this.roomName);
-      console.log(`Joined room: ${this.roomName}`);
-    };
-
-    this.socket.onmessage = (event) => {
-      console.log("Received data: ", event.data);
-    };
-
-    this.socket.onclose = () => {
-      console.log("Connection closed.");
-      this.isSocketOpen = false;
-      this.socket = null;
-    };
-
-    this.socket.onerror = (error) => {
-      console.error("WebSocket Error: ", error);
-      this.isSocketOpen = false;
-    };
-  }
+  // connectWebSocket() {
+  //   if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
+  //
+  //   // 接続開始
+  //   this.isSocketConnecting = true;
+  //   this.socket = new WebSocket("wss://websocket.voxelamming.com");
+  //
+  //   this.socket.onopen = () => {
+  //     console.log("Connection open...");
+  //     this.isSocketOpen = true;
+  //     this.isSocketConnecting = false;
+  //     this.socket.send(this.roomName);
+  //     console.log(`Joined room: ${this.roomName}`);
+  //   };
+  //
+  //   this.socket.onmessage = (event) => {
+  //     console.log("Received data: ", event.data);
+  //   };
+  //
+  //   this.socket.onclose = () => {
+  //     console.log("Connection closed.");
+  //     this.isSocketOpen = false;
+  //     this.socket = null;
+  //   };
+  //
+  //   this.socket.onerror = (error) => {
+  //     console.error("WebSocket Error: ", error);
+  //     this.isSocketOpen = false;
+  //   };
+  // }
 
 
   // 定期的にキューに入れたデータを送信する
   sendQueuedData() {
     if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
+    if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
 
-    this.connectWebSocket(); // WebSocket接続を確立または再利用
+    // this.connectWebSocket(); // WebSocket接続を確立または再利用
 
     if (this.isSocketOpen) {
       const dataToSend = this.dataQueue.shift(); // キューからデータを取得
@@ -1881,6 +1886,40 @@ class ExtensionBlocks {
 
       this.socket.send(JSON.stringify(dataToSend)); // データを送信
       console.log("Sent data: ", JSON.stringify(dataToSend));
+    } else {
+      if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
+
+      // 接続開始
+      this.isSocketConnecting = true;
+      this.socket = new WebSocket("wss://websocket.voxelamming.com");
+
+      this.socket.onopen = () => {
+        console.log("Connection open...");
+        this.isSocketOpen = true;
+        this.isSocketConnecting = false;
+        this.socket.send(this.roomName);
+        console.log(`Joined room: ${this.roomName}`);
+        const dataToSend = this.dataQueue.shift(); // キューからデータを取得
+        console.log('Sending data...', dataToSend);
+
+        this.socket.send(JSON.stringify(dataToSend)); // データを送信
+        console.log("Sent data: ", JSON.stringify(dataToSend));
+      };
+
+      this.socket.onmessage = (event) => {
+        console.log("Received data: ", event.data);
+      };
+
+      this.socket.onclose = () => {
+        console.log("Connection closed.");
+        this.isSocketOpen = false;
+        this.socket = null;
+      };
+
+      this.socket.onerror = (error) => {
+        console.error("WebSocket Error: ", error);
+        this.isSocketOpen = false;
+      };
     }
   }
 
