@@ -609,6 +609,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.dataQueue = [];
     this.isSocketConnecting = false;
     this.isSocketOpen = false;
+    this.inactivityTimeout = null; // 非アクティブタイマー
+    this.inactivityDelay = 5000; // 5秒後に接続を切断
     setInterval(this.sendQueuedData.bind(this), 100);
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -2445,37 +2447,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.dataQueue.push(dataToSend);
     }
 
-    // connectWebSocket() {
-    //   if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
-    //
-    //   // 接続開始
-    //   this.isSocketConnecting = true;
-    //   this.socket = new WebSocket("wss://websocket.voxelamming.com");
-    //
-    //   this.socket.onopen = () => {
-    //     console.log("Connection open...");
-    //     this.isSocketOpen = true;
-    //     this.isSocketConnecting = false;
-    //     this.socket.send(this.roomName);
-    //     console.log(`Joined room: ${this.roomName}`);
-    //   };
-    //
-    //   this.socket.onmessage = (event) => {
-    //     console.log("Received data: ", event.data);
-    //   };
-    //
-    //   this.socket.onclose = () => {
-    //     console.log("Connection closed.");
-    //     this.isSocketOpen = false;
-    //     this.socket = null;
-    //   };
-    //
-    //   this.socket.onerror = (error) => {
-    //     console.error("WebSocket Error: ", error);
-    //     this.isSocketOpen = false;
-    //   };
-    // }
-
     // 定期的にキューに入れたデータを送信する
   }, {
     key: "sendQueuedData",
@@ -2484,13 +2455,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
       if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
 
-      // this.connectWebSocket(); // WebSocket接続を確立または再利用
-
       if (this.isSocketOpen) {
         var dataToSend = this.dataQueue.shift(); // キューからデータを取得
         console.log('Sending data...', dataToSend);
         this.socket.send(JSON.stringify(dataToSend)); // データを送信
         console.log("Sent data: ", JSON.stringify(dataToSend));
+        this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
       } else {
         if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
 
@@ -2507,6 +2477,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           console.log('Sending data...', dataToSend);
           _this.socket.send(JSON.stringify(dataToSend)); // データを送信
           console.log("Sent data: ", JSON.stringify(dataToSend));
+          _this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
         };
         this.socket.onmessage = function (event) {
           console.log("Received data: ", event.data);
@@ -2520,6 +2491,27 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           console.error("WebSocket Error: ", error);
           _this.isSocketOpen = false;
         };
+      }
+    }
+  }, {
+    key: "startInactivityTimer",
+    value: function startInactivityTimer() {
+      var _this2 = this;
+      this.clearInactivityTimer(); // 既存のタイマーがあればクリア
+
+      this.inactivityTimeout = setTimeout(function () {
+        if (_this2.socket && _this2.isSocketOpen) {
+          console.log("No data for a while, closing connection...");
+          _this2.socket.close();
+        }
+      }, this.inactivityDelay);
+    }
+  }, {
+    key: "clearInactivityTimer",
+    value: function clearInactivityTimer() {
+      if (this.inactivityTimeout) {
+        clearTimeout(this.inactivityTimeout);
+        this.inactivityTimeout = null;
       }
     }
   }, {
