@@ -123,8 +123,6 @@ class ExtensionBlocks {
     this.socket = null;
     this.dataQueue = [];
     this.isSocketOpen = false;
-    this.emptyQueueCounter = 0; // キューが空であった回数をカウント
-    this.maxEmptyQueueCount = 20; // キューが空であった場合に切断するまでの回数
     setInterval(this.sendQueuedData.bind(this), 100);
 
     if (runtime.formatMessage) {
@@ -1749,8 +1747,7 @@ class ExtensionBlocks {
 
   setRotationStyle(args) {
     const spriteName = args.SPRITE_NAME;
-    const style = args.ROTATION_STYLE
-    this.retationStyles[spriteName] = style;
+    this.retationStyles[spriteName] = args.ROTATION_STYLE;
   }
 
   createSprite(args) {
@@ -1871,22 +1868,10 @@ class ExtensionBlocks {
     };
   }
 
+
   // 定期的にキューに入れたデータを送信する
   sendQueuedData() {
-    // if (this.dataQueue.length === 0) {
-    //   this.emptyQueueCounter++; // キューが空の回数をカウント
-    //   if (this.emptyQueueCounter >= this.maxEmptyQueueCount) {
-    //     this.emptyQueueCounter = 0; // カウンターをリセット
-    //     if (this.socket && this.isSocketOpen) {
-    //       console.log("Queue is empty for too long, closing connection...");
-    //       this.socket.close(); // 接続を閉じる
-    //     }
-    //   }
-    //   return;
-    // }
-    if (this.dataQueue.length === 0) {
-      return;
-    }
+    if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
 
     this.connectWebSocket(); // WebSocket接続を確立または再利用
 
@@ -1906,7 +1891,7 @@ class ExtensionBlocks {
       const vertex1 = positions[i * 4];
       const vertex2 = positions[i * 4 + 1];
       const vertex3 = positions[i * 4 + 2];
-      const vertex4 = positions[i * 4 + 3]; // no need
+      // const vertex4 = positions[i * 4 + 3]; // no need
       let x = Math.min(vertex1[0], vertex2[0], vertex3[0]);
       let y = Math.min(vertex1[1], vertex2[1], vertex3[1]);
       let z = Math.min(vertex1[2], vertex2[2], vertex3[2]);
