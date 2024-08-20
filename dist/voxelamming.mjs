@@ -2447,6 +2447,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.dataQueue.push(dataToSend);
     }
 
+    // キュー内のデータを送信
+  }, {
+    key: "sendDataFromQueue",
+    value: function sendDataFromQueue() {
+      if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
+
+      var dataToSend = this.dataQueue.shift(); // キューからデータを取得
+      console.log('Sending data...', dataToSend);
+      this.socket.send(JSON.stringify(dataToSend)); // データを送信
+      console.log("Sent data: ", JSON.stringify(dataToSend));
+      this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
+    }
+
     // 定期的にキューに入れたデータを送信する
   }, {
     key: "sendQueuedData",
@@ -2456,12 +2469,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
 
       if (this.isSocketOpen) {
-        var dataToSend = this.dataQueue.shift(); // キューからデータを取得
-        console.log('Sending data...', dataToSend);
-        this.socket.send(JSON.stringify(dataToSend)); // データを送信
-        console.log("Sent data: ", JSON.stringify(dataToSend));
-        this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
+        // 既に接続されている場合はデータを送信
+        this.sendDataFromQueue(); // キュー内のデータを送信
       } else {
+        // 未接続の場合は再接続
         if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
 
         // 接続開始
@@ -2473,11 +2484,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           _this.isSocketConnecting = false;
           _this.socket.send(_this.roomName);
           console.log("Joined room: ".concat(_this.roomName));
-          var dataToSend = _this.dataQueue.shift(); // キューからデータを取得
-          console.log('Sending data...', dataToSend);
-          _this.socket.send(JSON.stringify(dataToSend)); // データを送信
-          console.log("Sent data: ", JSON.stringify(dataToSend));
-          _this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
+          // 接続後にデータを送信
+          _this.sendDataFromQueue(); // キュー内のデータを送信
         };
         this.socket.onmessage = function (event) {
           console.log("Received data: ", event.data);
