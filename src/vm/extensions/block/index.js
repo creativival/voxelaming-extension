@@ -123,6 +123,8 @@ class ExtensionBlocks {
     this.socket = null;
     this.dataQueue = [];
     this.isSocketOpen = false;
+    this.emptyQueueCounter = 0; // キューが空であった回数をカウント
+    this.maxEmptyQueueCount = 20; // キューが空であった場合に切断するまでの回数
     setInterval(this.sendQueuedData.bind(this), 100);
 
     if (runtime.formatMessage) {
@@ -801,6 +803,15 @@ class ExtensionBlocks {
               defaultValue: 0
             }
           }
+        },
+        {
+          opcode: 'sendGameOver',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.sendGameOver',
+            default: 'Send Game Over',
+            description: 'send game over'
+          })
         },
         {
           opcode: 'setRotationStyle',
@@ -1732,6 +1743,10 @@ class ExtensionBlocks {
     this.gameScore = Number(args.GAME_SCORE);
   }
 
+  sendGameOver() {
+    this.commands.push('gameOver');
+  }
+
   setRotationStyle(args) {
     const spriteName = args.SPRITE_NAME;
     const style = args.ROTATION_STYLE
@@ -1826,38 +1841,6 @@ class ExtensionBlocks {
 
     // キューに一旦データを入れてから送信
     this.dataQueue.push(dataToSend);
-
-    // // データを送信
-    // let socket = new WebSocket("wss://websocket.voxelamming.com");
-    // // console.log(socket);
-    //
-    // const self = this; // thisを使うためにselfに代入
-    // socket.onopen = function () {
-    //   console.log("Connection open...");
-    //   // socket.send("Hello Server");
-    //   socket.send(self.roomName);
-    //   console.log(`Joined room: ${self.roomName}`);
-    //   socket.send(JSON.stringify(dataToSend));
-    //   console.log("Sent data: ", JSON.stringify(dataToSend));
-    //
-    //   // Not clear data after sending because we want to keep the data for the next sending
-    //   // self.clearData();  // clear data after sending
-    //
-    //   // Close the WebSocket connection after sending data
-    //   socket.close();
-    // };
-    //
-    // socket.onmessage = function (event) {
-    //   console.log("Received data: ", event.data);
-    // };
-    //
-    // socket.onclose = function () {
-    //   console.log("Connection closed.");
-    // };
-    //
-    // socket.onerror = function (error) {
-    //   console.error("WebSocket Error: ", error);
-    // };
   }
 
   connectWebSocket() {
@@ -1888,10 +1871,22 @@ class ExtensionBlocks {
     };
   }
 
-
   // 定期的にキューに入れたデータを送信する
   sendQueuedData() {
-    if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
+    // if (this.dataQueue.length === 0) {
+    //   this.emptyQueueCounter++; // キューが空の回数をカウント
+    //   if (this.emptyQueueCounter >= this.maxEmptyQueueCount) {
+    //     this.emptyQueueCounter = 0; // カウンターをリセット
+    //     if (this.socket && this.isSocketOpen) {
+    //       console.log("Queue is empty for too long, closing connection...");
+    //       this.socket.close(); // 接続を閉じる
+    //     }
+    //   }
+    //   return;
+    // }
+    if (this.dataQueue.length === 0) {
+      return;
+    }
 
     this.connectWebSocket(); // WebSocket接続を確立または再利用
 
