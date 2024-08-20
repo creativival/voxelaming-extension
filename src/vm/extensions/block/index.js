@@ -1843,19 +1843,29 @@ class ExtensionBlocks {
     this.dataQueue.push(dataToSend);
   }
 
+  // キュー内のデータを送信
+  sendDataFromQueue() {
+    if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
+
+    const dataToSend = this.dataQueue.shift(); // キューからデータを取得
+    console.log('Sending data...', dataToSend);
+
+    this.socket.send(JSON.stringify(dataToSend)); // データを送信
+    console.log("Sent data: ", JSON.stringify(dataToSend));
+
+    this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
+  }
+
   // 定期的にキューに入れたデータを送信する
   sendQueuedData() {
     if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
     if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
 
     if (this.isSocketOpen) {
-      const dataToSend = this.dataQueue.shift(); // キューからデータを取得
-      console.log('Sending data...', dataToSend);
-
-      this.socket.send(JSON.stringify(dataToSend)); // データを送信
-      console.log("Sent data: ", JSON.stringify(dataToSend));
-      this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
+      // 既に接続されている場合はデータを送信
+      this.sendDataFromQueue(); // キュー内のデータを送信
     } else {
+      // 未接続の場合は再接続
       if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
 
       // 接続開始
@@ -1868,12 +1878,8 @@ class ExtensionBlocks {
         this.isSocketConnecting = false;
         this.socket.send(this.roomName);
         console.log(`Joined room: ${this.roomName}`);
-        const dataToSend = this.dataQueue.shift(); // キューからデータを取得
-        console.log('Sending data...', dataToSend);
-
-        this.socket.send(JSON.stringify(dataToSend)); // データを送信
-        console.log("Sent data: ", JSON.stringify(dataToSend));
-        this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
+        // 接続後にデータを送信
+        this.sendDataFromQueue(); // キュー内のデータを送信
       };
 
       this.socket.onmessage = (event) => {
@@ -1910,8 +1916,7 @@ class ExtensionBlocks {
       this.inactivityTimeout = null;
     }
   }
-
-
+  
   getBoxes(positions) {
     const boxPositions = new Set();
     const numberOfFaces = Math.floor(positions.length / 4);
