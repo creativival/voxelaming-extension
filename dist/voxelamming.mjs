@@ -289,6 +289,7 @@ var en = {
 	"voxelamming.frameOut": "Frame out",
 	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
+	"voxelamming.sendGameOver": "Send Game Over",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list: [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]",
 	"voxelamming.getSpritePosition": "Get position of [SPRITE_NAME]",
@@ -359,6 +360,7 @@ var ja = {
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreenSize": "ゲーム画面サイズを設定する x: [X] y: [Y]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
+	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] スケール: [SCALE] 表示: [VISIBLE]",
 	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] の位置を取得する",
@@ -432,6 +434,7 @@ var translations = {
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreenSize": "ゲームがめんサイズをきめる x: [X] y: [Y]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
+	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] スケール: [SCALE] みえる: [VISIBLE]",
 	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] のいちをしゅとくする",
@@ -605,6 +608,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.socket = null;
     this.dataQueue = [];
     this.isSocketOpen = false;
+    this.emptyQueueCounter = 0; // キューが空であった回数をカウント
+    this.maxEmptyQueueCount = 20; // キューが空であった場合に切断するまでの回数
     setInterval(this.sendQueuedData.bind(this), 100);
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -1261,6 +1266,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               defaultValue: 0
             }
           }
+        }, {
+          opcode: 'sendGameOver',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.sendGameOver',
+            default: 'Send Game Over',
+            description: 'send game over'
+          })
         }, {
           opcode: 'setRotationStyle',
           blockType: blockType.COMMAND,
@@ -2325,6 +2338,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.gameScore = Number(args.GAME_SCORE);
     }
   }, {
+    key: "sendGameOver",
+    value: function sendGameOver() {
+      this.commands.push('gameOver');
+    }
+  }, {
     key: "setRotationStyle",
     value: function setRotationStyle(args) {
       var spriteName = args.SPRITE_NAME;
@@ -2427,38 +2445,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
       // キューに一旦データを入れてから送信
       this.dataQueue.push(dataToSend);
-
-      // // データを送信
-      // let socket = new WebSocket("wss://websocket.voxelamming.com");
-      // // console.log(socket);
-      //
-      // const self = this; // thisを使うためにselfに代入
-      // socket.onopen = function () {
-      //   console.log("Connection open...");
-      //   // socket.send("Hello Server");
-      //   socket.send(self.roomName);
-      //   console.log(`Joined room: ${self.roomName}`);
-      //   socket.send(JSON.stringify(dataToSend));
-      //   console.log("Sent data: ", JSON.stringify(dataToSend));
-      //
-      //   // Not clear data after sending because we want to keep the data for the next sending
-      //   // self.clearData();  // clear data after sending
-      //
-      //   // Close the WebSocket connection after sending data
-      //   socket.close();
-      // };
-      //
-      // socket.onmessage = function (event) {
-      //   console.log("Received data: ", event.data);
-      // };
-      //
-      // socket.onclose = function () {
-      //   console.log("Connection closed.");
-      // };
-      //
-      // socket.onerror = function (error) {
-      //   console.error("WebSocket Error: ", error);
-      // };
     }
   }, {
     key: "connectWebSocket",
@@ -2491,8 +2477,20 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "sendQueuedData",
     value: function sendQueuedData() {
-      if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
-
+      // if (this.dataQueue.length === 0) {
+      //   this.emptyQueueCounter++; // キューが空の回数をカウント
+      //   if (this.emptyQueueCounter >= this.maxEmptyQueueCount) {
+      //     this.emptyQueueCounter = 0; // カウンターをリセット
+      //     if (this.socket && this.isSocketOpen) {
+      //       console.log("Queue is empty for too long, closing connection...");
+      //       this.socket.close(); // 接続を閉じる
+      //     }
+      //   }
+      //   return;
+      // }
+      if (this.dataQueue.length === 0) {
+        return;
+      }
       this.connectWebSocket(); // WebSocket接続を確立または再利用
 
       if (this.isSocketOpen) {
