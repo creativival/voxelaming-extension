@@ -287,7 +287,7 @@ var en = {
 	"voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
-	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y]",
+	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "Send Game Over",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
@@ -358,7 +358,7 @@ var ja = {
 	"voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
-	"voxelamming.setGameScreenSize": "ゲーム画面サイズを設定する x: [X] y: [Y]",
+	"voxelamming.setGameScreenSize": "ゲーム画面を設定する サイズ x: [X] y: [Y] 角度 [ANGLE]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
@@ -432,7 +432,7 @@ var translations = {
 	"voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
-	"voxelamming.setGameScreenSize": "ゲームがめんサイズをきめる x: [X] y: [Y]",
+	"voxelamming.setGameScreenSize": "ゲームがめんをせっていする サイズ x: [X] y: [Y] かくど [ANGLE]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
@@ -595,7 +595,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
-    this.gameScore = 0;
+    this.gameScore = -1;
     this.size = 1.0;
     this.shape = 'box';
     this.isMetallic = 0;
@@ -1240,7 +1240,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           blockType: blockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.setGameScreenSize',
-            default: 'Set Game Screen Size x: [X] y: [Y]',
+            default: 'Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]',
             description: 'set game screen size'
           }),
           arguments: {
@@ -1251,6 +1251,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             Y: {
               type: argumentType.NUMBER,
               defaultValue: 360
+            },
+            ANGLE: {
+              type: argumentType.NUMBER,
+              defaultValue: 90
             }
           }
         }, {
@@ -1705,7 +1709,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.modelMoves = [];
       this.sprites = [];
       this.spriteMoves = [];
-      this.gameScore = 0;
+      this.gameScore = -1;
       this.size = 1.0;
       this.shape = 'box';
       this.isMetallic = 0;
@@ -2331,7 +2335,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     value: function setGameScreenSize(args) {
       var x = args.X;
       var y = args.Y;
-      this.commands.push("gameScreenSize ".concat(x, " ").concat(y));
+      var angle = args.ANGLE;
+      this.commands.push("gameScreenSize ".concat(x, " ").concat(y, " ").concat(angle));
     }
   }, {
     key: "setGameScore",

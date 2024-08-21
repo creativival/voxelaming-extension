@@ -776,7 +776,7 @@ class ExtensionBlocks {
           blockType: BlockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.setGameScreenSize',
-            default: 'Set Game Screen Size x: [X] y: [Y]',
+            default: 'Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]',
             description: 'set game screen size'
           }),
           arguments: {
@@ -787,6 +787,10 @@ class ExtensionBlocks {
             Y: {
               type: ArgumentType.NUMBER,
               defaultValue: 360
+            },
+            ANGLE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 90
             }
           }
         },
@@ -1737,7 +1741,8 @@ class ExtensionBlocks {
   setGameScreenSize(args) {
     const x = args.X;
     const y = args.Y;
-    this.commands.push(`gameScreenSize ${x} ${y}`);
+    const angle = args.ANGLE;
+    this.commands.push(`gameScreenSize ${x} ${y} ${angle}`);
   }
 
   setGameScore(args) {
