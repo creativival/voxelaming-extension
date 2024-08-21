@@ -110,7 +110,7 @@ class ExtensionBlocks {
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
-    this.gameScore = 0;
+    this.gameScore = -1;
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1292,7 +1292,7 @@ class ExtensionBlocks {
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
-    this.gameScore = 0;
+    this.gameScore = -1;
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1916,7 +1916,7 @@ class ExtensionBlocks {
       this.inactivityTimeout = null;
     }
   }
-  
+
   getBoxes(positions) {
     const boxPositions = new Set();
     const numberOfFaces = Math.floor(positions.length / 4);
