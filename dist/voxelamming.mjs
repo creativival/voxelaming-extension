@@ -362,7 +362,7 @@ var ja = {
 	"voxelamming.setGameScreenSize": "ゲーム画面を設定する サイズ x: [X] y: [Y] 角度 [ANGLE]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
-	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズを決める: [SPRITE_BASE_SIZE]",
+	"voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
@@ -1734,6 +1734,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isFraming = false;
       this.frameId = 0;
       this.retationStyles = {}; // 回転の制御（送信しない）
+      this.spriteBaseSize = 50; // ベースサイズを保存（送信しない）
     }
   }, {
     key: "setFrameFPS",
@@ -2440,8 +2441,17 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "sendData",
     value: function sendData() {
+      var args = {
+        'NAME': ''
+      };
+      this.sendAndRecordData(args);
+    }
+  }, {
+    key: "sendAndRecordData",
+    value: function sendAndRecordData(args) {
       var _this = this;
       console.log('Sending data...');
+      var name = args.NAME;
       var date = new Date();
       var dataToSend = {
         nodeTransform: this.nodeTransform,
@@ -2464,7 +2474,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         isMetallic: this.isMetallic,
         roughness: this.roughness,
         isAllowedFloat: this.isAllowedFloat,
-        name: '',
+        name: name,
         date: date.toISOString()
       };
       if (this.socket && this.socket.readyState === WebSocket.OPEN) {
