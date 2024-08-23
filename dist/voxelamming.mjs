@@ -290,9 +290,10 @@ var en = {
 	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "Send Game Over",
+	"voxelamming.setSpriteBaseSize": "Set sprite base size: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
-	"voxelamming.createSprite": "Create [SPRITE_NAME] list: [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]",
-	"voxelamming.getSpritePosition": "Get position of [SPRITE_NAME]",
+	"voxelamming.createSprite": "Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
+	"voxelamming.getSpriteProperties": "Get properties of [SPRITE_NAME]",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
 	"voxelamming.plane": "plane",
@@ -361,9 +362,10 @@ var ja = {
 	"voxelamming.setGameScreenSize": "ゲーム画面を設定する サイズ x: [X] y: [Y] 角度 [ANGLE]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
+	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズを決める: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
-	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] スケール: [SCALE] 表示: [VISIBLE]",
-	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] の位置を取得する",
+	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
+	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
 	"voxelamming.plane": "平面",
@@ -435,9 +437,10 @@ var translations = {
 	"voxelamming.setGameScreenSize": "ゲームがめんをせっていする サイズ x: [X] y: [Y] かくど [ANGLE]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
+	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズをきめる: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
-	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] スケール: [SCALE] みえる: [VISIBLE]",
-	"voxelamming.getSpritePosition": "スプライト [SPRITE_NAME] のいちをしゅとくする",
+	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
+	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] のじょうほうをしらべる",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
 	"voxelamming.plane": "いた",
@@ -605,13 +608,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.isFraming = false;
     this.frameId = 0;
     this.retationStyles = {}; // 回転の制御（送信しない）
+    this.spriteBaseSize = 50; // ベースサイズを保存（送信しない）
     this.socket = null;
-    this.dataQueue = [];
-    this.isSocketConnecting = false;
-    this.isSocketOpen = false;
     this.inactivityTimeout = null; // 非アクティブタイマー
-    this.inactivityDelay = 5000; // 5秒後に接続を切断
-    setInterval(this.sendQueuedData.bind(this), 100);
+    this.inactivityDelay = 2000; // 2秒後に接続を切断
+
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
@@ -1272,6 +1273,20 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
+          opcode: 'setSpriteBaseSize',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setSpriteBaseSize',
+            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
+            description: 'set sprite base size'
+          }),
+          arguments: {
+            SPRITE_BASE_SIZE: {
+              type: argumentType.NUMBER,
+              defaultValue: 50
+            }
+          }
+        }, {
           opcode: 'sendGameOver',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1303,7 +1318,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           blockType: blockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.createSprite',
-            default: 'Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]',
+            default: 'Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]',
             description: 'create sprite'
           }),
           arguments: {
@@ -1327,9 +1342,9 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               type: argumentType.NUMBER,
               defaultValue: 0
             },
-            SCALE: {
+            SIZE: {
               type: argumentType.NUMBER,
-              defaultValue: 1
+              defaultValue: 50
             },
             VISIBLE: {
               type: argumentType.STRING,
@@ -1338,11 +1353,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
-          opcode: 'getSpritePosition',
+          opcode: 'getSpriteProperties',
           blockType: blockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.getSpritePosition',
-            default: 'Get position of [SPRITE_NAME]',
+            id: 'voxelamming.getSpriteProperties',
+            default: 'Get properties of [SPRITE_NAME]',
             description: 'get sprite position'
           }),
           arguments: {
@@ -2344,6 +2359,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.gameScore = Number(args.GAME_SCORE);
     }
   }, {
+    key: "setSpriteBaseSize",
+    value: function setSpriteBaseSize(args) {
+      this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE);
+    }
+  }, {
     key: "sendGameOver",
     value: function sendGameOver() {
       this.commands.push('gameOver');
@@ -2362,15 +2382,18 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var x = args.X;
       var y = args.Y;
       var direction = args.DIRECTION;
-      var scale = args.SCALE;
-      var visible = args.VISIBLE === "on" ? 'visible' : 'invisible';
+      var size = Number(args.SIZE);
+      var visible = args.VISIBLE === "on" ? '1' : '0';
+
+      // スケールを計算
+      var scale = String(size / this.spriteBaseSize);
 
       // 新しいスプライトデータを配列に追加
       this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
     }
   }, {
-    key: "getSpritePosition",
-    value: function getSpritePosition(args) {
+    key: "getSpriteProperties",
+    value: function getSpriteProperties(args) {
       var spriteName = args.SPRITE_NAME;
       var sprite = this.runtime.getSpriteTargetByName(spriteName);
       if (sprite) {
@@ -2378,7 +2401,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         var x = String(sprite.x);
         var y = String(sprite.y);
         var direction = sprite.direction;
-        var visible = sprite.visible ? 'visible' : 'invisible';
+        var size = sprite.size;
+        var visible = sprite.visible ? '1' : '0';
+
+        // スケールを計算
+        var scale = String(size / this.spriteBaseSize);
 
         // rotationStyleを取得
         if (spriteName in this.retationStyles) {
@@ -2407,22 +2434,15 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         });
 
         // 新しいスプライトデータを配列に追加
-        this.spriteMoves.push([spriteName, x, y, direction, visible]);
+        this.spriteMoves.push([spriteName, x, y, direction, scale, visible]);
       }
     }
   }, {
     key: "sendData",
     value: function sendData() {
-      this.sendAndRecordData('');
-    }
-
-    // 連続してデータを送信するときに、データをキューに入れる
-  }, {
-    key: "sendAndRecordData",
-    value: function sendAndRecordData(args) {
+      var _this = this;
       console.log('Sending data...');
       var date = new Date();
-      var name = args.NAME;
       var dataToSend = {
         nodeTransform: this.nodeTransform,
         frameTransforms: this.frameTransforms,
@@ -2444,65 +2464,35 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         isMetallic: this.isMetallic,
         roughness: this.roughness,
         isAllowedFloat: this.isAllowedFloat,
-        name: name,
+        name: '',
         date: date.toISOString()
       };
-
-      // キューに一旦データを入れてから送信
-      this.dataQueue.push(dataToSend);
-    }
-
-    // キュー内のデータを送信
-  }, {
-    key: "sendDataFromQueue",
-    value: function sendDataFromQueue() {
-      if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
-
-      var dataToSend = this.dataQueue.shift(); // キューからデータを取得
-      console.log('Sending data...', dataToSend);
-      this.socket.send(JSON.stringify(dataToSend)); // データを送信
-      console.log("Sent data: ", JSON.stringify(dataToSend));
-      this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
-    }
-
-    // 定期的にキューに入れたデータを送信する
-  }, {
-    key: "sendQueuedData",
-    value: function sendQueuedData() {
-      var _this = this;
-      if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
-      if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
-
-      if (this.isSocketOpen) {
-        // 既に接続されている場合はデータを送信
-        this.sendDataFromQueue(); // キュー内のデータを送信
-      } else {
-        // 未接続の場合は再接続
-        if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
-
-        // 接続開始
-        this.isSocketConnecting = true;
-        this.socket = new WebSocket("wss://websocket.voxelamming.com");
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        this.socket.send(JSON.stringify(dataToSend));
+        console.log('Sent data to server (existing connection):', dataToSend);
+        this.startInactivityTimer(); // タイマーを開始
+      } else if (this.socket && this.socket.readyState === WebSocket.CONNECTING) {
         this.socket.onopen = function () {
-          console.log("Connection open...");
-          _this.isSocketOpen = true;
-          _this.isSocketConnecting = false;
           _this.socket.send(_this.roomName);
           console.log("Joined room: ".concat(_this.roomName));
-          // 接続後にデータを送信
-          _this.sendDataFromQueue(); // キュー内のデータを送信
+          _this.socket.send(JSON.stringify(dataToSend));
+          console.log('Sent data to server (connected):', dataToSend);
+          _this.startInactivityTimer(); // タイマーを開始
         };
-        this.socket.onmessage = function (event) {
-          console.log("Received data: ", event.data);
-        };
-        this.socket.onclose = function () {
-          console.log("Connection closed.");
-          _this.isSocketOpen = false;
-          _this.socket = null;
+      } else {
+        this.socket = new WebSocket('wss://websocket.voxelamming.com');
+        this.socket.onopen = function () {
+          _this.socket.send(_this.roomName);
+          console.log("Joined room: ".concat(_this.roomName));
+          _this.socket.send(JSON.stringify(dataToSend));
+          console.log('Sent data to server (new connection):', dataToSend);
+          _this.startInactivityTimer(); // タイマーを開始
         };
         this.socket.onerror = function (error) {
-          console.error("WebSocket Error: ", error);
-          _this.isSocketOpen = false;
+          console.error("WebSocket error: ".concat(error));
+        };
+        this.socket.onclose = function () {
+          console.log('WebSocket connection closed.');
         };
       }
     }
@@ -2510,11 +2500,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "startInactivityTimer",
     value: function startInactivityTimer() {
       var _this2 = this;
-      this.clearInactivityTimer(); // 既存のタイマーがあればクリア
-
+      this.clearInactivityTimer(); // 既存のタイマーをクリア
       this.inactivityTimeout = setTimeout(function () {
-        if (_this2.socket && _this2.isSocketOpen) {
-          console.log("No data for a while, closing connection...");
+        if (_this2.socket && _this2.socket.readyState === WebSocket.OPEN) {
+          console.log('No data sent for 2 seconds. Closing WebSocket connection.');
           _this2.socket.close();
         }
       }, this.inactivityDelay);

@@ -120,13 +120,10 @@ class ExtensionBlocks {
     this.isFraming = false;
     this.frameId = 0;
     this.retationStyles = {}; // 回転の制御（送信しない）
+    this.spriteBaseSize = 50 // ベースサイズを保存（送信しない）
     this.socket = null;
-    this.dataQueue = [];
-    this.isSocketConnecting = false;
-    this.isSocketOpen = false;
     this.inactivityTimeout = null; // 非アクティブタイマー
-    this.inactivityDelay = 5000; // 5秒後に接続を切断
-    setInterval(this.sendQueuedData.bind(this), 100);
+    this.inactivityDelay = 2000; // 2秒後に接続を切断
 
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -810,6 +807,21 @@ class ExtensionBlocks {
           }
         },
         {
+          opcode: 'setSpriteBaseSize',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setSpriteBaseSize',
+            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
+            description: 'set sprite base size'
+          }),
+          arguments: {
+            SPRITE_BASE_SIZE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 50
+            }
+          }
+        },
+        {
           opcode: 'sendGameOver',
           blockType: BlockType.COMMAND,
           text: formatMessage({
@@ -843,7 +855,7 @@ class ExtensionBlocks {
           blockType: BlockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.createSprite',
-            default: 'Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] scale: [SCALE] visible: [VISIBLE]',
+            default: 'Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]',
             description: 'create sprite'
           }),
           arguments: {
@@ -867,9 +879,9 @@ class ExtensionBlocks {
               type: ArgumentType.NUMBER,
               defaultValue: 0
             },
-            SCALE: {
+            SIZE: {
               type: ArgumentType.NUMBER,
-              defaultValue: 1
+              defaultValue: 50
             },
             VISIBLE: {
               type: ArgumentType.STRING,
@@ -879,11 +891,11 @@ class ExtensionBlocks {
           }
         },
         {
-          opcode: 'getSpritePosition',
+          opcode: 'getSpriteProperties',
           blockType: BlockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.getSpritePosition',
-            default: 'Get position of [SPRITE_NAME]',
+            id: 'voxelamming.getSpriteProperties',
+            default: 'Get properties of [SPRITE_NAME]',
             description: 'get sprite position'
           }),
           arguments: {
@@ -1749,6 +1761,10 @@ class ExtensionBlocks {
     this.gameScore = Number(args.GAME_SCORE);
   }
 
+  setSpriteBaseSize(args) {
+    this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE);
+  }
+
   sendGameOver() {
     this.commands.push('gameOver');
   }
@@ -1764,14 +1780,18 @@ class ExtensionBlocks {
     const x = args.X;
     const y = args.Y;
     const direction = args.DIRECTION;
-    const scale = args.SCALE;
-    const visible = (args.VISIBLE === "on") ? 'visible' : 'invisible';
+    const size = Number(args.SIZE);
+    const visible = (args.VISIBLE === "on") ? '1' : '0';
+
+    // スケールを計算
+    const scale = String(size / this.spriteBaseSize);
+
 
     // 新しいスプライトデータを配列に追加
     this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
   }
 
-  getSpritePosition(args) {
+  getSpriteProperties(args) {
     const spriteName = args.SPRITE_NAME;
     const sprite = this.runtime.getSpriteTargetByName(spriteName);
     if (sprite) {
@@ -1779,7 +1799,11 @@ class ExtensionBlocks {
       const x = String(sprite.x);
       const y = String(sprite.y);
       let direction = sprite.direction;
-      const visible = sprite.visible ? 'visible' : 'invisible';
+      const size = sprite.size;
+      const visible = sprite.visible ? '1' : '0';
+
+      // スケールを計算
+      const scale = String(size / this.spriteBaseSize);
 
       // rotationStyleを取得
       if (spriteName in this.retationStyles) {
@@ -1806,19 +1830,13 @@ class ExtensionBlocks {
       this.spriteMoves = this.spriteMoves.filter(spriteInfo => spriteInfo[0] !== spriteName);
 
       // 新しいスプライトデータを配列に追加
-      this.spriteMoves.push([spriteName, x, y, direction, visible]);
+      this.spriteMoves.push([spriteName, x, y, direction, scale, visible]);
     }
   }
 
   sendData() {
-    this.sendAndRecordData('')
-  }
-
-  // 連続してデータを送信するときに、データをキューに入れる
-  sendAndRecordData(args) {
     console.log('Sending data...');
     const date = new Date();
-    const name = args.NAME;
     const dataToSend = {
       nodeTransform: this.nodeTransform,
       frameTransforms: this.frameTransforms,
@@ -1840,76 +1858,48 @@ class ExtensionBlocks {
       isMetallic: this.isMetallic,
       roughness: this.roughness,
       isAllowedFloat: this.isAllowedFloat,
-      name: name,
+      name: '',
       date: date.toISOString()
     };
 
-    // キューに一旦データを入れてから送信
-    this.dataQueue.push(dataToSend);
-  }
-
-  // キュー内のデータを送信
-  sendDataFromQueue() {
-    if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
-
-    const dataToSend = this.dataQueue.shift(); // キューからデータを取得
-    console.log('Sending data...', dataToSend);
-
-    this.socket.send(JSON.stringify(dataToSend)); // データを送信
-    console.log("Sent data: ", JSON.stringify(dataToSend));
-
-    this.startInactivityTimer(); // データ送信後に非アクティブタイマーをリセット
-  }
-
-  // 定期的にキューに入れたデータを送信する
-  sendQueuedData() {
-    if (this.dataQueue.length === 0) return; // キューにデータがない場合はスキップ
-    if (this.isSocketConnecting) return; // WebSocket接続中の場合はスキップ
-
-    if (this.isSocketOpen) {
-      // 既に接続されている場合はデータを送信
-      this.sendDataFromQueue(); // キュー内のデータを送信
-    } else {
-      // 未接続の場合は再接続
-      if (this.socket && this.isSocketOpen) return; // 既に接続されている場合は再接続しない
-
-      // 接続開始
-      this.isSocketConnecting = true;
-      this.socket = new WebSocket("wss://websocket.voxelamming.com");
-
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(dataToSend));
+      console.log('Sent data to server (existing connection):', dataToSend);
+      this.startInactivityTimer(); // タイマーを開始
+    } else if (this.socket && this.socket.readyState === WebSocket.CONNECTING) {
       this.socket.onopen = () => {
-        console.log("Connection open...");
-        this.isSocketOpen = true;
-        this.isSocketConnecting = false;
         this.socket.send(this.roomName);
         console.log(`Joined room: ${this.roomName}`);
-        // 接続後にデータを送信
-        this.sendDataFromQueue(); // キュー内のデータを送信
+        this.socket.send(JSON.stringify(dataToSend));
+        console.log('Sent data to server (connected):', dataToSend);
+        this.startInactivityTimer(); // タイマーを開始
+      };
+    } else {
+      this.socket = new WebSocket('wss://websocket.voxelamming.com');
+
+      this.socket.onopen = () => {
+        this.socket.send(this.roomName);
+        console.log(`Joined room: ${this.roomName}`);
+        this.socket.send(JSON.stringify(dataToSend));
+        console.log('Sent data to server (new connection):', dataToSend);
+        this.startInactivityTimer(); // タイマーを開始
       };
 
-      this.socket.onmessage = (event) => {
-        console.log("Received data: ", event.data);
+      this.socket.onerror = error => {
+        console.error(`WebSocket error: ${error}`);
       };
 
       this.socket.onclose = () => {
-        console.log("Connection closed.");
-        this.isSocketOpen = false;
-        this.socket = null;
-      };
-
-      this.socket.onerror = (error) => {
-        console.error("WebSocket Error: ", error);
-        this.isSocketOpen = false;
+        console.log('WebSocket connection closed.');
       };
     }
   }
 
   startInactivityTimer() {
-    this.clearInactivityTimer(); // 既存のタイマーがあればクリア
-
+    this.clearInactivityTimer(); // 既存のタイマーをクリア
     this.inactivityTimeout = setTimeout(() => {
-      if (this.socket && this.isSocketOpen) {
-        console.log("No data for a while, closing connection...");
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        console.log('No data sent for 2 seconds. Closing WebSocket connection.');
         this.socket.close();
       }
     }, this.inactivityDelay);
