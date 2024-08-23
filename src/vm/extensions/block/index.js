@@ -1318,6 +1318,7 @@ class ExtensionBlocks {
     this.isFraming = false;
     this.frameId = 0;
     this.retationStyles = {}; // 回転の制御（送信しない）
+    this.spriteBaseSize = 50 // ベースサイズを保存（送信しない）
   }
 
   setFrameFPS(args) {
@@ -1786,7 +1787,6 @@ class ExtensionBlocks {
     // スケールを計算
     const scale = String(size / this.spriteBaseSize);
 
-
     // 新しいスプライトデータを配列に追加
     this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
   }
@@ -1835,7 +1835,13 @@ class ExtensionBlocks {
   }
 
   sendData() {
+    const args = {'NAME': ''};
+    this.sendAndRecordData(args)
+  }
+
+  sendAndRecordData(args) {
     console.log('Sending data...');
+    const name = args.NAME;
     const date = new Date();
     const dataToSend = {
       nodeTransform: this.nodeTransform,
@@ -1858,7 +1864,7 @@ class ExtensionBlocks {
       isMetallic: this.isMetallic,
       roughness: this.roughness,
       isAllowedFloat: this.isAllowedFloat,
-      name: '',
+      name: name,
       date: date.toISOString()
     };
 

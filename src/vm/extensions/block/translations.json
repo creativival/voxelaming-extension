@@ -103,7 +103,7 @@
     "voxelamming.setGameScreenSize": "ゲーム画面を設定する サイズ x: [X] y: [Y] 角度 [ANGLE]",
     "voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
     "voxelamming.sendGameOver": "ゲームオーバーを送信する",
-    "voxelamming.setSpriteBaseSize": "スプライトのきほんサイズを決める: [SPRITE_BASE_SIZE]",
+    "voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
     "voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
     "voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
     "voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
