@@ -607,7 +607,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.buildInterval = 0.01;
     this.isFraming = false;
     this.frameId = 0;
-    this.retationStyles = {}; // 回転の制御（送信しない）
+    this.rotationStyles = {}; // 回転の制御（送信しない）
     this.spriteBaseSize = 50; // ベースサイズを保存（送信しない）
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
@@ -1733,7 +1733,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.buildInterval = 0.01;
       this.isFraming = false;
       this.frameId = 0;
-      this.retationStyles = {}; // 回転の制御（送信しない）
+      this.rotationStyles = {}; // 回転の制御（送信しない）
       this.spriteBaseSize = 50; // ベースサイズを保存（送信しない）
     }
   }, {
@@ -2373,7 +2373,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "setRotationStyle",
     value: function setRotationStyle(args) {
       var spriteName = args.SPRITE_NAME;
-      this.retationStyles[spriteName] = args.ROTATION_STYLE;
+      this.rotationStyles[spriteName] = args.ROTATION_STYLE;
     }
   }, {
     key: "createSprite",
@@ -2409,8 +2409,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         var scale = String(size / this.spriteBaseSize);
 
         // rotationStyleを取得
-        if (spriteName in this.retationStyles) {
-          var rotationStyle = this.retationStyles[spriteName];
+        if (spriteName in this.rotationStyles) {
+          var rotationStyle = this.rotationStyles[spriteName];
 
           // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
           if (rotationStyle === 'left-right') {
