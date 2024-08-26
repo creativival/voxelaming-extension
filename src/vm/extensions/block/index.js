@@ -124,6 +124,7 @@ class ExtensionBlocks {
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
+    this.winndowSize = [480, 360]  // ウィンドウサイズ
 
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
@@ -773,18 +774,10 @@ class ExtensionBlocks {
           blockType: BlockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.setGameScreen',
-            default: 'Set Game Screen width: [WIDTH] height: [HEIGHT] angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]',
+            default: 'Set Game Screen angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]',
             description: 'set game screen'
           }),
           arguments: {
-            WIDTH: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 480
-            },
-            HEIGHT: {
-              type: ArgumentType.NUMBER,
-              defaultValue: 360
-            },
             ANGLE: {
               type: ArgumentType.NUMBER,
               defaultValue: 90
@@ -1754,8 +1747,8 @@ class ExtensionBlocks {
   // Game API
 
   setGameScreen(args) {
-    const width = Number(args.WIDTH) * 64 / 360;
-    const height = Number(args.HEIGHT)  * 64 / 360; // 画面サイズが縦64になるように調整する
+    const width = this.winndowSize[0] * 64 / 360;
+    const height = this.winndowSize[1]  * 64 / 360; // 画面サイズが縦64になるように調整する
     const angle = Number(args.ANGLE);
     const red = Number(args.R);
     const green = Number(args.G);
@@ -1780,14 +1773,14 @@ class ExtensionBlocks {
   createSprite(args) {
     const spriteName = args.SPRITE_NAME;
     let colorList = args.COLOR_LIST;
-    const x = args.X;
-    const y = args.Y;
+    const x = String(Number(args.X) * 64 / 360);
+    const y = String(Number(args.Y) * 64 / 360);
     const direction = String(90 - Number(args.DIRECTION));
-    const size = Number(args.SIZE) /35; // 大きさ35のときに1になるように調整
+    const size = Number(args.SIZE);
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
     // スケールを計算
-    const scale = String(size / this.voxelammingSizeRaito);
+    const scale = String(size / 35); // 大きさ35のときに1になるように調整
 
     // 新しいスプライトデータを配列に追加
     this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
@@ -1798,14 +1791,14 @@ class ExtensionBlocks {
     const sprite = this.runtime.getSpriteTargetByName(spriteName);
     if (sprite) {
       console.log(sprite);
-      const x = String(sprite.x);
-      const y = String(sprite.y);
+      const x = String(sprite.x * 64 / 360);
+      const y = String(sprite.y * 64 / 360);
       let direction = 90 - sprite.direction;
-      const size = sprite.size / 35; // 大きさ35のときに1になるように調整
+      const size = sprite.size; // 大きさ35のときに1になるように調整
       const visible = sprite.visible ? '1' : '0';
 
       // スケールを計算
-      const scale = String(size / this.voxelammingSizeRaito);
+      const scale = String(size / 35); // 大きさ35のときに1になるように調整
 
       // rotationStyleを取得
       if (spriteName in this.rotationStyles) {
