@@ -111,6 +111,7 @@ class ExtensionBlocks {
     this.sprites = [];
     this.spriteMoves = [];
     this.gameScore = -1;
+    this.gameScreen = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -792,6 +793,45 @@ class ExtensionBlocks {
           }
         },
         {
+          opcode: 'setGameScreen',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setGameScreen',
+            default: 'Set Game Screen width: [WIDTH] height: [HEIGHT] angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]',
+            description: 'set game screen'
+          }),
+          arguments: {
+            WIDTH: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 480
+            },
+            HEIGHT: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 360
+            },
+            ANGLE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 90
+            },
+            R: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+            G: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            B: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+            ALPHA: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0.3
+            }
+          }
+        },
+        {
           opcode: 'setGameScore',
           blockType: BlockType.COMMAND,
           text: formatMessage({
@@ -1309,6 +1349,7 @@ class ExtensionBlocks {
     this.sprites = [];
     this.spriteMoves = [];
     this.gameScore = -1;
+    this.gameScreen = [];
     this.size = 1.0;
     this.shape = 'box'
     this.isMetallic = 0
@@ -1751,11 +1792,23 @@ class ExtensionBlocks {
   }
 
   // Game API
+
   setGameScreenSize(args) {
     const x = args.X;
     const y = args.Y;
     const angle = args.ANGLE;
     this.commands.push(`gameScreenSize ${x} ${y} ${angle}`);
+  }
+
+  setGameScreen(args) {
+    const width = Number(args.WIDTH);
+    const height = Number(args.HEIGHT);
+    const angle = Number(args.ANGLE);
+    const red = Number(args.R);
+    const green = Number(args.G);
+    const blue = Number(args.B);
+    const alpha = Number(args.ALPHA);
+    this.gameScreen = [width, height, angle, red, green, blue, alpha]
   }
 
   setGameScore(args) {
@@ -1780,7 +1833,7 @@ class ExtensionBlocks {
     let colorList = args.COLOR_LIST;
     const x = args.X;
     const y = args.Y;
-    const direction = args.DIRECTION;
+    const direction = String(90 - Number(args.DIRECTION));
     const size = Number(args.SIZE);
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
@@ -1798,7 +1851,7 @@ class ExtensionBlocks {
       console.log(sprite);
       const x = String(sprite.x);
       const y = String(sprite.y);
-      let direction = sprite.direction;
+      let direction = 90 - sprite.direction;
       const size = sprite.size;
       const visible = sprite.visible ? '1' : '0';
 
@@ -1812,12 +1865,12 @@ class ExtensionBlocks {
         // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
         if (rotationStyle === 'left-right') {
           if (direction < 0) {
-            direction = "270"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
+            direction = "-180"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
           } else {
-            direction = "90";
+            direction = "0";
           }
         } else if (rotationStyle === "don't rotate") {
-          direction = "90"
+          direction = "0"
         } else {
           direction = String(direction)
         }
@@ -1858,6 +1911,7 @@ class ExtensionBlocks {
       sprites: this.sprites,
       spriteMoves: this.spriteMoves,
       gameScore: this.gameScore,
+      gameScreen: this.gameScreen,
       size: this.size,
       shape: this.shape,
       interval: this.buildInterval,

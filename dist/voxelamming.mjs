@@ -288,6 +288,7 @@ var en = {
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
 	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]",
+	"voxelamming.setGameScreen": "Set Game Screen width: [WIDTH] height: [HEIGHT] angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "Send Game Over",
 	"voxelamming.setSpriteBaseSize": "Set sprite base size: [SPRITE_BASE_SIZE]",
@@ -360,6 +361,7 @@ var ja = {
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreenSize": "ゲーム画面を設定する サイズ x: [X] y: [Y] 角度 [ANGLE]",
+	"voxelamming.setGameScreen": "ゲーム画面を設定する　幅: [WIDTH] 高さ: [HEIGHT] 角度: [ANGLE] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
 	"voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
@@ -435,6 +437,7 @@ var translations = {
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreenSize": "ゲームがめんをせっていする サイズ x: [X] y: [Y] かくど [ANGLE]",
+	"voxelamming.setGameScreen": "ゲームがめんをせっていする　はば: [WIDTH] たかさ: [HEIGHT] かくど: [ANGLE] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
 	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズをきめる: [SPRITE_BASE_SIZE]",
@@ -599,6 +602,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.sprites = [];
     this.spriteMoves = [];
     this.gameScore = -1;
+    this.gameScreen = [];
     this.size = 1.0;
     this.shape = 'box';
     this.isMetallic = 0;
@@ -1259,6 +1263,44 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
+          opcode: 'setGameScreen',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setGameScreen',
+            default: 'Set Game Screen width: [WIDTH] height: [HEIGHT] angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]',
+            description: 'set game screen'
+          }),
+          arguments: {
+            WIDTH: {
+              type: argumentType.NUMBER,
+              defaultValue: 480
+            },
+            HEIGHT: {
+              type: argumentType.NUMBER,
+              defaultValue: 360
+            },
+            ANGLE: {
+              type: argumentType.NUMBER,
+              defaultValue: 90
+            },
+            R: {
+              type: argumentType.NUMBER,
+              defaultValue: 1
+            },
+            G: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            B: {
+              type: argumentType.NUMBER,
+              defaultValue: 1
+            },
+            ALPHA: {
+              type: argumentType.NUMBER,
+              defaultValue: 0.3
+            }
+          }
+        }, {
           opcode: 'setGameScore',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1725,6 +1767,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.sprites = [];
       this.spriteMoves = [];
       this.gameScore = -1;
+      this.gameScreen = [];
       this.size = 1.0;
       this.shape = 'box';
       this.isMetallic = 0;
@@ -2355,6 +2398,18 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.commands.push("gameScreenSize ".concat(x, " ").concat(y, " ").concat(angle));
     }
   }, {
+    key: "setGameScreen",
+    value: function setGameScreen(args) {
+      var width = Number(args.WIDTH);
+      var height = Number(args.HEIGHT);
+      var angle = Number(args.ANGLE);
+      var red = Number(args.R);
+      var green = Number(args.G);
+      var blue = Number(args.B);
+      var alpha = Number(args.ALPHA);
+      this.gameScreen = [width, height, angle, red, green, blue, alpha];
+    }
+  }, {
     key: "setGameScore",
     value: function setGameScore(args) {
       this.gameScore = Number(args.GAME_SCORE);
@@ -2382,7 +2437,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var colorList = args.COLOR_LIST;
       var x = args.X;
       var y = args.Y;
-      var direction = args.DIRECTION;
+      var direction = String(90 - Number(args.DIRECTION));
       var size = Number(args.SIZE);
       var visible = args.VISIBLE === "on" ? '1' : '0';
 
@@ -2401,7 +2456,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         console.log(sprite);
         var x = String(sprite.x);
         var y = String(sprite.y);
-        var direction = sprite.direction;
+        var direction = 90 - sprite.direction;
         var size = sprite.size;
         var visible = sprite.visible ? '1' : '0';
 
@@ -2415,12 +2470,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
           if (rotationStyle === 'left-right') {
             if (direction < 0) {
-              direction = "270"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
+              direction = "-180"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
             } else {
-              direction = "90";
+              direction = "0";
             }
           } else if (rotationStyle === "don't rotate") {
-            direction = "90";
+            direction = "0";
           } else {
             direction = String(direction);
           }
@@ -2468,6 +2523,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         sprites: this.sprites,
         spriteMoves: this.spriteMoves,
         gameScore: this.gameScore,
+        gameScreen: this.gameScreen,
         size: this.size,
         shape: this.shape,
         interval: this.buildInterval,
