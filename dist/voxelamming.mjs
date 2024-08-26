@@ -2373,12 +2373,15 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var colorList = args.COLOR_LIST;
       var x = String(Number(args.X) * 64 / 360);
       var y = String(Number(args.Y) * 64 / 360);
-      var direction = String(90 - Number(args.DIRECTION));
+      var direction = Number(args.DIRECTION);
       var size = Number(args.SIZE);
       var visible = args.VISIBLE === "on" ? '1' : '0';
 
       // スケールを計算
       var scale = String(size / 35); // 大きさ35のときに1になるように調整
+
+      // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
+      direction = String(90 - direction);
 
       // 新しいスプライトデータを配列に追加
       this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
@@ -2392,32 +2395,33 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         console.log(sprite);
         var x = String(sprite.x * 64 / 360);
         var y = String(sprite.y * 64 / 360);
-        var direction = 90 - sprite.direction;
+        var direction = sprite.direction;
         var size = sprite.size; // 大きさ35のときに1になるように調整
         var visible = sprite.visible ? '1' : '0';
 
         // スケールを計算
         var scale = String(size / 35); // 大きさ35のときに1になるように調整
 
-        // rotationStyleを取得
+        // rotationStyleを取得して、送信用のdirectionを計算
         if (spriteName in this.rotationStyles) {
           var rotationStyle = this.rotationStyles[spriteName];
 
           // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+          // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
           if (rotationStyle === 'left-right') {
             if (direction < 0) {
-              direction = "-180"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
+              direction = "-180"; // 取得できる値は-90から90である。-180にすることで特別な値として、左右反転を表現する
             } else {
               direction = "0";
             }
           } else if (rotationStyle === "don't rotate") {
             direction = "0";
           } else {
-            direction = String(direction);
+            direction = String(90 - direction);
           }
         } else {
           // rotationStyleが設定されていない場合、そのままの値を使う
-          direction = String(direction);
+          direction = String(90 - direction);
         }
 
         // sprites配列から同じスプライト名の要素を削除
