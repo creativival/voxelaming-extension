@@ -287,11 +287,9 @@ var en = {
 	"voxelamming.setFrameRepeats": "Set Frame Repeats: [REPEATS]",
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
-	"voxelamming.setGameScreenSize": "Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]",
 	"voxelamming.setGameScreen": "Set Game Screen width: [WIDTH] height: [HEIGHT] angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "Send Game Over",
-	"voxelamming.setSpriteBaseSize": "Set sprite base size: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "Get properties of [SPRITE_NAME]",
@@ -360,11 +358,9 @@ var ja = {
 	"voxelamming.setFrameRepeats": "フレーム 回数: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
-	"voxelamming.setGameScreenSize": "ゲーム画面を設定する サイズ x: [X] y: [Y] 角度 [ANGLE]",
 	"voxelamming.setGameScreen": "ゲーム画面を設定する　幅: [WIDTH] 高さ: [HEIGHT] 角度: [ANGLE] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
-	"voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
@@ -436,11 +432,9 @@ var translations = {
 	"voxelamming.setFrameRepeats": "フレーム かいすう: [REPEATS]",
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
-	"voxelamming.setGameScreenSize": "ゲームがめんをせっていする サイズ x: [X] y: [Y] かくど [ANGLE]",
 	"voxelamming.setGameScreen": "ゲームがめんをせっていする　はば: [WIDTH] たかさ: [HEIGHT] かくど: [ANGLE] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
-	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズをきめる: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] のじょうほうをしらべる",
@@ -612,7 +606,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
-    this.spriteBaseSize = 50; // ベースサイズを保存（送信しない）
+    this.voxelammingSizeRaito = 0.16074285714285715; // ボクセラミングのスプライトサイズを調整するための係数 5.625 / 35
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
@@ -1241,28 +1235,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
-          opcode: 'setGameScreenSize',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.setGameScreenSize',
-            default: 'Set Game Screen Size x: [X] y: [Y] angle: [ANGLE]',
-            description: 'set game screen size'
-          }),
-          arguments: {
-            X: {
-              type: argumentType.NUMBER,
-              defaultValue: 480
-            },
-            Y: {
-              type: argumentType.NUMBER,
-              defaultValue: 360
-            },
-            ANGLE: {
-              type: argumentType.NUMBER,
-              defaultValue: 90
-            }
-          }
-        }, {
           opcode: 'setGameScreen',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1312,20 +1284,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             GAME_SCORE: {
               type: argumentType.NUMBER,
               defaultValue: 0
-            }
-          }
-        }, {
-          opcode: 'setSpriteBaseSize',
-          blockType: blockType.COMMAND,
-          text: formatMessage({
-            id: 'voxelamming.setSpriteBaseSize',
-            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
-            description: 'set sprite base size'
-          }),
-          arguments: {
-            SPRITE_BASE_SIZE: {
-              type: argumentType.NUMBER,
-              defaultValue: 50
             }
           }
         }, {
@@ -1777,7 +1735,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isFraming = false;
       this.frameId = 0;
       this.rotationStyles = {}; // 回転の制御（送信しない）
-      this.spriteBaseSize = 50; // ベースサイズを保存（送信しない）
+      this.voxelammingSizeRaito = 0.16074285714285715; // ボクセラミングのスプライトサイズを調整するための係数 5.625 / 35
     }
   }, {
     key: "setFrameFPS",
@@ -2390,14 +2348,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
     // Game API
   }, {
-    key: "setGameScreenSize",
-    value: function setGameScreenSize(args) {
-      var x = args.X;
-      var y = args.Y;
-      var angle = args.ANGLE;
-      this.commands.push("gameScreenSize ".concat(x, " ").concat(y, " ").concat(angle));
-    }
-  }, {
     key: "setGameScreen",
     value: function setGameScreen(args) {
       var width = Number(args.WIDTH);
@@ -2413,11 +2363,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "setGameScore",
     value: function setGameScore(args) {
       this.gameScore = Number(args.GAME_SCORE);
-    }
-  }, {
-    key: "setSpriteBaseSize",
-    value: function setSpriteBaseSize(args) {
-      this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE);
     }
   }, {
     key: "sendGameOver",
@@ -2442,7 +2387,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var visible = args.VISIBLE === "on" ? '1' : '0';
 
       // スケールを計算
-      var scale = String(size / this.spriteBaseSize);
+      var scale = String(size / this.voxelammingSizeRaito);
 
       // 新しいスプライトデータを配列に追加
       this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
@@ -2461,7 +2406,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         var visible = sprite.visible ? '1' : '0';
 
         // スケールを計算
-        var scale = String(size / this.spriteBaseSize);
+        var scale = String(size / this.voxelammingSizeRaito);
 
         // rotationStyleを取得
         if (spriteName in this.rotationStyles) {
