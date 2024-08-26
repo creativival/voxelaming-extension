@@ -121,7 +121,6 @@ class ExtensionBlocks {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
-    this.voxelammingSizeRaito = 0.16074285714285715 // ボクセラミングのスプライトサイズを調整するための係数 5.625 / 35
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
@@ -1321,7 +1320,6 @@ class ExtensionBlocks {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
-    this.voxelammingSizeRaito = 0.16074285714285715 // ボクセラミングのスプライトサイズを調整するための係数 5.625 / 35
   }
 
   setFrameFPS(args) {
@@ -1756,8 +1754,8 @@ class ExtensionBlocks {
   // Game API
 
   setGameScreen(args) {
-    const width = Number(args.WIDTH);
-    const height = Number(args.HEIGHT);
+    const width = Number(args.WIDTH) * 64 / 360;
+    const height = Number(args.HEIGHT)  * 64 / 360; // 画面サイズが縦64になるように調整する
     const angle = Number(args.ANGLE);
     const red = Number(args.R);
     const green = Number(args.G);
@@ -1785,7 +1783,7 @@ class ExtensionBlocks {
     const x = args.X;
     const y = args.Y;
     const direction = String(90 - Number(args.DIRECTION));
-    const size = Number(args.SIZE);
+    const size = Number(args.SIZE) /35; // 大きさ35のときに1になるように調整
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
     // スケールを計算
@@ -1803,7 +1801,7 @@ class ExtensionBlocks {
       const x = String(sprite.x);
       const y = String(sprite.y);
       let direction = 90 - sprite.direction;
-      const size = sprite.size;
+      const size = sprite.size / 35; // 大きさ35のときに1になるように調整
       const visible = sprite.visible ? '1' : '0';
 
       // スケールを計算

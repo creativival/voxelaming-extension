@@ -606,7 +606,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
-    this.voxelammingSizeRaito = 0.16074285714285715; // ボクセラミングのスプライトサイズを調整するための係数 5.625 / 35
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
@@ -1735,7 +1734,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isFraming = false;
       this.frameId = 0;
       this.rotationStyles = {}; // 回転の制御（送信しない）
-      this.voxelammingSizeRaito = 0.16074285714285715; // ボクセラミングのスプライトサイズを調整するための係数 5.625 / 35
     }
   }, {
     key: "setFrameFPS",
@@ -2350,8 +2348,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "setGameScreen",
     value: function setGameScreen(args) {
-      var width = Number(args.WIDTH);
-      var height = Number(args.HEIGHT);
+      var width = Number(args.WIDTH) * 64 / 360;
+      var height = Number(args.HEIGHT) * 64 / 360; // 画面サイズが縦64になるように調整する
       var angle = Number(args.ANGLE);
       var red = Number(args.R);
       var green = Number(args.G);
@@ -2383,7 +2381,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var x = args.X;
       var y = args.Y;
       var direction = String(90 - Number(args.DIRECTION));
-      var size = Number(args.SIZE);
+      var size = Number(args.SIZE) / 35; // 大きさ35のときに1になるように調整
       var visible = args.VISIBLE === "on" ? '1' : '0';
 
       // スケールを計算
@@ -2402,7 +2400,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         var x = String(sprite.x);
         var y = String(sprite.y);
         var direction = 90 - sprite.direction;
-        var size = sprite.size;
+        var size = sprite.size / 35; // 大きさ35のときに1になるように調整
         var visible = sprite.visible ? '1' : '0';
 
         // スケールを計算
