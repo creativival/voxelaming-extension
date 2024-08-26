@@ -1775,12 +1775,15 @@ class ExtensionBlocks {
     let colorList = args.COLOR_LIST;
     const x = String(Number(args.X) * 64 / 360);
     const y = String(Number(args.Y) * 64 / 360);
-    const direction = String(90 - Number(args.DIRECTION));
+    let direction = Number(args.DIRECTION);
     const size = Number(args.SIZE);
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
     // スケールを計算
     const scale = String(size / 35); // 大きさ35のときに1になるように調整
+
+    // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
+    direction = String(90 - direction);
 
     // 新しいスプライトデータを配列に追加
     this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
@@ -1793,32 +1796,33 @@ class ExtensionBlocks {
       console.log(sprite);
       const x = String(sprite.x * 64 / 360);
       const y = String(sprite.y * 64 / 360);
-      let direction = 90 - sprite.direction;
+      let direction = sprite.direction;
       const size = sprite.size; // 大きさ35のときに1になるように調整
       const visible = sprite.visible ? '1' : '0';
 
       // スケールを計算
       const scale = String(size / 35); // 大きさ35のときに1になるように調整
 
-      // rotationStyleを取得
+      // rotationStyleを取得して、送信用のdirectionを計算
       if (spriteName in this.rotationStyles) {
         const rotationStyle = this.rotationStyles[spriteName];
 
         // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+        // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
         if (rotationStyle === 'left-right') {
           if (direction < 0) {
-            direction = "-180"; // 取得できる値は-90から90である。270にすることで、左右反転を表現する
+            direction = "-180"; // 取得できる値は-90から90である。-180にすることで特別な値として、左右反転を表現する
           } else {
             direction = "0";
           }
         } else if (rotationStyle === "don't rotate") {
           direction = "0"
         } else {
-          direction = String(direction)
+          direction = String(90 - direction)
         }
       } else {
         // rotationStyleが設定されていない場合、そのままの値を使う
-        direction = String(direction)
+        direction = String(90 - direction)
       }
 
       // sprites配列から同じスプライト名の要素を削除
