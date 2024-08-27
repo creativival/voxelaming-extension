@@ -124,6 +124,7 @@ class ExtensionBlocks {
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
+    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
     this.winndowSize = [480, 360]  // ウィンドウサイズ
 
     if (runtime.formatMessage) {
@@ -825,6 +826,21 @@ class ExtensionBlocks {
           })
         },
         {
+          opcode: 'setSpriteBaseSize',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setSpriteBaseSize',
+            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
+            description: 'set sprite base size'
+          }),
+          arguments: {
+            SPRITE_BASE_SIZE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 35
+            }
+          }
+        },
+        {
           opcode: 'setRotationStyle',
           blockType: BlockType.COMMAND,
           text: formatMessage({
@@ -860,6 +876,42 @@ class ExtensionBlocks {
             COLOR_LIST: {
               type: ArgumentType.STRING,
               defaultValue: 'colorList'
+            },
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            SIZE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 50
+            },
+            VISIBLE: {
+              type: ArgumentType.STRING,
+              defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        },
+        {
+          opcode: 'moveSprite',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.moveSprite',
+            default: 'Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Sprite1'
             },
             X: {
               type: ArgumentType.NUMBER,
@@ -1313,6 +1365,7 @@ class ExtensionBlocks {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
+    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
   }
 
   setFrameFPS(args) {
@@ -1746,6 +1799,18 @@ class ExtensionBlocks {
 
   // Game API
 
+  // スプライトの基本サイズを設定
+  // 推奨設定の場合はデフォルト値は35を使うため、設定不要
+  // 推奨設定：スクラッチで読み込む画像サイズは128x128
+  // 推奨設置：ボクセラミングでは、画面サイズ縦が64で、スプライトは8x8のサイズになる（8分の1）
+  // 上記の推奨設定以外の値を使うときは、このブロックでスプライトの基本サイズを変更する事で、見た目を同じにする
+  setSpriteBaseSize(args) {
+    this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE)
+  }
+
+  // ゲーム画面の設定を更新
+  // スクラッチでは480x360は画面サイズとして固定されているため、それに合わせて調整する
+  // ボクセラミングの画面サイズが縦64になるように調整する（Pyxelの画面スケールに合わせる）
   setGameScreen(args) {
     const width = this.winndowSize[0] * 64 / 360;
     const height = this.winndowSize[1]  * 64 / 360; // 画面サイズが縦64になるように調整する
@@ -1757,19 +1822,23 @@ class ExtensionBlocks {
     this.gameScreen = [width, height, angle, red, green, blue, alpha]
   }
 
+  // ゲームスコアを更新
   setGameScore(args) {
     this.gameScore = Number(args.GAME_SCORE);
   }
 
+  // ゲームオーバーを送信
   sendGameOver() {
     this.commands.push('gameOver');
   }
 
+  // 回転スタイルの設定
   setRotationStyle(args) {
     const spriteName = args.SPRITE_NAME;
     this.rotationStyles[spriteName] = args.ROTATION_STYLE;
   }
 
+  // ドットデータからスプライトを作成する
   createSprite(args) {
     const spriteName = args.SPRITE_NAME;
     let colorList = args.COLOR_LIST;
@@ -1780,7 +1849,8 @@ class ExtensionBlocks {
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
     // スケールを計算
-    const scale = String(size / 35); // 大きさ35のときに1になるように調整
+    // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+    const scale = String(size / this.spriteBaseSize);
 
     // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
     direction = String(90 - direction);
@@ -1789,6 +1859,29 @@ class ExtensionBlocks {
     this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
   }
 
+  // 直接数値を指定して動かす
+  // 通常は、getSpritePropertiesメソッドを優勢して使用し、このメソッドは使わない
+  moveSprite(args) {
+    const spriteName = args.SPRITE_NAME;
+    const x = String(Number(args.X) * 64 / 360);
+    const y = String(Number(args.Y) * 64 / 360);
+    let direction = Number(args.DIRECTION);
+    const size = Number(args.SIZE);
+    const visible = (args.VISIBLE === "on") ? '1' : '0';
+
+    // スケールを計算
+    // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+    const scale = String(size / this.spriteBaseSize);
+
+    // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
+    direction = String(90 - direction);
+
+    // 新しいスプライトデータを配列に追加
+    this.spriteMoves.push([spriteName, x, y, direction, scale, visible]);
+  }
+
+  // スプライトの情報を取得して自動で動かす
+  // ゲーム中のスプライトの位置を取得するときに使用する
   getSpriteProperties(args) {
     const spriteName = args.SPRITE_NAME;
     const sprite = this.runtime.getSpriteTargetByName(spriteName);
@@ -1801,7 +1894,8 @@ class ExtensionBlocks {
       const visible = sprite.visible ? '1' : '0';
 
       // スケールを計算
-      const scale = String(size / 35); // 大きさ35のときに1になるように調整
+      // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+      const scale = String(size / this.spriteBaseSize);
 
       // rotationStyleを取得して、送信用のdirectionを計算
       if (spriteName in this.rotationStyles) {

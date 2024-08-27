@@ -290,8 +290,10 @@ var en = {
 	"voxelamming.setGameScreen": "Set Game Screen angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "Send Game Over",
+	"voxelamming.setSpriteBaseSize": "Set sprite base size: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
+	"voxelamming.moveSprite": "Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "Get properties of [SPRITE_NAME]",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
@@ -361,8 +363,10 @@ var ja = {
 	"voxelamming.setGameScreen": "ゲーム画面を設定する　角度: [ANGLE] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
+	"voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
+	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] を移動する x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
@@ -435,8 +439,10 @@ var translations = {
 	"voxelamming.setGameScreen": "ゲームがめんをせっていする　かくど: [ANGLE] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
+	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズをきめる: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
+	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] をうごかす x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] のじょうほうをしらべる",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
@@ -609,6 +615,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
+    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
     this.winndowSize = [480, 360]; // ウィンドウサイズ
 
     if (runtime.formatMessage) {
@@ -1287,6 +1294,20 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             description: 'send game over'
           })
         }, {
+          opcode: 'setSpriteBaseSize',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setSpriteBaseSize',
+            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
+            description: 'set sprite base size'
+          }),
+          arguments: {
+            SPRITE_BASE_SIZE: {
+              type: argumentType.NUMBER,
+              defaultValue: 35
+            }
+          }
+        }, {
           opcode: 'setRotationStyle',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1321,6 +1342,41 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             COLOR_LIST: {
               type: argumentType.STRING,
               defaultValue: 'colorList'
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            SIZE: {
+              type: argumentType.NUMBER,
+              defaultValue: 50
+            },
+            VISIBLE: {
+              type: argumentType.STRING,
+              defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        }, {
+          opcode: 'moveSprite',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.moveSprite',
+            default: 'Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'Sprite1'
             },
             X: {
               type: argumentType.NUMBER,
@@ -1727,6 +1783,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.isFraming = false;
       this.frameId = 0;
       this.rotationStyles = {}; // 回転の制御（送信しない）
+      this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
     }
   }, {
     key: "setFrameFPS",
@@ -2338,6 +2395,21 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     }
 
     // Game API
+
+    // スプライトの基本サイズを設定
+    // 推奨設定の場合はデフォルト値は35を使うため、設定不要
+    // 推奨設定：スクラッチで読み込む画像サイズは128x128
+    // 推奨設置：ボクセラミングでは、画面サイズ縦が64で、スプライトは8x8のサイズになる（8分の1）
+    // 上記の推奨設定以外の値を使うときは、このブロックでスプライトの基本サイズを変更する事で、見た目を同じにする
+  }, {
+    key: "setSpriteBaseSize",
+    value: function setSpriteBaseSize(args) {
+      this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE);
+    }
+
+    // ゲーム画面の設定を更新
+    // スクラッチでは480x360は画面サイズとして固定されているため、それに合わせて調整する
+    // ボクセラミングの画面サイズが縦64になるように調整する（Pyxelの画面スケールに合わせる）
   }, {
     key: "setGameScreen",
     value: function setGameScreen(args) {
@@ -2350,22 +2422,30 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var alpha = Number(args.ALPHA);
       this.gameScreen = [width, height, angle, red, green, blue, alpha];
     }
+
+    // ゲームスコアを更新
   }, {
     key: "setGameScore",
     value: function setGameScore(args) {
       this.gameScore = Number(args.GAME_SCORE);
     }
+
+    // ゲームオーバーを送信
   }, {
     key: "sendGameOver",
     value: function sendGameOver() {
       this.commands.push('gameOver');
     }
+
+    // 回転スタイルの設定
   }, {
     key: "setRotationStyle",
     value: function setRotationStyle(args) {
       var spriteName = args.SPRITE_NAME;
       this.rotationStyles[spriteName] = args.ROTATION_STYLE;
     }
+
+    // ドットデータからスプライトを作成する
   }, {
     key: "createSprite",
     value: function createSprite(args) {
@@ -2378,7 +2458,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var visible = args.VISIBLE === "on" ? '1' : '0';
 
       // スケールを計算
-      var scale = String(size / 35); // 大きさ35のときに1になるように調整
+      // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+      var scale = String(size / this.spriteBaseSize);
 
       // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
       direction = String(90 - direction);
@@ -2386,6 +2467,32 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       // 新しいスプライトデータを配列に追加
       this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
     }
+
+    // 直接数値を指定して動かす
+    // 通常は、getSpritePropertiesメソッドを優勢して使用し、このメソッドは使わない
+  }, {
+    key: "moveSprite",
+    value: function moveSprite(args) {
+      var spriteName = args.SPRITE_NAME;
+      var x = String(Number(args.X) * 64 / 360);
+      var y = String(Number(args.Y) * 64 / 360);
+      var direction = Number(args.DIRECTION);
+      var size = Number(args.SIZE);
+      var visible = args.VISIBLE === "on" ? '1' : '0';
+
+      // スケールを計算
+      // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+      var scale = String(size / this.spriteBaseSize);
+
+      // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
+      direction = String(90 - direction);
+
+      // 新しいスプライトデータを配列に追加
+      this.spriteMoves.push([spriteName, x, y, direction, scale, visible]);
+    }
+
+    // スプライトの情報を取得して自動で動かす
+    // ゲーム中のスプライトの位置を取得するときに使用する
   }, {
     key: "getSpriteProperties",
     value: function getSpriteProperties(args) {
@@ -2400,7 +2507,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         var visible = sprite.visible ? '1' : '0';
 
         // スケールを計算
-        var scale = String(size / 35); // 大きさ35のときに1になるように調整
+        // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+        var scale = String(size / this.spriteBaseSize);
 
         // rotationStyleを取得して、送信用のdirectionを計算
         if (spriteName in this.rotationStyles) {
