@@ -288,7 +288,7 @@ var en = {
 	"voxelamming.frameIn": "Frame in",
 	"voxelamming.frameOut": "Frame out",
 	"voxelamming.setGameScreen": "Set Game Screen angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE]",
+	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE] position: [POSITION]",
 	"voxelamming.sendGameOver": "Send Game Over",
 	"voxelamming.setSpriteBaseSize": "Set sprite base size: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
@@ -368,7 +368,7 @@ var ja = {
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreen": "ゲーム画面を設定する　角度: [ANGLE] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE]",
+	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE] 位置: [POSITION]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
 	"voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
@@ -451,7 +451,7 @@ var translations = {
 	"voxelamming.frameIn": "フレームイン",
 	"voxelamming.frameOut": "フレームアウト",
 	"voxelamming.setGameScreen": "ゲームがめんをせっていする　かくど: [ANGLE] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
-	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE]",
+	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE] いち: [POSITION]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
 	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズをきめる: [SPRITE_BASE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
@@ -1297,7 +1297,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           blockType: blockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.setGameScore',
-            default: 'Set Game Score: [GAME_SCORE]',
+            default: 'Set Game Score: [GAME_SCORE] position: [POSITION]',
             description: 'set game score'
           }),
           arguments: {
@@ -2551,11 +2551,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     value: function displaySpriteTemplate(spriteName, x, y) {
       var direction = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
       var scale = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1; // x, y, directionを丸める
-      var _this$roundNumbers25 = this.roundNumbers([x, y, direction]);
-      var _this$roundNumbers26 = _slicedToArray(_this$roundNumbers25, 3);
-      x = _this$roundNumbers26[0];
-      y = _this$roundNumbers26[1];
-      direction = _this$roundNumbers26[2];
+      var _this$roundTwoDecimal11 = this.roundTwoDecimals([x, y, direction]);
+      var _this$roundTwoDecimal12 = _slicedToArray(_this$roundTwoDecimal11, 3);
+      x = _this$roundTwoDecimal12[0];
+      y = _this$roundTwoDecimal12[1];
+      direction = _this$roundTwoDecimal12[2];
       // rotationStyleを取得
       var _map9 = [x, y, direction, scale].map(String);
       var _map10 = _slicedToArray(_map9, 4);
@@ -2643,17 +2643,17 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var x = 0;
       var y = 0;
       if (position === "top-left") {
-        x = -160;
-        y = 160;
+        x = -28;
+        y = 29;
       } else if (position === "top-right") {
-        x = 160;
-        y = 160;
+        x = 28;
+        y = 29;
       } else if (position === "bottom-left") {
-        x = -160;
-        y = -160;
+        x = -28;
+        y = -29;
       } else if (position === "bottom-right") {
-        x = 160;
-        y = -160;
+        x = 28;
+        y = -29;
       } else if (position === "center") {
         x = 0;
         y = 0;
@@ -2700,11 +2700,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
       // スプライトが表示される場合、スプライトの移動データを配列に追加（これでスプライトが表示される）
       if (visible) {
-        var _this$roundNumbers27 = this.roundNumbers([x, y, direction]);
-        var _this$roundNumbers28 = _slicedToArray(_this$roundNumbers27, 3);
-        x = _this$roundNumbers28[0];
-        y = _this$roundNumbers28[1];
-        direction = _this$roundNumbers28[2];
+        var _this$roundTwoDecimal13 = this.roundTwoDecimals([x, y, direction]);
+        var _this$roundTwoDecimal14 = _slicedToArray(_this$roundTwoDecimal13, 3);
+        x = _this$roundTwoDecimal14[0];
+        y = _this$roundTwoDecimal14[1];
+        direction = _this$roundTwoDecimal14[2];
         var _map11 = [x, y, direction, scale].map(String);
         var _map12 = _slicedToArray(_map11, 4);
         x = _map12[0];
@@ -2744,9 +2744,9 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         if (visible) {
           // スケールを計算
           // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
-          var _this$roundNumbers29 = this.roundNumbers([size / this.spriteBaseSize]),
-            _this$roundNumbers30 = _slicedToArray(_this$roundNumbers29, 1),
-            scale = _this$roundNumbers30[0];
+          var _this$roundTwoDecimal15 = this.roundTwoDecimals([size / this.spriteBaseSize]),
+            _this$roundTwoDecimal16 = _slicedToArray(_this$roundTwoDecimal15, 1),
+            scale = _this$roundTwoDecimal16[0];
 
           // rotationStyleを取得して、送信用のdirectionを計算
           if (spriteName in this.rotationStyles) {
@@ -2793,10 +2793,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var colorId = args.COLOR_ID;
       var width = Number(args.WIDTH) / this.spriteBaseSize;
       var height = Number(args.HEIGHT) / this.spriteBaseSize;
-      var _this$roundNumbers31 = this.roundNumbers([width, height]),
-        _this$roundNumbers32 = _slicedToArray(_this$roundNumbers31, 2),
-        w = _this$roundNumbers32[0],
-        h = _this$roundNumbers32[1];
+      var _this$roundNumbers25 = this.roundNumbers([width, height]),
+        _this$roundNumbers26 = _slicedToArray(_this$roundNumbers25, 2),
+        w = _this$roundNumbers26[0],
+        h = _this$roundNumbers26[1];
       var templateName = "dot_".concat(colorId, "_").concat(w, "_").concat(h);
       this.displaySpriteTemplate(templateName, x, y, direction, 1);
     }
