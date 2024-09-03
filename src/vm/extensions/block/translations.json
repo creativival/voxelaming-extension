@@ -36,6 +36,8 @@
     "voxelamming.createSprite": "Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
     "voxelamming.moveSprite": "Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
     "voxelamming.getSpriteProperties": "Get properties of [SPRITE_NAME]",
+    "voxelamming.displayDot": "Display a dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]",
+    "voxelamming.displayText": "Display text at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL]",
     "voxelamming.box": "box",
     "voxelamming.sphere": "sphere",
     "voxelamming.plane": "plane",
@@ -70,7 +72,12 @@
     "voxelamming.Skull": "Skull",
     "voxelamming.left-right": "left-right",
     "voxelamming.don't-rotate": "don't rotate",
-    "voxelamming.all-around": "all around"
+    "voxelamming.all-around": "all around",
+    "voxelamming.top-left": "top-left",
+    "voxelamming.top-right": "top-right",
+    "voxelamming.bottom-left": "bottom-left",
+    "voxelamming.bottom-right": "bottom-right",
+    "voxelamming.center": "center"
   },
   "ja": {
     "voxelamming.name": "ボクセラミング",
@@ -109,6 +116,8 @@
     "voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
     "voxelamming.moveSprite": "スプライト [SPRITE_NAME] を移動する x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
     "voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
+    "voxelamming.displayDot": "ドットを x: [X] y: [Y] に表示する。方向: [DIRECTION] 色番号: [COLOR_ID] 幅: [WIDTH] 高さ: [HEIGHT]",
+    "voxelamming.displayText": "テキストを x: [X] y: [Y] に表示する。方向: [DIRECTION] サイズ: [SIZE] 色番号: [COLOR_ID] 縦書き: [VERTICAL]",
     "voxelamming.box": "立方体",
     "voxelamming.sphere": "球体",
     "voxelamming.plane": "平面",
@@ -143,7 +152,12 @@
     "voxelamming.Skull": "ガイコツ",
     "voxelamming.left-right": "左右のみ",
     "voxelamming.don't-rotate": "回転しない",
-    "voxelamming.all-around": "自由に回転"
+    "voxelamming.all-around": "自由に回転",
+    "voxelamming.top-left": "左上",
+    "voxelamming.top-right": "右上",
+    "voxelamming.bottom-left": "左下",
+    "voxelamming.bottom-right": "右下",
+    "voxelamming.center": "中央"
   },
   "ja-Hira": {
     "voxelamming.name": "ボクセラミング",
@@ -182,6 +196,8 @@
     "voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
     "voxelamming.moveSprite": "スプライト [SPRITE_NAME] をうごかす x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
     "voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] のじょうほうをしらべる",
+    "voxelamming.displayDot": "ドットを x: [X] y: [Y] にひょうじする。ほうこう [DIRECTION] いろばんごう: [COLOR_ID] はば: [WIDTH] たかさ: [HEIGHT]",
+    "voxelamming.displayText": "テキストを x: [X] y: [Y] にひょうじする。方向 [DIRECTION] サイズ: [SIZE] いろばんごう: [COLOR_ID] たてがき: [VERTICAL]",
     "voxelamming.box": "はこ",
     "voxelamming.sphere": "きゅう",
     "voxelamming.plane": "いた",
@@ -216,6 +232,11 @@
     "voxelamming.Skull": "がいこつ",
     "voxelamming.left-right": "さゆうのみ",
     "voxelamming.don't-rotate": "かいてんしない",
-    "voxelamming.all-around": "じゆうにかいてん"
+    "voxelamming.all-around": "じゆうにかいてん",
+    "voxelamming.top-left": "ひだりうえ",
+    "voxelamming.top-right": "みぎうえ",
+    "voxelamming.bottom-left": "ひだりした",
+    "voxelamming.bottom-right": "みぎした",
+    "voxelamming.center": "ちゅうおう"
   }
 }

@@ -110,7 +110,7 @@ class ExtensionBlocks {
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
-    this.gameScore = -1;
+    this.gameScore = [];
     this.gameScreen = [];
     this.size = 1.0;
     this.shape = 'box'
@@ -813,6 +813,11 @@ class ExtensionBlocks {
             GAME_SCORE: {
               type: ArgumentType.NUMBER,
               defaultValue: 0
+            },
+            POSITION: {
+              type: ArgumentType.STRING,
+              defaultValue: 'top-left',
+              menu: 'positionMenu'
             }
           }
         },
@@ -932,6 +937,77 @@ class ExtensionBlocks {
             VISIBLE: {
               type: ArgumentType.STRING,
               defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        },
+        {
+          opcode: 'displayDot',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.displayDot',
+            default: 'Display a dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]',
+            description: 'display a dot'
+          }),
+          arguments: {
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            COLOR_ID: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            WIDTH: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+            HEIGHT: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+          }
+        },
+        {
+          opcode: 'displayText',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.displayText',
+            default: 'Display text at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            SIZE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 50
+            },
+            COLOR_ID: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            VERTICAL: {
+              type: ArgumentType.STRING,
+              defaultValue: 'off',
               menu: 'onOrOffMenu'
             }
           }
@@ -1329,6 +1405,51 @@ class ExtensionBlocks {
             }
           ]
         },
+        positionMenu: {
+          acceptReporters: false,
+          items: [
+            {
+              text: formatMessage({
+                id: 'voxelamming.top-left',
+                default: 'top-left',
+                description: 'Menu item for top-left'
+              }),
+              value: 'top-left'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.top-right',
+                default: 'top-right',
+                description: 'Menu item for top-right'
+              }),
+              value: 'top-right'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.bottom-left',
+                default: 'bottom-left',
+                description: 'Menu item for bottom-left'
+              }),
+              value: 'bottom-left'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.bottom-right',
+                default: 'bottom-right',
+                description: 'Menu item for bottom-right'
+              }),
+              value: 'bottom-right'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.center',
+                default: 'center',
+                description: 'Menu item for center'
+              }),
+              value: 'center'
+            },
+          ]
+        },
       }
     };
   }
@@ -1354,7 +1475,7 @@ class ExtensionBlocks {
     this.modelMoves = [];
     this.sprites = [];
     this.spriteMoves = [];
-    this.gameScore = -1;
+    this.gameScore = [];
     this.gameScreen = [];
     this.size = 1.0;
     this.shape = 'box'
@@ -1799,6 +1920,63 @@ class ExtensionBlocks {
 
   // Game API
 
+  // スプライトの作成と表示について、テンプレートとクローンの概念を導入する
+  // テンプレートはボクセルの集合で、標準サイズは8x8に設定する
+  // この概念により、スプライトの複数作成が可能となる（敵キャラや球など）
+  // スプライトは、ボクセラミングアプリ上で、テンプレートとして作成される（isEnable=falseにより表示されない）
+  // スプライトは、テンプレートのクローンとして画面上に表示される
+  // 送信ごとに、クローンはすべて削除されて、新しいクローンが作成される
+  // 上記の仕様により、テンプレートからスプライトを複数作成できる
+
+  // スプライトのテンプレートを作成（スプライトは配置されない）
+  createSpriteTemplate(spriteName, colorList) {
+    this.sprites.push([spriteName, colorList]);
+  }
+
+  // スプライトのテンプレートを使って、複数のスプライトを表示する
+  displaySpriteTemplate(spriteName, x, y, direction = 0, scale = 1) {
+    // x, y, directionを丸める
+    [x, y, direction] = this.roundNumbers([x, y, direction]);
+    [x, y, direction, scale] = [x, y, direction, scale].map(String);
+
+    // rotationStyleを取得
+    if (this.rotationStyles[spriteName]) {
+      let rotationStyle = this.rotationStyles[spriteName];
+
+      // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+      if (rotationStyle === 'left-right') {
+        let directionMod = direction % 360;  // 常に0から359の範囲で処理（常に正の数になる）
+        if (directionMod > 90 && directionMod < 270) {
+          direction = "-180";  // -180は左右反転するようにボクセラミング側で実装されている
+        } else {
+          direction = "0";
+        }
+      } else if (rotationStyle === "don't rotate") {
+        direction = "0";
+      } else {
+        direction = String(direction);
+      }
+    } else {
+      // rotationStyleが設定されていない場合、そのままの値を使う
+      direction = String(direction);
+    }
+
+    // spriteMoves 配列から指定されたスプライト名の情報を検索
+    let matchingSprites = this.spriteMoves
+      .map((info, index) => ({ index, info }))
+      .filter(item => item.info[0] === spriteName);
+
+    // スプライトの移動データを保存または更新
+    if (matchingSprites.length === 0) {
+      // 新しいスプライトデータをリストに追加
+      this.spriteMoves.push([spriteName, x, y, direction, scale]);
+    } else {
+      // 既存のスプライトデータを更新（2つ目以降のスプライトデータ）
+      let { index, info: spriteData } = matchingSprites[0];
+      this.spriteMoves[index] = [...this.spriteMoves[index], x, y, direction, scale];
+    }
+  }
+
   // スプライトの基本サイズを設定
   // 推奨設定の場合はデフォルト値は35を使うため、設定不要
   // 推奨設定：スクラッチで読み込む画像サイズは128x128
@@ -1824,7 +2002,28 @@ class ExtensionBlocks {
 
   // ゲームスコアを更新
   setGameScore(args) {
-    this.gameScore = Number(args.GAME_SCORE);
+    const score = Number(args.GAME_SCORE);
+    const position = args.POSITION
+    var x = 0;
+    var y = 0;
+    if (position === "top-left") {
+      x = -160;
+      y = 160;
+    } else if (position === "top-right") {
+      x = 160;
+      y = 160;
+    } else if (position === "bottom-left") {
+      x = -160;
+      y = -160;
+    } else if (position === "bottom-right") {
+      x = 160;
+      y = -160;
+    } else if (position === "center") {
+      x = 0;
+      y = 0;
+    }
+
+    this.gameScore = [score, x, y];
   }
 
   // ゲームオーバーを送信
@@ -1841,43 +2040,40 @@ class ExtensionBlocks {
   // ドットデータからスプライトを作成する
   createSprite(args) {
     const spriteName = args.SPRITE_NAME;
-    let colorList = args.COLOR_LIST;
-    const x = String(Number(args.X) * 64 / 360);
-    const y = String(Number(args.Y) * 64 / 360);
+    const colorList = args.COLOR_LIST;
+    let x = Number(args.X) * 64 / 360;
+    let y = Number(args.Y) * 64 / 360;
     let direction = Number(args.DIRECTION);
     const size = Number(args.SIZE);
-    const visible = (args.VISIBLE === "on") ? '1' : '0';
+    const visible = args.VISIBLE === "on";
 
     // スケールを計算
     // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
-    const scale = String(size / this.spriteBaseSize);
+    let scale = size / this.spriteBaseSize;
 
     // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
-    direction = String(90 - direction);
+    direction = 90 - direction;
 
-    // 新しいスプライトデータを配列に追加
-    this.sprites.push([spriteName, colorList, x, y, direction, scale, visible]);
+    // スプライトのテンプレートデータを配列に追加（これだけでは表示されない）
+    this.createSpriteTemplate(spriteName, colorList);
+
+    // スプライトが表示される場合、スプライトの移動データを配列に追加（これでスプライトが表示される）
+    if (visible) {
+      [x, y, direction] = this.roundNumbers([x, y, direction]);
+      [x, y, direction, scale] = [x, y, direction, scale].map(String);
+      this.spriteMoves.push([spriteName, x, y, direction, scale]);
+    }
   }
 
   // 直接数値を指定して動かす
   // 通常は、getSpritePropertiesメソッドを優勢して使用し、このメソッドは使わない
   moveSprite(args) {
-    const spriteName = args.SPRITE_NAME;
-    const x = String(Number(args.X) * 64 / 360);
-    const y = String(Number(args.Y) * 64 / 360);
-    let direction = Number(args.DIRECTION);
-    const size = Number(args.SIZE);
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
-    // スケールを計算
-    // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
-    const scale = String(size / this.spriteBaseSize);
-
-    // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
-    direction = String(90 - direction);
-
-    // 新しいスプライトデータを配列に追加
-    this.spriteMoves.push([spriteName, x, y, direction, scale, visible]);
+    if (visible) {
+      // displaySpriteTemplateと同じ処理
+      this.displaySpriteTemplate(args);
+    }
   }
 
   // スプライトの情報を取得して自動で動かす
@@ -1891,40 +2087,74 @@ class ExtensionBlocks {
       const y = String(sprite.y * 64 / 360);
       let direction = sprite.direction;
       const size = sprite.size; // 大きさ35のときに1になるように調整
-      const visible = sprite.visible ? '1' : '0';
+      const visible = sprite.visible;
 
-      // スケールを計算
-      // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
-      const scale = String(size / this.spriteBaseSize);
+      if (visible) {
+        // スケールを計算
+        // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+        const [scale] = this.roundNumbers([size / this.spriteBaseSize]);
 
-      // rotationStyleを取得して、送信用のdirectionを計算
-      if (spriteName in this.rotationStyles) {
-        const rotationStyle = this.rotationStyles[spriteName];
+        // rotationStyleを取得して、送信用のdirectionを計算
+        if (spriteName in this.rotationStyles) {
+          const rotationStyle = this.rotationStyles[spriteName];
 
-        // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
-        // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
-        if (rotationStyle === 'left-right') {
-          if (direction < 0) {
-            direction = "-180"; // 取得できる値は-90から90である。-180にすることで特別な値として、左右反転を表現する
+          // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+          // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
+          if (rotationStyle === 'left-right') {
+            if (direction < 0) {
+              direction = "-180"; // 取得できる値は-90から90である。-180にすることで特別な値として、左右反転を表現する
+            } else {
+              direction = "0";
+            }
+          } else if (rotationStyle === "don't rotate") {
+            direction = "0"
           } else {
-            direction = "0";
+            direction = String(90 - direction)
           }
-        } else if (rotationStyle === "don't rotate") {
-          direction = "0"
         } else {
+          // rotationStyleが設定されていない場合、そのままの値を使う
           direction = String(90 - direction)
         }
-      } else {
-        // rotationStyleが設定されていない場合、そのままの値を使う
-        direction = String(90 - direction)
+
+        // sprites配列から同じスプライト名の要素を削除
+        this.spriteMoves = this.spriteMoves.filter(spriteInfo => spriteInfo[0] !== spriteName);
+
+        // 新しいスプライトデータを配列に追加
+        this.spriteMoves.push([spriteName, x, y, direction, String(scale)]);
       }
-
-      // sprites配列から同じスプライト名の要素を削除
-      this.spriteMoves = this.spriteMoves.filter(spriteInfo => spriteInfo[0] !== spriteName);
-
-      // 新しいスプライトデータを配列に追加
-      this.spriteMoves.push([spriteName, x, y, direction, scale, visible]);
     }
+  }
+
+  // ドット（弾）を表示する
+  // ドットの表示は、特別な名前（dot_色_幅_高さ）のテンプレートとして表示する
+  // displayDot(x, y, direction = 0, colorId = 10, width = 1, height = 1) {
+  displayDot(args) {
+    const x = Number(args.X) * 64 / 360;
+    const y = Number(args.Y) * 64 / 360;
+    let direction = Number(args.DIRECTION);
+    const colorId = args.COLOR_ID;
+    const width = Number(args.WIDTH) / this.spriteBaseSize;
+    const height = Number(args.HEIGHT) / this.spriteBaseSize;
+    const [w, h] = this.roundNumbers([width, height]);
+    let templateName = `dot_${colorId}_${w}_${h}`;
+    this.displaySpriteTemplate(templateName, x, y, direction, 1);
+  }
+
+  // テキストを表示する
+  // テキストの表示は、特別な名前（template_色_幅_高さ）のテンプレートとして表示する
+  // 一度表示した後はテンプレートが自動で保存されているため、テンプレートをクローンとして表示できる
+  // displayText(text, x, y, direction = 0, scale = 1, colorId = 7, isVertical = false) {
+  displayText(args) {
+    const x = Number(args.X) * 64 / 360;
+    const y = Number(args.Y) * 64 / 360;
+    let direction = Number(args.DIRECTION);
+    const size = Number(args.SIZE); // 大きさ35のときに1になるように調整
+    // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
+    const scale = size / this.spriteBaseSize;
+    const colorId = args.COLOR_ID;
+    const isVertical = args.VERTICAL === "on" ? "1" : "0";
+    let templateName = `text_${text}_${colorId}_${isVertical}`;
+    this.displaySpriteTemplate(templateName, x, y, direction, scale);
   }
 
   sendData() {
