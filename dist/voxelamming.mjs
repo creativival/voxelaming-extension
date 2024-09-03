@@ -2602,33 +2602,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       x = _this$roundTwoDecimal12[0];
       y = _this$roundTwoDecimal12[1];
       direction = _this$roundTwoDecimal12[2];
-      // rotationStyleを取得
-      var _map9 = [x, y, direction, scale].map(String);
-      var _map10 = _slicedToArray(_map9, 4);
-      x = _map10[0];
-      y = _map10[1];
-      direction = _map10[2];
-      scale = _map10[3];
-      if (this.rotationStyles[spriteName]) {
-        var rotationStyle = this.rotationStyles[spriteName];
+      this.spriteScales[spriteName] = scale;
 
-        // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
-        if (rotationStyle === 'left-right') {
-          var directionMod = direction % 360; // 常に0から359の範囲で処理（常に正の数になる）
-          if (directionMod > 90 && directionMod < 270) {
-            direction = "-180"; // -180は左右反転するようにボクセラミング側で実装されている
-          } else {
-            direction = "0";
-          }
-        } else if (rotationStyle === "don't rotate") {
-          direction = "0";
-        } else {
-          direction = String(direction);
-        }
-      } else {
-        // rotationStyleが設定されていない場合、そのままの値を使う
-        direction = String(direction);
-      }
+      // rotationStyleを取得して、送信用のdirectionを計算
+      direction = this.getSpriteDirection(spriteName, direction);
 
       // spriteMoves 配列から指定されたスプライト名の情報を検索
       var matchingSprites = this.spriteMoves.map(function (info, index) {
@@ -2639,8 +2616,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }).filter(function (item) {
         return item.info[0] === spriteName;
       });
-
       // スプライトの移動データを保存または更新
+      var _map9 = [x, y, direction, scale].map(String);
+      var _map10 = _slicedToArray(_map9, 4);
+      x = _map10[0];
+      y = _map10[1];
+      direction = _map10[2];
+      scale = _map10[3];
       if (matchingSprites.length === 0) {
         // 新しいスプライトデータをリストに追加
         this.spriteMoves.push([spriteName, x, y, direction, scale]);
@@ -2739,19 +2721,18 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var scale = size / this.spriteBaseSize;
       this.spriteScales[spriteName] = scale;
 
-      // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
-      direction = 90 - direction;
-
       // スプライトのテンプレートデータを配列に追加（これだけでは表示されない）
       this.createSpriteTemplate(spriteName, colorList);
 
       // スプライトが表示される場合、スプライトの移動データを配列に追加（これでスプライトが表示される）
       if (visible) {
+        // rotationStyleを取得して、送信用のdirectionを計算
         var _this$roundTwoDecimal13 = this.roundTwoDecimals([x, y, direction]);
         var _this$roundTwoDecimal14 = _slicedToArray(_this$roundTwoDecimal13, 3);
         x = _this$roundTwoDecimal14[0];
         y = _this$roundTwoDecimal14[1];
         direction = _this$roundTwoDecimal14[2];
+        direction = this.getSpriteDirection(spriteName, direction);
         var _map11 = [x, y, direction, scale].map(String);
         var _map12 = _slicedToArray(_map11, 4);
         x = _map12[0];
@@ -2792,33 +2773,14 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var visible = args.VISIBLE === "on";
       if (visible) {
         // x, y, directionを丸める
-        // rotationStyleを取得
+        // rotationStyleを取得して、送信用のdirectionを計算
         var _this$roundTwoDecimal15 = this.roundTwoDecimals([x, y, direction, scale]);
         var _this$roundTwoDecimal16 = _slicedToArray(_this$roundTwoDecimal15, 4);
         x = _this$roundTwoDecimal16[0];
         y = _this$roundTwoDecimal16[1];
         direction = _this$roundTwoDecimal16[2];
         scale = _this$roundTwoDecimal16[3];
-        if (this.rotationStyles[spriteName]) {
-          var rotationStyle = this.rotationStyles[spriteName];
-
-          // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
-          if (rotationStyle === 'left-right') {
-            var directionMod = direction % 360; // 常に0から359の範囲で処理（常に正の数になる）
-            if (directionMod > 90 && directionMod < 270) {
-              direction = "-180"; // -180は左右反転するようにボクセラミング側で実装されている
-            } else {
-              direction = "0";
-            }
-          } else if (rotationStyle === "don't rotate") {
-            direction = "0";
-          } else {
-            direction = String(direction);
-          }
-        } else {
-          // rotationStyleが設定されていない場合、そのままの値を使う
-          direction = String(direction);
-        }
+        direction = this.getSpriteDirection(spriteName, direction);
 
         // spriteCloneMoves辞書に移動情報を保存する
         var _map13 = [x, y, direction, scale].map(String);
@@ -2894,8 +2856,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var sprite = this.runtime.getSpriteTargetByName(spriteName);
       if (sprite) {
         console.log(sprite);
-        var x = String(sprite.x * 64 / 360);
-        var y = String(sprite.y * 64 / 360);
+        var x = sprite.x * 64 / 360;
+        var y = sprite.y * 64 / 360;
         var direction = sprite.direction;
         var size = sprite.size; // 大きさ35のときに1になるように調整
         var visible = sprite.visible;
@@ -2908,26 +2870,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           this.spriteScales[spriteName] = scale;
 
           // rotationStyleを取得して、送信用のdirectionを計算
-          if (spriteName in this.rotationStyles) {
-            var rotationStyle = this.rotationStyles[spriteName];
-
-            // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
-            // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
-            if (rotationStyle === 'left-right') {
-              if (direction < 0) {
-                direction = "-180"; // 取得できる値は-90から90である。-180にすることで特別な値として、左右反転を表現する
-              } else {
-                direction = "0";
-              }
-            } else if (rotationStyle === "don't rotate") {
-              direction = "0";
-            } else {
-              direction = String(90 - direction);
-            }
-          } else {
-            // rotationStyleが設定されていない場合、そのままの値を使う
-            direction = String(90 - direction);
-          }
+          direction = this.getSpriteDirection(spriteName, direction);
 
           // sprites配列から同じスプライト名の要素を削除
           this.spriteMoves = this.spriteMoves.filter(function (spriteInfo) {
@@ -2935,7 +2878,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           });
 
           // 新しいスプライトデータを配列に追加
-          this.spriteMoves.push([spriteName, x, y, direction, String(scale)]);
+          var _map15 = [x, y, direction, scale].map(String);
+          var _map16 = _slicedToArray(_map15, 4);
+          x = _map16[0];
+          y = _map16[1];
+          direction = _map16[2];
+          scale = _map16[3];
+          this.spriteMoves.push([spriteName, x, y, direction, scale]);
         }
       }
     }
@@ -3145,6 +3094,31 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         arr.push(""); // 必要に応じて空の文字列を追加
       }
       arr[index] = value; // 指定した位置に値を挿入
+    }
+  }, {
+    key: "getSpriteDirection",
+    value: function getSpriteDirection(spriteName, direction) {
+      // rotationStyleを取得して、送信用のdirectionを計算
+      if (spriteName in this.rotationStyles) {
+        var rotationStyle = this.rotationStyles[spriteName];
+
+        // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+        // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
+        if (rotationStyle === 'left-right') {
+          if (direction < 0) {
+            return -180; // 取得できる値は-90から90である。-180にすることで特別な値として、左右反転を表現する
+          } else {
+            return 0;
+          }
+        } else if (rotationStyle === "don't rotate") {
+          return 0;
+        } else {
+          return 90 - direction;
+        }
+      } else {
+        // rotationStyleが設定されていない場合、そのままの値を使う
+        return 90 - direction;
+      }
     }
   }], [{
     key: "EXTENSION_NAME",
