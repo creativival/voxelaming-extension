@@ -121,6 +121,8 @@ class ExtensionBlocks {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
+    this.spriteScales = {}; // スプライトのスケールを保存（送信しない）
+    this.spriteCloneMoves = {}; // スプライトのスケールを保存（送信しない）
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
@@ -942,6 +944,46 @@ class ExtensionBlocks {
           }
         },
         {
+          opcode: 'moveSpriteClone',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.moveSpriteClone',
+            default: 'Move [SPRITE_NAME] clone id: [CLONE_ID] at x: [X] y: [Y] direction: [DIRECTION] visible: [VISIBLE]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Sprite1'
+            },
+            CLONE_ID: {
+              type: ArgumentType.NUMBER,
+              defaultValue: '1'
+            },
+            X: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 0
+            },
+            SIZE: {
+              type: ArgumentType.NUMBER,
+              defaultValue: 50
+            },
+            VISIBLE: {
+              type: ArgumentType.STRING,
+              defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        },
+        {
           opcode: 'displayDot',
           blockType: BlockType.COMMAND,
           text: formatMessage({
@@ -1485,7 +1527,9 @@ class ExtensionBlocks {
     this.buildInterval = 0.01;
     this.isFraming = false;
     this.frameId = 0;
-    this.rotationStyles = {}; // 回転の制御（送信しない）
+    // this.rotationStyles = {}; // 初期化しない（クローン送信のため）
+    // this.spriteScales = {}; // 初期化しない（クローン送信のため）
+    this.spriteCloneMoves = {}; // スプライトのスケールを保存（送信しない）
     this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
   }
 
@@ -2050,6 +2094,7 @@ class ExtensionBlocks {
     // スケールを計算
     // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
     let scale = size / this.spriteBaseSize;
+    this.spriteScales[spriteName] = scale;
 
     // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
     direction = 90 - direction;
@@ -2068,11 +2113,91 @@ class ExtensionBlocks {
   // 直接数値を指定して動かす
   // 通常は、getSpritePropertiesメソッドを優勢して使用し、このメソッドは使わない
   moveSprite(args) {
+    const spriteName = args.SPRITE_NAME;
+    let x = Number(args.X) * 64 / 360;
+    let y = Number(args.Y) * 64 / 360;
+    let direction = Number(args.DIRECTION);
+    const size = Number(args.SIZE);
     const visible = (args.VISIBLE === "on") ? '1' : '0';
 
     if (visible) {
       // displaySpriteTemplateと同じ処理
-      this.displaySpriteTemplate(args);
+      this.displaySpriteTemplate(spriteName, x, y, direction, size);
+    }
+  }
+
+  // スプライトのテンプレートを使って、複数のスプライトを表示する
+  moveSpriteClone(args) {
+    const spriteName = args.SPRITE_NAME;
+    const cloneID = Number(args.CLONE_ID);
+    let x = Number(args.X) * 64 / 360;
+    let y = Number(args.Y) * 64 / 360;
+    let direction = Number(args.DIRECTION);
+    let scale = this.spriteScales[spriteName] || 1;
+    const visible = args.VISIBLE === "on";
+
+    if (visible) {
+      // x, y, directionを丸める
+      [x, y, direction, scale] = this.roundTwoDecimals([x, y, direction, scale]);
+
+      // rotationStyleを取得
+      if (this.rotationStyles[spriteName]) {
+        let rotationStyle = this.rotationStyles[spriteName];
+
+        // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+        if (rotationStyle === 'left-right') {
+          let directionMod = direction % 360;  // 常に0から359の範囲で処理（常に正の数になる）
+          if (directionMod > 90 && directionMod < 270) {
+            direction = "-180";  // -180は左右反転するようにボクセラミング側で実装されている
+          } else {
+            direction = "0";
+          }
+        } else if (rotationStyle === "don't rotate") {
+          direction = "0";
+        } else {
+          direction = String(direction);
+        }
+      } else {
+        // rotationStyleが設定されていない場合、そのままの値を使う
+        direction = String(direction);
+      }
+
+      // spriteCloneMoves辞書に移動情報を保存する
+      [x, y, direction, scale] = [x, y, direction, scale].map(String);
+
+      if (spriteName in this.spriteCloneMoves) {
+        this.insertAt(this.spriteCloneMoves[spriteName], cloneID, [x, y, direction, scale]);
+      } else {
+        // スプライトの移動データを保存または更新
+        this.spriteCloneMoves[spriteName] = [];
+        this.insertAt(this.spriteCloneMoves[spriteName], cloneID, [x, y, direction, scale]);
+      }
+    }
+  }
+
+  addSpriteCloneMoves() {
+    // spriteMoves配列にクローン情報を追加する
+    for (const spriteName in this.spriteCloneMoves) {
+      const moves = this.spriteCloneMoves[spriteName];
+      for (const move of moves) {
+        if (Array.isArray(move) && move.length === 4) {
+          // moveは配列であり、要素数が4つの場合、スプライト名を先頭に追加して配列に追加
+          // spriteMoves 配列から指定されたスプライト名の情報を検索
+          let matchingSprites = this.spriteMoves
+            .map((info, index) => ({ index, info })) // インデックスと要素の辞書に変換
+            .filter(item => item.info[0] === spriteName); // 前頭の要素とスプライト名が一致するものを検索
+
+          // スプライトの移動データを保存または更新
+          if (matchingSprites.length === 0) {
+            // 新しいスプライトデータをリストに追加
+            this.spriteMoves.push([spriteName, ...move]);
+          } else {
+            // 既存のスプライトデータを更新（2つ目以降のスプライトデータ）
+            let { index: index, info: spriteData } = matchingSprites[0];
+            this.spriteMoves[index] = [...spriteData, ...move];
+          }
+        }
+      }
     }
   }
 
@@ -2093,6 +2218,7 @@ class ExtensionBlocks {
         // スケールを計算
         // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
         const [scale] = this.roundTwoDecimals([size / this.spriteBaseSize]);
+        this.spriteScales[spriteName] = scale;
 
         // rotationStyleを取得して、送信用のdirectionを計算
         if (spriteName in this.rotationStyles) {
@@ -2164,6 +2290,9 @@ class ExtensionBlocks {
 
   sendAndRecordData(args) {
     console.log('Sending data...');
+    // クローンの移動データを追加
+    this.addSpriteCloneMoves()
+
     const name = args.NAME;
     const date = new Date();
     const dataToSend = {
@@ -2300,6 +2429,14 @@ class ExtensionBlocks {
 
   roundTwoDecimals(num_list) {
     return num_list.map(val => parseFloat(val.toFixed(2)));
+  }
+
+  insertAt(arr, index, value) {
+    // 配列が必要な長さに達していない場合、空の要素を追加
+    while (arr.length <= index) {
+      arr.push(""); // 必要に応じて空の文字列を追加
+    }
+    arr[index] = value; // 指定した位置に値を挿入
   }
 }
 

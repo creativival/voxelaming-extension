@@ -294,6 +294,7 @@ var en = {
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
 	"voxelamming.moveSprite": "Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
+	"voxelamming.moveSpriteClone": "Move [SPRITE_NAME] clone id: [CLONE_ID] at x: [X] y: [Y] direction: [DIRECTION] visible: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "Get properties of [SPRITE_NAME]",
 	"voxelamming.displayDot": "Display a dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]",
 	"voxelamming.displayText": "Display text at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL]",
@@ -341,9 +342,9 @@ var en = {
 var ja = {
 	"voxelamming.name": "ボクセラミング",
 	"voxelamming.setRoomName": "ルームネームを [ROOMNAME] にする",
-	"voxelamming.animateGlobal": "まとめてアニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。拡大: [SCALE] 移動時間: [INTERVAL]",
+	"voxelamming.animateGlobal": "まとめてアニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。スケール: [SCALE] 移動時間: [INTERVAL]",
 	"voxelamming.setNode": "ノードを x: [X] y: [Y] z: [Z] に配置する。角度を pitch: [PITCH] yaw: [YAW] roll: [ROLL] にする",
-	"voxelamming.animateNode": "アニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。拡大: [SCALE] 移動時間: [INTERVAL]",
+	"voxelamming.animateNode": "アニメーション移動 x: [X] y: [Y] z: [Z] 。回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。スケール: [SCALE] 移動時間: [INTERVAL]",
 	"voxelamming.createBox": "ボクセルを x: [X] y: [Y] z: [Z] に作成する。色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.createTexturedBox": "ボクセルを x: [X] y: [Y] z: [Z] に作成する。テクスチャー: [TEXTURE]",
 	"voxelamming.removeBox": "ボクセルを x: [X] y: [Y] z: [Z] から削除する",
@@ -355,8 +356,8 @@ var ja = {
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "線を引く x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.makePlyModel": "PLYモデルを作成する リスト: [LIST_CONTENT] x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
-	"voxelamming.createModel": "デフォルトモデルを作成する [MODEL_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 拡大: [SCALE] エンティティネーム: [ENTITY_NAME]",
-	"voxelamming.moveModel": "エンティティモデルを移動する [ENTITY_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] 拡大: [SCALE]",
+	"voxelamming.createModel": "デフォルトモデルを作成する [MODEL_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] スケール: [SCALE] エンティティネーム: [ENTITY_NAME]",
+	"voxelamming.moveModel": "エンティティモデルを移動する [ENTITY_NAME] at x: [X] y: [Y] z: [Z] 回転 pitch: [PITCH] yaw: [YAW] roll: [ROLL] スケール: [SCALE]",
 	"voxelamming.changeShape": "形状を変更する [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルを変更する: メタリック: [IS_METALLIC] 表面荒さ: [ROUGHNESS]",
 	"voxelamming.sendData": "データを送信する",
@@ -374,6 +375,7 @@ var ja = {
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
 	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] を移動する x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
+	"voxelamming.moveSpriteClone": "スプライト [SPRITE_NAME] クローンを移動する ID: [CLONE_ID] at x: [X] y: [Y] 方向: [DIRECTION] 表示: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
 	"voxelamming.displayDot": "ドットを x: [X] y: [Y] に表示する。方向: [DIRECTION] 色番号: [COLOR_ID] 幅: [WIDTH] 高さ: [HEIGHT]",
 	"voxelamming.displayText": "テキストを x: [X] y: [Y] に表示する。方向: [DIRECTION] サイズ: [SIZE] 色番号: [COLOR_ID] 縦書き: [VERTICAL]",
@@ -424,9 +426,9 @@ var translations = {
 	"ja-Hira": {
 	"voxelamming.name": "ボクセラミング",
 	"voxelamming.setRoomName": "ルームネームを [ROOMNAME] にする",
-	"voxelamming.animateGlobal": "まとめてアニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。かくだい: [SCALE] じかん: [INTERVAL]",
+	"voxelamming.animateGlobal": "まとめてアニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。スケール: [SCALE] じかん: [INTERVAL]",
 	"voxelamming.setNode": "ノードを x: [X] y: [Y] z: [Z] におく。かくどを pitch: [PITCH] yaw: [YAW] roll: [ROLL] にする",
-	"voxelamming.animateNode": "アニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。かくだい: [SCALE] じかん: [INTERVAL]",
+	"voxelamming.animateNode": "アニメーションいどう x: [X] y: [Y] z: [Z] 。かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] 。スケール: [SCALE] じかん: [INTERVAL]",
 	"voxelamming.createBox": "ボクセルを x: [X] y: [Y] z: [Z] につくる。いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.createTexturedBox": "ボクセルを x: [X] y: [Y] z: [Z] につくる。テクスチャー: [TEXTURE]",
 	"voxelamming.removeBox": "ボクセルを x: [X] y: [Y] z: [Z] からけす",
@@ -438,8 +440,8 @@ var translations = {
 	"voxelamming.setCommand": "コマンドをセットする [COMMAND]",
 	"voxelamming.drawLine": "せんをひく x1: [X1] y1: [Y1] z1: [Z1] x2: [X2] y2: [Y2] z2: [Z2] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.makePlyModel": "PLYモデルをつくる リスト: [LIST_CONTENT] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL]",
-	"voxelamming.createModel": "デフォルトモデルをつくる [MODEL_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] かくだい: [SCALE] エンティティネーム: [ENTITY_NAME]",
-	"voxelamming.moveModel": "エンティティモデルをうごかす [ENTITY_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] かくだい: [SCALE]",
+	"voxelamming.createModel": "デフォルトモデルをつくる [MODEL_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] スケール: [SCALE] エンティティネーム: [ENTITY_NAME]",
+	"voxelamming.moveModel": "エンティティモデルをうごかす [ENTITY_NAME] x: [X] y: [Y] z: [Z] かいてん pitch: [PITCH] yaw: [YAW] roll: [ROLL] スケール: [SCALE]",
 	"voxelamming.changeShape": "かたちをかえる [SHAPE]",
 	"voxelamming.changeMaterial": "マテリアルをかえる: メタリック: [IS_METALLIC] ひょうめんのあらさ: [ROUGHNESS]",
 	"voxelamming.sendData": "データをおくる",
@@ -457,6 +459,7 @@ var translations = {
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
 	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] をうごかす x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
+	"voxelamming.moveSpriteClone": "スプライト [SPRITE_NAME] クローンをうごかす ID: [CLONE_ID] at x: [X] y: [Y] ほうこう: [DIRECTION] みえる: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] のじょうほうをしらべる",
 	"voxelamming.displayDot": "ドットを x: [X] y: [Y] にひょうじする。ほうこう [DIRECTION] いろばんごう: [COLOR_ID] はば: [WIDTH] たかさ: [HEIGHT]",
 	"voxelamming.displayText": "テキストを x: [X] y: [Y] にひょうじする。方向 [DIRECTION] サイズ: [SIZE] いろばんごう: [COLOR_ID] たてがき: [VERTICAL]",
@@ -633,6 +636,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.isFraming = false;
     this.frameId = 0;
     this.rotationStyles = {}; // 回転の制御（送信しない）
+    this.spriteScales = {}; // スプライトのスケールを保存（送信しない）
+    this.spriteCloneMoves = {}; // スプライトのスケールを保存（送信しない）
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
@@ -1427,6 +1432,45 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
+          opcode: 'moveSpriteClone',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.moveSpriteClone',
+            default: 'Move [SPRITE_NAME] clone id: [CLONE_ID] at x: [X] y: [Y] direction: [DIRECTION] visible: [VISIBLE]',
+            description: 'create sprite'
+          }),
+          arguments: {
+            SPRITE_NAME: {
+              type: argumentType.STRING,
+              defaultValue: 'Sprite1'
+            },
+            CLONE_ID: {
+              type: argumentType.NUMBER,
+              defaultValue: '1'
+            },
+            X: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            Y: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            DIRECTION: {
+              type: argumentType.NUMBER,
+              defaultValue: 0
+            },
+            SIZE: {
+              type: argumentType.NUMBER,
+              defaultValue: 50
+            },
+            VISIBLE: {
+              type: argumentType.STRING,
+              defaultValue: 'on',
+              menu: 'onOrOffMenu'
+            }
+          }
+        }, {
           opcode: 'displayDot',
           blockType: blockType.COMMAND,
           text: formatMessage({
@@ -1916,7 +1960,9 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this.buildInterval = 0.01;
       this.isFraming = false;
       this.frameId = 0;
-      this.rotationStyles = {}; // 回転の制御（送信しない）
+      // this.rotationStyles = {}; // 初期化しない（クローン送信のため）
+      // this.spriteScales = {}; // 初期化しない（クローン送信のため）
+      this.spriteCloneMoves = {}; // スプライトのスケールを保存（送信しない）
       this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
     }
   }, {
@@ -2691,6 +2737,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       // スケールを計算
       // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
       var scale = size / this.spriteBaseSize;
+      this.spriteScales[spriteName] = scale;
 
       // 送信用のdirectionを計算（スクラッチはy軸が0度で、時計回りに増加するため、変換が必要）
       direction = 90 - direction;
@@ -2720,10 +2767,121 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "moveSprite",
     value: function moveSprite(args) {
+      var spriteName = args.SPRITE_NAME;
+      var x = Number(args.X) * 64 / 360;
+      var y = Number(args.Y) * 64 / 360;
+      var direction = Number(args.DIRECTION);
+      var size = Number(args.SIZE);
       var visible = args.VISIBLE === "on" ? '1' : '0';
       if (visible) {
         // displaySpriteTemplateと同じ処理
-        this.displaySpriteTemplate(args);
+        this.displaySpriteTemplate(spriteName, x, y, direction, size);
+      }
+    }
+
+    // スプライトのテンプレートを使って、複数のスプライトを表示する
+  }, {
+    key: "moveSpriteClone",
+    value: function moveSpriteClone(args) {
+      var spriteName = args.SPRITE_NAME;
+      var cloneID = Number(args.CLONE_ID);
+      var x = Number(args.X) * 64 / 360;
+      var y = Number(args.Y) * 64 / 360;
+      var direction = Number(args.DIRECTION);
+      var scale = this.spriteScales[spriteName] || 1;
+      var visible = args.VISIBLE === "on";
+      if (visible) {
+        // x, y, directionを丸める
+        // rotationStyleを取得
+        var _this$roundTwoDecimal15 = this.roundTwoDecimals([x, y, direction, scale]);
+        var _this$roundTwoDecimal16 = _slicedToArray(_this$roundTwoDecimal15, 4);
+        x = _this$roundTwoDecimal16[0];
+        y = _this$roundTwoDecimal16[1];
+        direction = _this$roundTwoDecimal16[2];
+        scale = _this$roundTwoDecimal16[3];
+        if (this.rotationStyles[spriteName]) {
+          var rotationStyle = this.rotationStyles[spriteName];
+
+          // rotationStyleが変更された場合、新しいスプライトデータを配列に追加
+          if (rotationStyle === 'left-right') {
+            var directionMod = direction % 360; // 常に0から359の範囲で処理（常に正の数になる）
+            if (directionMod > 90 && directionMod < 270) {
+              direction = "-180"; // -180は左右反転するようにボクセラミング側で実装されている
+            } else {
+              direction = "0";
+            }
+          } else if (rotationStyle === "don't rotate") {
+            direction = "0";
+          } else {
+            direction = String(direction);
+          }
+        } else {
+          // rotationStyleが設定されていない場合、そのままの値を使う
+          direction = String(direction);
+        }
+
+        // spriteCloneMoves辞書に移動情報を保存する
+        var _map13 = [x, y, direction, scale].map(String);
+        var _map14 = _slicedToArray(_map13, 4);
+        x = _map14[0];
+        y = _map14[1];
+        direction = _map14[2];
+        scale = _map14[3];
+        if (spriteName in this.spriteCloneMoves) {
+          this.insertAt(this.spriteCloneMoves[spriteName], cloneID, [x, y, direction, scale]);
+        } else {
+          // スプライトの移動データを保存または更新
+          this.spriteCloneMoves[spriteName] = [];
+          this.insertAt(this.spriteCloneMoves[spriteName], cloneID, [x, y, direction, scale]);
+        }
+      }
+    }
+  }, {
+    key: "addSpriteCloneMoves",
+    value: function addSpriteCloneMoves() {
+      var _this = this;
+      var _loop = function _loop(spriteName) {
+        var moves = _this.spriteCloneMoves[spriteName];
+        var _iterator2 = _createForOfIteratorHelper(moves),
+          _step2;
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var move = _step2.value;
+            if (Array.isArray(move) && move.length === 4) {
+              // moveは配列であり、要素数が4つの場合、スプライト名を先頭に追加して配列に追加
+              // spriteMoves 配列から指定されたスプライト名の情報を検索
+              var matchingSprites = _this.spriteMoves.map(function (info, index) {
+                return {
+                  index: index,
+                  info: info
+                };
+              }) // インデックスと要素の辞書に変換
+              .filter(function (item) {
+                return item.info[0] === spriteName;
+              }); // 前頭の要素とスプライト名が一致するものを検索
+
+              // スプライトの移動データを保存または更新
+              if (matchingSprites.length === 0) {
+                // 新しいスプライトデータをリストに追加
+                _this.spriteMoves.push([spriteName].concat(_toConsumableArray(move)));
+              } else {
+                // 既存のスプライトデータを更新（2つ目以降のスプライトデータ）
+                var _matchingSprites$2 = matchingSprites[0],
+                  index = _matchingSprites$2.index,
+                  spriteData = _matchingSprites$2.info;
+                _this.spriteMoves[index] = [].concat(_toConsumableArray(spriteData), _toConsumableArray(move));
+              }
+            }
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+      };
+      // spriteMoves配列にクローン情報を追加する
+      for (var spriteName in this.spriteCloneMoves) {
+        _loop(spriteName);
       }
     }
 
@@ -2744,9 +2902,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         if (visible) {
           // スケールを計算
           // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
-          var _this$roundTwoDecimal15 = this.roundTwoDecimals([size / this.spriteBaseSize]),
-            _this$roundTwoDecimal16 = _slicedToArray(_this$roundTwoDecimal15, 1),
-            scale = _this$roundTwoDecimal16[0];
+          var _this$roundTwoDecimal17 = this.roundTwoDecimals([size / this.spriteBaseSize]),
+            _this$roundTwoDecimal18 = _slicedToArray(_this$roundTwoDecimal17, 1),
+            scale = _this$roundTwoDecimal18[0];
+          this.spriteScales[spriteName] = scale;
 
           // rotationStyleを取得して、送信用のdirectionを計算
           if (spriteName in this.rotationStyles) {
@@ -2830,8 +2989,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "sendAndRecordData",
     value: function sendAndRecordData(args) {
-      var _this = this;
+      var _this2 = this;
       console.log('Sending data...');
+      // クローンの移動データを追加
+      this.addSpriteCloneMoves();
       var name = args.NAME;
       var date = new Date();
       var dataToSend = {
@@ -2865,20 +3026,20 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         this.startInactivityTimer(); // タイマーを開始
       } else if (this.socket && this.socket.readyState === WebSocket.CONNECTING) {
         this.socket.onopen = function () {
-          _this.socket.send(_this.roomName);
-          console.log("Joined room: ".concat(_this.roomName));
-          _this.socket.send(JSON.stringify(dataToSend));
+          _this2.socket.send(_this2.roomName);
+          console.log("Joined room: ".concat(_this2.roomName));
+          _this2.socket.send(JSON.stringify(dataToSend));
           console.log('Sent data to server (connected):', dataToSend);
-          _this.startInactivityTimer(); // タイマーを開始
+          _this2.startInactivityTimer(); // タイマーを開始
         };
       } else {
         this.socket = new WebSocket('wss://websocket.voxelamming.com');
         this.socket.onopen = function () {
-          _this.socket.send(_this.roomName);
-          console.log("Joined room: ".concat(_this.roomName));
-          _this.socket.send(JSON.stringify(dataToSend));
+          _this2.socket.send(_this2.roomName);
+          console.log("Joined room: ".concat(_this2.roomName));
+          _this2.socket.send(JSON.stringify(dataToSend));
           console.log('Sent data to server (new connection):', dataToSend);
-          _this.startInactivityTimer(); // タイマーを開始
+          _this2.startInactivityTimer(); // タイマーを開始
         };
         this.socket.onerror = function (error) {
           console.error("WebSocket error: ".concat(error));
@@ -2891,12 +3052,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "startInactivityTimer",
     value: function startInactivityTimer() {
-      var _this2 = this;
+      var _this3 = this;
       this.clearInactivityTimer(); // 既存のタイマーをクリア
       this.inactivityTimeout = setTimeout(function () {
-        if (_this2.socket && _this2.socket.readyState === WebSocket.OPEN) {
+        if (_this3.socket && _this3.socket.readyState === WebSocket.OPEN) {
           console.log('No data sent for 2 seconds. Closing WebSocket connection.');
-          _this2.socket.close();
+          _this3.socket.close();
         }
       }, this.inactivityDelay);
     }
@@ -2975,6 +3136,15 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       return num_list.map(function (val) {
         return parseFloat(val.toFixed(2));
       });
+    }
+  }, {
+    key: "insertAt",
+    value: function insertAt(arr, index, value) {
+      // 配列が必要な長さに達していない場合、空の要素を追加
+      while (arr.length <= index) {
+        arr.push(""); // 必要に応じて空の文字列を追加
+      }
+      arr[index] = value; // 指定した位置に値を挿入
     }
   }], [{
     key: "EXTENSION_NAME",
