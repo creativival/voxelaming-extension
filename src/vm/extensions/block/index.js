@@ -806,7 +806,7 @@ class ExtensionBlocks {
           blockType: BlockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.setGameScore',
-            default: 'Set Game Score: [GAME_SCORE]',
+            default: 'Set Game Score: [GAME_SCORE] position: [POSITION]',
             description: 'set game score'
           }),
           arguments: {
@@ -1936,7 +1936,7 @@ class ExtensionBlocks {
   // スプライトのテンプレートを使って、複数のスプライトを表示する
   displaySpriteTemplate(spriteName, x, y, direction = 0, scale = 1) {
     // x, y, directionを丸める
-    [x, y, direction] = this.roundNumbers([x, y, direction]);
+    [x, y, direction] = this.roundTwoDecimals([x, y, direction]);
     [x, y, direction, scale] = [x, y, direction, scale].map(String);
 
     // rotationStyleを取得
@@ -2004,20 +2004,20 @@ class ExtensionBlocks {
   setGameScore(args) {
     const score = Number(args.GAME_SCORE);
     const position = args.POSITION
-    var x = 0;
-    var y = 0;
+    let x = 0;
+    let y = 0;
     if (position === "top-left") {
-      x = -160;
-      y = 160;
+      x = -28;
+      y = 29;
     } else if (position === "top-right") {
-      x = 160;
-      y = 160;
+      x = 28;
+      y = 29;
     } else if (position === "bottom-left") {
-      x = -160;
-      y = -160;
+      x = -28;
+      y = -29;
     } else if (position === "bottom-right") {
-      x = 160;
-      y = -160;
+      x = 28;
+      y = -29;
     } else if (position === "center") {
       x = 0;
       y = 0;
@@ -2059,7 +2059,7 @@ class ExtensionBlocks {
 
     // スプライトが表示される場合、スプライトの移動データを配列に追加（これでスプライトが表示される）
     if (visible) {
-      [x, y, direction] = this.roundNumbers([x, y, direction]);
+      [x, y, direction] = this.roundTwoDecimals([x, y, direction]);
       [x, y, direction, scale] = [x, y, direction, scale].map(String);
       this.spriteMoves.push([spriteName, x, y, direction, scale]);
     }
@@ -2092,7 +2092,7 @@ class ExtensionBlocks {
       if (visible) {
         // スケールを計算
         // スプライトの画像サイズが128のときに、大きさ35にすると1になるように調整
-        const [scale] = this.roundNumbers([size / this.spriteBaseSize]);
+        const [scale] = this.roundTwoDecimals([size / this.spriteBaseSize]);
 
         // rotationStyleを取得して、送信用のdirectionを計算
         if (spriteName in this.rotationStyles) {
