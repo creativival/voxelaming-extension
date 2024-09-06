@@ -290,7 +290,9 @@ var en = {
 	"voxelamming.setGameScreen": "Set Game Screen angle: [ANGLE] r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "Set Game Score: [GAME_SCORE] position: [POSITION]",
 	"voxelamming.sendGameOver": "Send Game Over",
+	"voxelamming.sendGameClear": "Send Game Clear",
 	"voxelamming.setSpriteBaseSize": "Set sprite base size: [SPRITE_BASE_SIZE]",
+	"voxelamming.setSpriteImageSize": "Set sprite image size: [SPRITE_IMAGE_SIZE]",
 	"voxelamming.setRotationStyle": "Set rotation style spriteName: [SPRITE_NAME] style: [ROTATION_STYLE]",
 	"voxelamming.createSprite": "Create [SPRITE_NAME] list [COLOR_LIST] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
 	"voxelamming.moveSprite": "Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
@@ -371,7 +373,9 @@ var ja = {
 	"voxelamming.setGameScreen": "ゲーム画面を設定する　角度: [ANGLE] 色 r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアを送信する: [GAME_SCORE] 位置: [POSITION]",
 	"voxelamming.sendGameOver": "ゲームオーバーを送信する",
+	"voxelamming.sendGameClear": "ゲームクリアを送信する",
 	"voxelamming.setSpriteBaseSize": "スプライトの基本サイズを決める: [SPRITE_BASE_SIZE]",
+	"voxelamming.setSpriteImageSize": "スプライトの画像サイズを決める: [SPRITE_IMAGE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] の回転方向を [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] を作成する リスト: [COLOR_LIST] x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
 	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] を移動する x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
@@ -455,7 +459,9 @@ var translations = {
 	"voxelamming.setGameScreen": "ゲームがめんをせっていする　かくど: [ANGLE] いろ r: [R] g: [G] b: [B] alpha: [ALPHA]",
 	"voxelamming.setGameScore": "ゲームスコアをおくる: [GAME_SCORE] いち: [POSITION]",
 	"voxelamming.sendGameOver": "ゲームオーバーをおくる",
+	"voxelamming.sendGameClear": "ゲームクリアをおくる",
 	"voxelamming.setSpriteBaseSize": "スプライトのきほんサイズをきめる: [SPRITE_BASE_SIZE]",
+	"voxelamming.setSpriteImageSize": "スプライトのがぞうサイズをきめる: [SPRITE_IMAGE_SIZE]",
 	"voxelamming.setRotationStyle": "スプライト [SPRITE_NAME] のかいてんほうこうを [ROTATION_STYLE] にする",
 	"voxelamming.createSprite": "スプライト [SPRITE_NAME] をつくる リスト: [COLOR_LIST] x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
 	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] をうごかす x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
@@ -641,7 +647,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
-    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
+    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（spriteImageSizeが変更されたら計算し直す）
+    this.spriteImageSize = 128; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
     this.winndowSize = [480, 360]; // ウィンドウサイズ
 
     if (runtime.formatMessage) {
@@ -1325,17 +1332,41 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             description: 'send game over'
           })
         }, {
-          opcode: 'setSpriteBaseSize',
+          opcode: 'sendGameClear',
           blockType: blockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.setSpriteBaseSize',
-            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
-            description: 'set sprite base size'
+            id: 'voxelamming.sendGameClear',
+            default: 'Send Game Clear',
+            description: 'send game clear'
+          })
+        },
+        // { // setSpriteImageSizeに変更
+        //   opcode: 'setSpriteBaseSize',
+        //   blockType: BlockType.COMMAND,
+        //   text: formatMessage({
+        //     id: 'voxelamming.setSpriteBaseSize',
+        //     default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
+        //     description: 'set sprite base size'
+        //   }),
+        //   arguments: {
+        //     SPRITE_BASE_SIZE: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 35
+        //     }
+        //   }
+        // },
+        {
+          opcode: 'setSpriteImageSize',
+          blockType: blockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setSpriteImageSize',
+            default: 'Set sprite image size: [SPRITE_IMAGE_SIZE]',
+            description: 'set sprite image size'
           }),
           arguments: {
             SPRITE_BASE_SIZE: {
               type: argumentType.NUMBER,
-              defaultValue: 35
+              defaultValue: 128
             }
           }
         }, {
@@ -1934,6 +1965,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "clearData",
     value: function clearData() {
+      // this.roomName = '1000'; // 初期化しない（明示的に変更されるまで同じ値を使用する）
       this.isAllowedMatrix = 0;
       this.savedMatrices = [];
       this.nodeTransform = [0, 0, 0, 0, 0, 0];
@@ -1963,7 +1995,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       // this.rotationStyles = {}; // 初期化しない（クローン送信のため）
       // this.spriteScales = {}; // 初期化しない（クローン送信のため）
       this.spriteCloneMoves = {}; // スプライトのスケールを保存（送信しない）
-      this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
+      this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（spriteImageSizeを変更したときに計算し直す）
+      this.spriteImageSize = 128; // スプライトの画像デフォルトサイズ（もし変更する時のみ設定する）
     }
   }, {
     key: "setFrameFPS",
@@ -2635,16 +2668,24 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }
     }
 
-    // スプライトの基本サイズを設定
-    // 推奨設定の場合はデフォルト値は35を使うため、設定不要
-    // 推奨設定：スクラッチで読み込む画像サイズは128x128
-    // 推奨設置：ボクセラミングでは、画面サイズ縦が64で、スプライトは8x8のサイズになる（8分の1）
-    // 上記の推奨設定以外の値を使うときは、このブロックでスプライトの基本サイズを変更する事で、見た目を同じにする
+    // スプライトの画像サイズを設定（標準は128x128）
   }, {
-    key: "setSpriteBaseSize",
-    value: function setSpriteBaseSize(args) {
-      this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE);
+    key: "setSpriteImageSize",
+    value: function setSpriteImageSize(args) {
+      this.spriteImageSize = Number(args.SPRITE_IMAGE_SIZE);
+      // 標準は35.15625。スプライトのサイズを35にすると、画面高さのほぼ8分の1になる（基本設定）
+      this.spriteBaseSize = 360 / 8 * 100 / this.spriteImageSize;
     }
+
+    // // 概念が分かりにくいため、スプライトの画像サイズを設定するように変更する
+    // // スプライトの基本サイズを設定
+    // // 推奨設定の場合はデフォルト値は35を使うため、設定不要
+    // // 推奨設定：スクラッチで読み込む画像サイズは128x128
+    // // 推奨設置：ボクセラミングでは、画面サイズ縦が64で、スプライトは8x8のサイズになる（8分の1）
+    // // 上記の推奨設定以外の値を使うときは、このブロックでスプライトの基本サイズを変更する事で、見た目を同じにする
+    // setSpriteBaseSize(args) {
+    //   this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE)
+    // }
 
     // ゲーム画面の設定を更新
     // スクラッチでは480x360は画面サイズとして固定されているため、それに合わせて調整する
@@ -2694,6 +2735,13 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "sendGameOver",
     value: function sendGameOver() {
       this.commands.push('gameOver');
+    }
+
+    // ゲームクリアを送信
+  }, {
+    key: "sendGameClear",
+    value: function sendGameClear() {
+      this.commands.push('gameClear');
     }
 
     // 回転スタイルの設定
