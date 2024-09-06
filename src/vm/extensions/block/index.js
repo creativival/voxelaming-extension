@@ -126,7 +126,8 @@ class ExtensionBlocks {
     this.socket = null;
     this.inactivityTimeout = null; // 非アクティブタイマー
     this.inactivityDelay = 2000; // 2秒後に接続を切断
-    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
+    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（spriteImageSizeが変更されたら計算し直す）
+    this.spriteImageSize = 128; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
     this.winndowSize = [480, 360]  // ウィンドウサイズ
 
     if (runtime.formatMessage) {
@@ -833,17 +834,41 @@ class ExtensionBlocks {
           })
         },
         {
-          opcode: 'setSpriteBaseSize',
+          opcode: 'sendGameClear',
           blockType: BlockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.setSpriteBaseSize',
-            default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
-            description: 'set sprite base size'
+            id: 'voxelamming.sendGameClear',
+            default: 'Send Game Clear',
+            description: 'send game clear'
+          })
+        },
+        // { // setSpriteImageSizeに変更
+        //   opcode: 'setSpriteBaseSize',
+        //   blockType: BlockType.COMMAND,
+        //   text: formatMessage({
+        //     id: 'voxelamming.setSpriteBaseSize',
+        //     default: 'Set sprite base size: [SPRITE_BASE_SIZE]',
+        //     description: 'set sprite base size'
+        //   }),
+        //   arguments: {
+        //     SPRITE_BASE_SIZE: {
+        //       type: ArgumentType.NUMBER,
+        //       defaultValue: 35
+        //     }
+        //   }
+        // },
+        {
+          opcode: 'setSpriteImageSize',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'voxelamming.setSpriteImageSize',
+            default: 'Set sprite image size: [SPRITE_IMAGE_SIZE]',
+            description: 'set sprite image size'
           }),
           arguments: {
             SPRITE_BASE_SIZE: {
               type: ArgumentType.NUMBER,
-              defaultValue: 35
+              defaultValue: 128
             }
           }
         },
@@ -1501,6 +1526,7 @@ class ExtensionBlocks {
   }
 
   clearData() {
+    // this.roomName = '1000'; // 初期化しない（明示的に変更されるまで同じ値を使用する）
     this.isAllowedMatrix = 0;
     this.savedMatrices = [];
     this.nodeTransform = [0, 0, 0, 0, 0, 0];
@@ -1530,7 +1556,8 @@ class ExtensionBlocks {
     // this.rotationStyles = {}; // 初期化しない（クローン送信のため）
     // this.spriteScales = {}; // 初期化しない（クローン送信のため）
     this.spriteCloneMoves = {}; // スプライトのスケールを保存（送信しない）
-    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（もし変更する時のみ設定する）
+    this.spriteBaseSize = 35; // スプライトのデフォルトサイズ（spriteImageSizeを変更したときに計算し直す）
+    this.spriteImageSize = 128; // スプライトの画像デフォルトサイズ（もし変更する時のみ設定する）
   }
 
   setFrameFPS(args) {
@@ -2004,14 +2031,22 @@ class ExtensionBlocks {
     }
   }
 
-  // スプライトの基本サイズを設定
-  // 推奨設定の場合はデフォルト値は35を使うため、設定不要
-  // 推奨設定：スクラッチで読み込む画像サイズは128x128
-  // 推奨設置：ボクセラミングでは、画面サイズ縦が64で、スプライトは8x8のサイズになる（8分の1）
-  // 上記の推奨設定以外の値を使うときは、このブロックでスプライトの基本サイズを変更する事で、見た目を同じにする
-  setSpriteBaseSize(args) {
-    this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE)
+  // スプライトの画像サイズを設定（標準は128x128）
+  setSpriteImageSize(args) {
+    this.spriteImageSize = Number(args.SPRITE_IMAGE_SIZE)
+    // 標準は35.15625。スプライトのサイズを35にすると、画面高さのほぼ8分の1になる（基本設定）
+    this.spriteBaseSize = (360 / 8) * 100 / this.spriteImageSize;
   }
+
+  // // 概念が分かりにくいため、スプライトの画像サイズを設定するように変更する
+  // // スプライトの基本サイズを設定
+  // // 推奨設定の場合はデフォルト値は35を使うため、設定不要
+  // // 推奨設定：スクラッチで読み込む画像サイズは128x128
+  // // 推奨設置：ボクセラミングでは、画面サイズ縦が64で、スプライトは8x8のサイズになる（8分の1）
+  // // 上記の推奨設定以外の値を使うときは、このブロックでスプライトの基本サイズを変更する事で、見た目を同じにする
+  // setSpriteBaseSize(args) {
+  //   this.spriteBaseSize = Number(args.SPRITE_BASE_SIZE)
+  // }
 
   // ゲーム画面の設定を更新
   // スクラッチでは480x360は画面サイズとして固定されているため、それに合わせて調整する
@@ -2056,6 +2091,11 @@ class ExtensionBlocks {
   // ゲームオーバーを送信
   sendGameOver() {
     this.commands.push('gameOver');
+  }
+
+  // ゲームクリアを送信
+  sendGameClear() {
+    this.commands.push('gameClear');
   }
 
   // 回転スタイルの設定
