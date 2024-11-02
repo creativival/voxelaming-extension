@@ -1009,11 +1009,11 @@ class ExtensionBlocks {
           }
         },
         {
-          opcode: 'displayDot',
+          opcode: 'displayGameDot',
           blockType: BlockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.displayDot',
-            default: 'Display a dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]',
+            id: 'voxelamming.displayGameDot',
+            default: 'Display game dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]',
             description: 'display a dot'
           }),
           arguments: {
@@ -1044,12 +1044,12 @@ class ExtensionBlocks {
           }
         },
         {
-          opcode: 'displayText',
+          opcode: 'displayGameText',
           blockType: BlockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.displayText',
-            default: 'Display text: [TEXT] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL] align: [ALIGN]',
-            description: 'create sprite'
+            id: 'voxelamming.displayGameText',
+            default: 'Display game text: [TEXT] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL] align: [ALIGN]',
+            description: 'display game text'
           }),
           arguments: {
             TEXT: {
@@ -2324,8 +2324,8 @@ class ExtensionBlocks {
 
   // ドット（弾）を表示する
   // ドットの表示は、特別な名前（dot_色_幅_高さ）のテンプレートとして表示する
-  // displayDot(x, y, direction = 0, colorId = 10, width = 1, height = 1) {
-  displayDot(args) {
+  // displayGameDot(x, y, direction = 0, colorId = 10, width = 1, height = 1) {
+  displayGameDot(args) {
     const x = Number(args.X) * 64 / 360;
     const y = Number(args.Y) * 64 / 360;
     let direction = Number(args.DIRECTION);
@@ -2340,8 +2340,8 @@ class ExtensionBlocks {
   // テキストを表示する
   // テキストの表示は、特別な名前（template_色_幅_高さ）のテンプレートとして表示する
   // 一度表示した後はテンプレートが自動で保存されているため、テンプレートをクローンとして表示できる
-  // displayText(text, x, y, direction = 0, scale = 1, colorId = 7, isVertical = false) {
-  displayText(args) {
+  // displayGameText(text, x, y, direction = 0, scale = 1, colorId = 7, isVertical = false) {
+  displayGameText(args) {
     const text = args.TEXT;
     const x = Number(args.X) * 64 / 360;
     const y = Number(args.Y) * 64 / 360;
