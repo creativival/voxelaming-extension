@@ -298,8 +298,8 @@ var en = {
 	"voxelamming.moveSprite": "Move [SPRITE_NAME] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] visible: [VISIBLE]",
 	"voxelamming.moveSpriteClone": "Move [SPRITE_NAME] clone id: [CLONE_ID] at x: [X] y: [Y] direction: [DIRECTION] visible: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "Get properties of [SPRITE_NAME]",
-	"voxelamming.displayDot": "Display a dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]",
-	"voxelamming.displayText": "Display text at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL]",
+	"voxelamming.displayGameDot": "Display game dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]",
+	"voxelamming.displayGameText": "Display game text: [TEXT] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL] align: [ALIGN]",
 	"voxelamming.box": "box",
 	"voxelamming.sphere": "sphere",
 	"voxelamming.plane": "plane",
@@ -386,8 +386,8 @@ var ja = {
 	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] を移動する x: [X] y: [Y] 方向: [DIRECTION] サイズ: [SIZE] 表示: [VISIBLE]",
 	"voxelamming.moveSpriteClone": "スプライト [SPRITE_NAME] クローンを移動する ID: [CLONE_ID] at x: [X] y: [Y] 方向: [DIRECTION] 表示: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] の情報を取得する",
-	"voxelamming.displayDot": "ドットを x: [X] y: [Y] に表示する。方向: [DIRECTION] 色番号: [COLOR_ID] 幅: [WIDTH] 高さ: [HEIGHT]",
-	"voxelamming.displayText": "テキストを x: [X] y: [Y] に表示する。方向: [DIRECTION] サイズ: [SIZE] 色番号: [COLOR_ID] 縦書き: [VERTICAL]",
+	"voxelamming.displayGameDot": "ゲームドットを x: [X] y: [Y] に表示する。方向: [DIRECTION] 色番号: [COLOR_ID] 幅: [WIDTH] 高さ: [HEIGHT]",
+	"voxelamming.displayGameText": "ゲームテキスト [TEXT] を x: [X] y: [Y] に表示する。方向: [DIRECTION] サイズ: [SIZE] 色番号: [COLOR_ID] 縦書き: [VERTICAL] 文字寄せ: [ALIGN]",
 	"voxelamming.box": "立方体",
 	"voxelamming.sphere": "球体",
 	"voxelamming.plane": "平面",
@@ -477,8 +477,8 @@ var translations = {
 	"voxelamming.moveSprite": "スプライト [SPRITE_NAME] をうごかす x: [X] y: [Y] ほうこう: [DIRECTION] サイズ: [SIZE] みえる: [VISIBLE]",
 	"voxelamming.moveSpriteClone": "スプライト [SPRITE_NAME] クローンをうごかす ID: [CLONE_ID] at x: [X] y: [Y] ほうこう: [DIRECTION] みえる: [VISIBLE]",
 	"voxelamming.getSpriteProperties": "スプライト [SPRITE_NAME] のじょうほうをしらべる",
-	"voxelamming.displayDot": "ドットを x: [X] y: [Y] にひょうじする。ほうこう [DIRECTION] いろばんごう: [COLOR_ID] はば: [WIDTH] たかさ: [HEIGHT]",
-	"voxelamming.displayText": "テキストを x: [X] y: [Y] にひょうじする。方向 [DIRECTION] サイズ: [SIZE] いろばんごう: [COLOR_ID] たてがき: [VERTICAL]",
+	"voxelamming.displayGameDot": "ゲームドットを x: [X] y: [Y] にひょうじする。ほうこう [DIRECTION] いろばんごう: [COLOR_ID] はば: [WIDTH] たかさ: [HEIGHT]",
+	"voxelamming.displayGameText": "ゲームテキスト [TEXT] を x: [X] y: [Y] にひょうじする。方向 [DIRECTION] サイズ: [SIZE] いろばんごう: [COLOR_ID] たてがき: [VERTICAL] もじよせ: [ALIGN]",
 	"voxelamming.box": "はこ",
 	"voxelamming.sphere": "きゅう",
 	"voxelamming.plane": "いた",
@@ -1517,11 +1517,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
-          opcode: 'displayDot',
+          opcode: 'displayGameDot',
           blockType: blockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.displayDot',
-            default: 'Display a dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]',
+            id: 'voxelamming.displayGameDot',
+            default: 'Display game dot at x: [X] y: [Y] direction: [DIRECTION] color id: [COLOR_ID] width: [WIDTH] height: [HEIGHT]',
             description: 'display a dot'
           }),
           arguments: {
@@ -1551,12 +1551,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             }
           }
         }, {
-          opcode: 'displayText',
+          opcode: 'displayGameText',
           blockType: blockType.COMMAND,
           text: formatMessage({
-            id: 'voxelamming.displayText',
-            default: 'Display text: [TEXT] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL] align: [ALIGN]',
-            description: 'create sprite'
+            id: 'voxelamming.displayGameText',
+            default: 'Display game text: [TEXT] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL] align: [ALIGN]',
+            description: 'display game text'
           }),
           arguments: {
             TEXT: {
@@ -3030,10 +3030,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
     // ドット（弾）を表示する
     // ドットの表示は、特別な名前（dot_色_幅_高さ）のテンプレートとして表示する
-    // displayDot(x, y, direction = 0, colorId = 10, width = 1, height = 1) {
+    // displayGameDot(x, y, direction = 0, colorId = 10, width = 1, height = 1) {
   }, {
-    key: "displayDot",
-    value: function displayDot(args) {
+    key: "displayGameDot",
+    value: function displayGameDot(args) {
       var x = Number(args.X) * 64 / 360;
       var y = Number(args.Y) * 64 / 360;
       var direction = Number(args.DIRECTION);
@@ -3051,10 +3051,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     // テキストを表示する
     // テキストの表示は、特別な名前（template_色_幅_高さ）のテンプレートとして表示する
     // 一度表示した後はテンプレートが自動で保存されているため、テンプレートをクローンとして表示できる
-    // displayText(text, x, y, direction = 0, scale = 1, colorId = 7, isVertical = false) {
+    // displayGameText(text, x, y, direction = 0, scale = 1, colorId = 7, isVertical = false) {
   }, {
-    key: "displayText",
-    value: function displayText(args) {
+    key: "displayGameText",
+    value: function displayGameText(args) {
       var text = args.TEXT;
       var x = Number(args.X) * 64 / 360;
       var y = Number(args.Y) * 64 / 360;
