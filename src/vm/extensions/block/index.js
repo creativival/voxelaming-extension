@@ -1048,7 +1048,7 @@ class ExtensionBlocks {
           blockType: BlockType.COMMAND,
           text: formatMessage({
             id: 'voxelamming.displayText',
-            default: 'Display text at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL]',
+            default: 'Display text: [TEXT] at x: [X] y: [Y] direction: [DIRECTION] size: [SIZE] color id: [COLOR_ID] vertical: [VERTICAL] align: [ALIGN]',
             description: 'create sprite'
           }),
           arguments: {
