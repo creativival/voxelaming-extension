@@ -1379,7 +1379,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             description: 'set sprite image size'
           }),
           arguments: {
-            SPRITE_BASE_SIZE: {
+            SPRITE_IMAGE_SIZE: {
               type: argumentType.NUMBER,
               defaultValue: 128
             }
@@ -2764,7 +2764,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "setSpriteImageSize",
     value: function setSpriteImageSize(args) {
       this.spriteImageSize = Number(args.SPRITE_IMAGE_SIZE);
-      // 標準は35.15625。スプライトのサイズを35にすると、画面高さのほぼ8分の1になる（基本設定）
+      // デフォルト値128のときは35.15625。スプライトのサイズを35にすると、画面高さのほぼ8分の1になる（基本設定）
       this.spriteBaseSize = 360 / 8 * 100 / this.spriteImageSize;
     }
 

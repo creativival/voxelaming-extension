@@ -866,7 +866,7 @@ class ExtensionBlocks {
             description: 'set sprite image size'
           }),
           arguments: {
-            SPRITE_BASE_SIZE: {
+            SPRITE_IMAGE_SIZE: {
               type: ArgumentType.NUMBER,
               defaultValue: 128
             }
@@ -2120,7 +2120,7 @@ class ExtensionBlocks {
   // スプライトの画像サイズを設定（標準は128x128）
   setSpriteImageSize(args) {
     this.spriteImageSize = Number(args.SPRITE_IMAGE_SIZE)
-    // 標準は35.15625。スプライトのサイズを35にすると、画面高さのほぼ8分の1になる（基本設定）
+    // デフォルト値128のときは35.15625。スプライトのサイズを35にすると、画面高さのほぼ8分の1になる（基本設定）
     this.spriteBaseSize = (360 / 8) * 100 / this.spriteImageSize;
   }
 
