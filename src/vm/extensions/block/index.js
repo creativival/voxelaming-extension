@@ -1052,6 +1052,10 @@ class ExtensionBlocks {
             description: 'create sprite'
           }),
           arguments: {
+            TEXT: {
+              type: ArgumentType.STRING,
+              defaultValue: 'Hello World',
+            },
             X: {
               type: ArgumentType.NUMBER,
               defaultValue: 0
@@ -1076,6 +1080,11 @@ class ExtensionBlocks {
               type: ArgumentType.STRING,
               defaultValue: 'off',
               menu: 'onOrOffMenu'
+            },
+            ALIGN: {
+              type: ArgumentType.STRING,
+              defaultValue: 'off',
+              menu: 'alignMenu'
             }
           }
         },
@@ -1284,6 +1293,83 @@ class ExtensionBlocks {
               }),
               value: 'on'
             }
+          ]
+        },
+        alignMenu: {
+          acceptReporters: false,
+          items: [
+            {
+              text: formatMessage({
+                id: 'voxelamming.top-left',
+                default: 'top-left',
+                description: 'Menu item for top-left'
+              }),
+              value: 'top-left'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.top-center',
+                default: 'top-center',
+                description: 'Menu item for top-center'
+              }),
+              value: 'top-center'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.top-right',
+                default: 'top-right',
+                description: 'Menu item for top-right'
+              }),
+              value: 'top-right'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.middle-left',
+                default: 'middle-left',
+                description: 'Menu item for middle-left'
+              }),
+              value: 'middle-left'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.middle-center',
+                default: 'middle-center',
+                description: 'Menu item for middle-center'
+              }),
+              value: 'middle-center'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.middle-right',
+                default: 'middle-right',
+                description: 'Menu item for middle-right'
+              }),
+              value: 'middle-right'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.bottom-left',
+                default: 'bottom-left',
+                description: 'Menu item for bottom-left'
+              }),
+              value: 'bottom-left'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.bottom-center',
+                default: 'bottom-center',
+                description: 'Menu item for bottom-center'
+              }),
+              value: 'bottom-center'
+            },
+            {
+              text: formatMessage({
+                id: 'voxelamming.bottom-right',
+                default: 'bottom-right',
+                description: 'Menu item for bottom-right'
+              }),
+              value: 'bottom-right'
+            },
           ]
         },
         modelNameMenu: {
@@ -2256,6 +2342,7 @@ class ExtensionBlocks {
   // 一度表示した後はテンプレートが自動で保存されているため、テンプレートをクローンとして表示できる
   // displayText(text, x, y, direction = 0, scale = 1, colorId = 7, isVertical = false) {
   displayText(args) {
+    const text = args.TEXT;
     const x = Number(args.X) * 64 / 360;
     const y = Number(args.Y) * 64 / 360;
     let direction = Number(args.DIRECTION);
@@ -2264,7 +2351,30 @@ class ExtensionBlocks {
     const scale = size / this.spriteBaseSize;
     const colorId = args.COLOR_ID;
     const isVertical = args.VERTICAL === "on" ? "1" : "0";
-    let templateName = `text_${text}_${colorId}_${isVertical}`;
+    const align = args.ALIGN.toLowerCase();
+    // テキストの右寄せなどの情報を取得
+    let textFormat = '';
+
+    if (align.includes('top')) {
+      textFormat += 't';
+    } else if (align.includes('bottom')) {
+      textFormat += 'b';
+    }
+
+    if (align.includes('left')) {
+      textFormat += 'l';
+    } else if (align.includes('right')) {
+      textFormat += 'r';
+    }
+
+    if (isVertical) {
+      textFormat += 'v';
+    } else {
+      textFormat += 'h';
+    }
+
+    const templateName = `text_${text}_${colorId}_${textFormat}`;
+
     this.displaySpriteTemplate(templateName, x, y, direction, scale);
   }
 

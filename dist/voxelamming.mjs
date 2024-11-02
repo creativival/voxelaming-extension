@@ -336,8 +336,13 @@ var en = {
 	"voxelamming.don't-rotate": "don't rotate",
 	"voxelamming.all-around": "all around",
 	"voxelamming.top-left": "top-left",
+	"voxelamming.top-center": "top-center",
 	"voxelamming.top-right": "top-right",
+	"voxelamming.middle-left": "middle-left",
+	"voxelamming.middle-center": "middle-center",
+	"voxelamming.middle-right": "middle-right",
 	"voxelamming.bottom-left": "bottom-left",
+	"voxelamming.bottom-center": "bottom-center",
 	"voxelamming.bottom-right": "bottom-right",
 	"voxelamming.center": "center"
 };
@@ -419,8 +424,13 @@ var ja = {
 	"voxelamming.don't-rotate": "回転しない",
 	"voxelamming.all-around": "自由に回転",
 	"voxelamming.top-left": "左上",
+	"voxelamming.top-center": "中央上",
 	"voxelamming.top-right": "右上",
+	"voxelamming.middle-left": "左中央",
+	"voxelamming.middle-center": "中央",
+	"voxelamming.middle-right": "右中央",
 	"voxelamming.bottom-left": "左下",
+	"voxelamming.bottom-center": "中央下",
 	"voxelamming.bottom-right": "右下",
 	"voxelamming.center": "中央"
 };
@@ -505,8 +515,13 @@ var translations = {
 	"voxelamming.don't-rotate": "かいてんしない",
 	"voxelamming.all-around": "じゆうにかいてん",
 	"voxelamming.top-left": "ひだりうえ",
+	"voxelamming.top-center": "ちゅうおううえ",
 	"voxelamming.top-right": "みぎうえ",
+	"voxelamming.middle-left": "ひだりちゅうおう",
+	"voxelamming.middle-center": "ちゅうおう",
+	"voxelamming.middle-right": "みぎちゅうおう",
 	"voxelamming.bottom-left": "ひだりした",
+	"voxelamming.bottom-center": "ちゅうおうした",
 	"voxelamming.bottom-right": "みぎした",
 	"voxelamming.center": "ちゅうおう"
 }
@@ -1544,6 +1559,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
             description: 'create sprite'
           }),
           arguments: {
+            TEXT: {
+              type: argumentType.STRING,
+              defaultValue: 'Hello World'
+            },
             X: {
               type: argumentType.NUMBER,
               defaultValue: 0
@@ -1568,6 +1587,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
               type: argumentType.STRING,
               defaultValue: 'off',
               menu: 'onOrOffMenu'
+            },
+            ALIGN: {
+              type: argumentType.STRING,
+              defaultValue: 'off',
+              menu: 'alignMenu'
             }
           }
         }, {
@@ -1751,6 +1775,73 @@ var ExtensionBlocks = /*#__PURE__*/function () {
                 description: 'Menu item for on'
               }),
               value: 'on'
+            }]
+          },
+          alignMenu: {
+            acceptReporters: false,
+            items: [{
+              text: formatMessage({
+                id: 'voxelamming.top-left',
+                default: 'top-left',
+                description: 'Menu item for top-left'
+              }),
+              value: 'top-left'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.top-center',
+                default: 'top-center',
+                description: 'Menu item for top-center'
+              }),
+              value: 'top-center'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.top-right',
+                default: 'top-right',
+                description: 'Menu item for top-right'
+              }),
+              value: 'top-right'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.middle-left',
+                default: 'middle-left',
+                description: 'Menu item for middle-left'
+              }),
+              value: 'middle-left'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.middle-center',
+                default: 'middle-center',
+                description: 'Menu item for middle-center'
+              }),
+              value: 'middle-center'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.middle-right',
+                default: 'middle-right',
+                description: 'Menu item for middle-right'
+              }),
+              value: 'middle-right'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.bottom-left',
+                default: 'bottom-left',
+                description: 'Menu item for bottom-left'
+              }),
+              value: 'bottom-left'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.bottom-center',
+                default: 'bottom-center',
+                description: 'Menu item for bottom-center'
+              }),
+              value: 'bottom-center'
+            }, {
+              text: formatMessage({
+                id: 'voxelamming.bottom-right',
+                default: 'bottom-right',
+                description: 'Menu item for bottom-right'
+              }),
+              value: 'bottom-right'
             }]
           },
           modelNameMenu: {
@@ -2964,6 +3055,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "displayText",
     value: function displayText(args) {
+      var text = args.TEXT;
       var x = Number(args.X) * 64 / 360;
       var y = Number(args.Y) * 64 / 360;
       var direction = Number(args.DIRECTION);
@@ -2972,7 +3064,25 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       var scale = size / this.spriteBaseSize;
       var colorId = args.COLOR_ID;
       var isVertical = args.VERTICAL === "on" ? "1" : "0";
-      var templateName = "text_".concat(text, "_").concat(colorId, "_").concat(isVertical);
+      var align = args.ALIGN.toLowerCase();
+      // テキストの右寄せなどの情報を取得
+      var textFormat = '';
+      if (align.includes('top')) {
+        textFormat += 't';
+      } else if (align.includes('bottom')) {
+        textFormat += 'b';
+      }
+      if (align.includes('left')) {
+        textFormat += 'l';
+      } else if (align.includes('right')) {
+        textFormat += 'r';
+      }
+      if (isVertical) {
+        textFormat += 'v';
+      } else {
+        textFormat += 'h';
+      }
+      var templateName = "text_".concat(text, "_").concat(colorId, "_").concat(textFormat);
       this.displaySpriteTemplate(templateName, x, y, direction, scale);
     }
   }, {
